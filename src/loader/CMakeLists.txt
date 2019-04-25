@@ -22,6 +22,8 @@
 include(GenerateExportHeader)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS false)
 
+include(GNUInstallDirs)
+
 find_package(PythonInterp 3 REQUIRED)
 
 set(LOADER_NAME openxr_loader)
@@ -103,6 +105,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PRIVATE FALLBACK_CONFIG_DIRS="${FALLBACK_CONFIG_DIRS}"
         PRIVATE FALLBACK_DATA_DIRS="${FALLBACK_DATA_DIRS}"
         PRIVATE SYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}"
+        PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATADIR}"
     )
     if(NOT(CMAKE_INSTALL_FULL_SYSCONFDIR STREQUAL "/etc"))
         target_compile_definitions(openxr_loader PRIVATE EXTRASYSCONFDIR="/etc")
@@ -113,6 +116,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     add_custom_target(lib${LOADER_NAME}.so.${MAJOR}.${MINOR} ALL
         COMMAND ${CMAKE_COMMAND} -E create_symlink lib${LOADER_NAME}.so.${MAJOR}.${MINOR}.${PATCH} lib${LOADER_NAME}.so.${MAJOR}.${MINOR})
+    install(TARGETS ${LOADER_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    set(XR_API_VERSION "${MAJOR}.${MINOR}")
+    configure_file("openxr.pc.in" "openxr.pc" @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/openxr.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     foreach(configuration in CMAKE_C_FLAGS_DEBUG
                              CMAKE_C_FLAGS_RELEASE
@@ -136,6 +146,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_options(${LOADER_NAME} PRIVATE)
     generate_export_header(${LOADER_NAME})
     # set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS false)
+    install(TARGETS ${LOADER_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    set(XR_API_VERSION "${MAJOR}.${MINOR}")
 
     # Need to copy DLL to client directories so clients can easily load it.
     if( (DYNAMIC_LOADER) AND (CMAKE_GENERATOR MATCHES "^Visual Studio.*") )

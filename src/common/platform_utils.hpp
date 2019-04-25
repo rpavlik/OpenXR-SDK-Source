@@ -79,22 +79,23 @@ static inline void PlatformUtilsFreeEnv(char* val) {
 }
 
 // Prefix for the Linux/Apple global runtime JSON file name
-static const std::string rt_dir_prefix = "/usr/local/share/openxr/";
 static const std::string rt_filename = "/active_runtime.json";
 
-static inline bool PlatformGetGlobalRuntimeFileName(uint16_t major_version, std::string& file_name) {
+static inline bool PlatformGetGlobalRuntimeFileName(uint16_t major_version, std::string rt_dir_prefix, std::string& file_name) {
     file_name = rt_dir_prefix;
+    file_name += "/openxr/";
     file_name += std::to_string(major_version);
     file_name += rt_filename;
     return true;
 }
 
-static inline bool PlatformLockGlobalRuntimeFile(uint16_t major_version, GlobalRuntimeFile& global_rt_file) {
+static inline bool PlatformLockGlobalRuntimeFile(uint16_t major_version, std::string rt_dir_prefix,
+                                                 GlobalRuntimeFile& global_rt_file) {
     bool success = false;
     try {
         global_rt_file = {};
         // Get the filename
-        if (PlatformGetGlobalRuntimeFileName(major_version, global_rt_file.file_name)) {
+        if (PlatformGetGlobalRuntimeFileName(major_version, rt_dir_prefix, global_rt_file.file_name)) {
             // Initialize the global runtime file info
             // Open a file descriptor to the file.
             global_rt_file.file_descriptor = open(global_rt_file.file_name.c_str(), O_RDWR);
@@ -245,11 +246,11 @@ static inline void PlatformUtilsFreeEnv(char *val) {
 }
 
 // Prefix for the Linux/Apple global runtime JSON file name
-static const std::string rt_dir_prefix = "/usr/local/share/openxr/";
 static const std::string rt_filename = "/active_runtime.json";
 
-static inline bool PlatformGetGlobalRuntimeFileName(uint16_t major_version, std::string &file_name) {
+static inline bool PlatformGetGlobalRuntimeFileName(uint16_t major_version, std::string rt_dir_prefix, std::string &file_name) {
     file_name = rt_dir_prefix;
+    file_name += "/openxr/";
     file_name += std::to_string(major_version);
     file_name += rt_filename;
     return true;

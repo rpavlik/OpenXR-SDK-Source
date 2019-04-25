@@ -652,8 +652,9 @@ XrResult RuntimeManifestFile::FindManifestFiles(ManifestFileType type,
                     "", "RuntimeManifestFile::findManifestFiles - found too many default runtime files in registry");
             }
 #else
+            std::string global_rt_prefix = std::string(DATADIR);
             std::string global_rt_filename;
-            PlatformGetGlobalRuntimeFileName(XR_VERSION_MAJOR(XR_CURRENT_API_VERSION), global_rt_filename);
+            PlatformGetGlobalRuntimeFileName(XR_VERSION_MAJOR(XR_CURRENT_API_VERSION), global_rt_prefix, global_rt_filename);
             filenames.push_back(global_rt_filename);
 #endif
             std::string info_message = "RuntimeManifestFile::FindManifestFiles - using global runtime file ";

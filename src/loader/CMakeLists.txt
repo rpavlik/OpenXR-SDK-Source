@@ -187,3 +187,9 @@ add_custom_target(loader_gen_files
 # Custom commands to build dependencies for above targets
 run_xr_xml_generate(utility_source_generator.py xr_generated_loader.hpp)
 run_xr_xml_generate(utility_source_generator.py xr_generated_loader.cpp)
+
+install(FILES
+    ${PROJECT_BINARY_DIR}/include/openxr/openxr_platform_defines.h
+    ${PROJECT_BINARY_DIR}/include/openxr/openxr_platform.h
+    ${PROJECT_BINARY_DIR}/include/openxr/openxr.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openxr)

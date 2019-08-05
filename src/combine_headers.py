@@ -49,13 +49,17 @@ GENERATED_WARNING = """
 """
 
 
-def get_headers():
+def get_headers(base_dir):
+    for fn in base_dir.iterdir():
+        if not fn.is_file():
+            continue
+        if fn.suffix in HEADER_SUFFIXES:
+            yield fn
+
+def get_all_headers():
     for base_dir in DIRS:
-        for fn in base_dir.iterdir():
-            if not fn.is_file():
-                continue
-            if fn.suffix in HEADER_SUFFIXES:
-                yield fn
+        for fn in get_headers(base_dir):
+            yield fn
 
 
 def join_lines(lines):
@@ -91,7 +95,7 @@ def get_file_prefix():
 
 class LoaderMerger(HeaderMergerBase):
     def __init__(self):
-        self.header_files = [fn for fn in get_headers()]
+        self.header_files = [fn for fn in get_all_headers() if 'gfxwrapper' not in fn.name]
         self.header_filenames = set((fn.name for fn in self.header_files))
         self.known_filenames = set((fn.name for fn in self.header_files))
 

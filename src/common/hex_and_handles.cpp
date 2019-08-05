@@ -29,6 +29,9 @@
 #include <sstream>
 #include <iomanip>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 std::string Uint64ToHexString(uint64_t val) {
     std::ostringstream oss;
     oss << "0x";

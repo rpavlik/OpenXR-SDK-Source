@@ -29,6 +29,9 @@
 
 #include "hex_and_handles.h"
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Use internal versions of flags similar to XR_EXT_debug_utils so that
 // we're not tightly coupled to that extension.  This way, if the extension
 // changes or gets replaced, we can be flexible in the loader.

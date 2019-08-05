@@ -31,6 +31,9 @@
 #include <unordered_map>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 class LoaderInstance;
 class ApiLayerInterface;
 struct XrGeneratedDispatchTable;

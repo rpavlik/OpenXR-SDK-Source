@@ -29,6 +29,9 @@
 #include <mutex>
 #include <memory>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 struct XrGeneratedDispatchTable;
 
 class RuntimeInterface {

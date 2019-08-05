@@ -42,6 +42,9 @@
 #include <utility>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Flag to cause the one time to init to only occur one time.
 std::once_flag g_one_time_init_flag;
 

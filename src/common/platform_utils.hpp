@@ -31,6 +31,9 @@
 #include "common_config.h"
 #endif  // OPENXR_HAVE_COMMON_CONFIG
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Environment variables
 #if defined(XR_OS_LINUX)
 

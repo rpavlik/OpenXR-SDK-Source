@@ -29,6 +29,9 @@
 #include <algorithm>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 /// Like std::remove_if, except it works on associative containers and it actually removes this.
 ///
 /// The iterator stuff in here is subtle - .erase() invalidates only that iterator, but it returns a non-invalidated iterator to the

@@ -22,6 +22,9 @@
 #include <string>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Determine if the path indicates a regular file (not a directory or symbolic link)
 bool FileSysUtilsIsRegularFile(const std::string& path);
 

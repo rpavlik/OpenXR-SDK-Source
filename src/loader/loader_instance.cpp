@@ -40,6 +40,9 @@
 #include <utility>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Extensions that are supported by the loader, but may not be supported
 // the the runtime.
 const std::array<XrExtensionProperties, 1>& LoaderInstance::LoaderSpecificExtensions() {

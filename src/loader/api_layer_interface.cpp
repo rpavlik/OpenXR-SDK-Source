@@ -34,6 +34,9 @@
 #include <utility>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 #define OPENXR_ENABLE_LAYERS_ENV_VAR "XR_ENABLE_API_LAYERS"
 
 // Add any layers defined in the loader layer environment variable.

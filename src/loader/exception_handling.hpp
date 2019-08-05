@@ -18,9 +18,8 @@
 
 #pragma once
 
-#ifdef OPENXR_HAVE_COMMON_CONFIG
-#include "common_config.h"
-#endif  // OPENXR_HAVE_COMMON_CONFIG
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
 
 #ifdef XRLOADER_DISABLE_EXCEPTION_HANDLING
 

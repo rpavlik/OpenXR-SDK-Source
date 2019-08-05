@@ -35,6 +35,9 @@
 #include <string>
 #include <stdint.h>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 #if XR_PTR_SIZE == 8
 /// Convert a handle into a same-sized integer.
 template <typename T>

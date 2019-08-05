@@ -24,6 +24,9 @@
 
 #include <cstring>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 #if defined DISABLE_STD_FILESYSTEM
 #define USE_EXPERIMENTAL_FS 0
 #define USE_FINAL_FS 0

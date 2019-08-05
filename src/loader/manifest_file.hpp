@@ -26,6 +26,9 @@
 #include <vector>
 #include <unordered_map>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 namespace Json {
 class Value;
 }

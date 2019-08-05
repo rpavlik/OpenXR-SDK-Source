@@ -17,6 +17,9 @@
 
 #pragma once
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 #ifdef XR_USE_PLATFORM_ANDROID
 #include <android/native_window.h>
 #endif  // XR_USE_PLATFORM_ANDROID

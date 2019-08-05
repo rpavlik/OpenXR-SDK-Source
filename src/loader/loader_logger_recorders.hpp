@@ -25,6 +25,9 @@
 
 #include <memory>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 //! Standard Error logger, always on for now
 std::unique_ptr<LoaderLogRecorder> MakeStdErrLoaderLogRecorder(void* user_data);
 

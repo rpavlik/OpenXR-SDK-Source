@@ -35,6 +35,9 @@
 #include <utility>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 std::unique_ptr<RuntimeInterface> RuntimeInterface::_single_runtime_interface;
 uint32_t RuntimeInterface::_single_runtime_count = 0;
 

@@ -29,6 +29,9 @@
 #include <vector>
 #include <iostream>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 // Anonymous namespace to keep these types private
 namespace {
 // With std::cerr: Standard Error logger, always on for now

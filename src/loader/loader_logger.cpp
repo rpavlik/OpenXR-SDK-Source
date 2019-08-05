@@ -36,6 +36,9 @@
 #include <utility>
 #include <vector>
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 std::unique_ptr<LoaderLogger> LoaderLogger::_instance;
 std::once_flag LoaderLogger::_once_flag;
 

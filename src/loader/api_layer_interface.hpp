@@ -28,6 +28,9 @@
 #include "loader_platform.hpp"
 #include "loader_interfaces.h"
 
+// DO NOT EDIT THE FOLLOWING COMMENT:
+// source-merger-content-start
+
 struct XrGeneratedDispatchTable;
 
 class ApiLayerInterface {

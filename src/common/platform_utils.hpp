@@ -22,12 +22,6 @@
 #include "xr_dependencies.h"
 #include <string>
 
-#if defined(XR_OS_LINUX)
-#include <unistd.h>
-#include <fcntl.h>
-#include <iostream>
-#endif
-
 // This is a CMake generated file with #defines for any functions/includes
 // that it found present and build-time configuration.
 // If you don't have this file, on non-Windows you'll need to define
@@ -39,6 +33,10 @@
 
 // Environment variables
 #if defined(XR_OS_LINUX)
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <iostream>
 
 static inline char* PlatformUtilsGetEnv(const char* name) { return getenv(name); }
 

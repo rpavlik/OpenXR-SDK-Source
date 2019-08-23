@@ -22,6 +22,10 @@
 #include "xr_dependencies.h"
 #include <string>
 
+#ifdef LOGME
+#include "loader_logger.hpp"
+#endif
+
 #if defined(XR_OS_LINUX)
 #include <unistd.h>
 #include <fcntl.h>
@@ -64,18 +68,27 @@ static inline char* ImplGetSecureEnv(const char* name) {
 
 static inline std::string PlatformUtilsGetEnv(const char* name) {
     auto str = detail::ImplGetEnv(name);
-    if (str == nullptr) {
-        return {};
+    std::string result;
+    if (str != nullptr) {
+        result = str;
     }
-    return str;
+
+#ifdef LOGME
+    LoaderLogger::LogVerboseMessage("", "PlatformUtilsGetEnv: ${" + std::string{name} + "} = \"" + result + "\"");
+#endif
+    return result;
 }
 
 static inline std::string PlatformUtilsGetSecureEnv(const char* name) {
     auto str = detail::ImplGetSecureEnv(name);
-    if (str == nullptr) {
-        return {};
+    std::string result;
+    if (str != nullptr) {
+        result = str;
     }
-    return str;
+#ifdef LOGME
+    LoaderLogger::LogVerboseMessage("", "PlatformUtilsGetSecureEnv: ${" + std::string{name} + "} = \"" + result + "\"");
+#endif
+    return result;
 }
 
 static inline bool PlatformUtilsGetEnvSet(const char* name) { return detail::ImplGetEnv(name) != nullptr; }

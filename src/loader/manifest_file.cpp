@@ -17,6 +17,8 @@
 // Author: Mark Young <marky@lunarg.com>
 //
 
+#define LOGME
+
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif  // defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
@@ -261,19 +263,48 @@ static void ReadDataFilesInSearchPaths(ManifestFileType type, const std::string 
 // is supplied. If ${fallback_env} or ${fallback_env}/... would be returned but that environment
 // variable is unset or empty, return the empty string.
 static std::string GetXDGEnv(const char *name, const char *fallback_env, const char *fallback_path) {
+    std::string callMsg = [&] {
+        std::ostringstream oss;
+        oss << "GetXDGEnv(name = \"" << name << "\", fallback_env = ";
+        if (fallback_env) {
+            oss << "\"" << fallback_env << "\"";
+        } else {
+            oss << "nullptr";
+        }
+        oss << ", fallback_path = ";
+        if (fallback_path) {
+            oss << "\"" << fallback_path << "\"";
+        } else {
+            oss << "nullptr";
+        }
+        oss << ")";
+        return oss.str();
+    }();
+    LoaderLogger::LogVerboseMessage("", callMsg);
+
     std::string result = PlatformUtilsGetSecureEnv(name);
+
+    std::string envMsg = [&] {
+        std::ostringstream oss;
+        oss << "${" << name << "} = \"" << result << "\"";
+        return oss.str();
+    }();
+    LoaderLogger::LogVerboseMessage("", envMsg);
     if (!result.empty()) {
         return result;
     }
     if (fallback_env != nullptr) {
         result = PlatformUtilsGetSecureEnv(fallback_env);
-        if (result.empty()) {
-            return result;
+        if (!result.empty()) {
+            if (fallback_path != nullptr) {
+                result += "/";
+                result += fallback_path;
+            }
         }
-        if (fallback_path != nullptr) {
-            result += "/";
-            result += fallback_path;
-        }
+        return result;
+    }
+    if (fallback_path != nullptr) {
+        result = fallback_path;
     }
     return result;
 }
@@ -285,6 +316,7 @@ static bool FindXDGConfigFile(const std::string &relative_path, std::string &out
     if (!out.empty()) {
         out += "/";
         out += relative_path;
+        LoaderLogger::LogInfoMessage("", "Looking in " + out);
         if (FileSysUtilsPathExists(out)) {
             return true;
         }
@@ -299,6 +331,7 @@ static bool FindXDGConfigFile(const std::string &relative_path, std::string &out
         out = path;
         out += "/";
         out += relative_path;
+        LoaderLogger::LogInfoMessage("", "Looking in " + out);
         if (FileSysUtilsPathExists(out)) {
             return true;
         }
@@ -307,6 +340,7 @@ static bool FindXDGConfigFile(const std::string &relative_path, std::string &out
     out = SYSCONFDIR;
     out += "/";
     out += relative_path;
+    LoaderLogger::LogInfoMessage("", "Looking in " + out);
     if (FileSysUtilsPathExists(out)) {
         return true;
     }
@@ -315,6 +349,7 @@ static bool FindXDGConfigFile(const std::string &relative_path, std::string &out
     out = EXTRASYSCONFDIR;
     out += "/";
     out += relative_path;
+    LoaderLogger::LogInfoMessage("", "Looking in " + out);
     if (FileSysUtilsPathExists(out)) {
         return true;
     }

@@ -116,8 +116,10 @@ class LoaderLogRecorder {
 class LoaderLogger {
    public:
     static LoaderLogger& GetInstance() {
-        std::call_once(LoaderLogger::_once_flag, []() { _instance.reset(new LoaderLogger); });
-        return *(_instance.get());
+        static LoaderLogger instance{};
+        return instance;
+        // std::call_once(LoaderLogger::_once_flag, []() { _instance.reset(new LoaderLogger); });
+        // return *(_instance.get());
     }
 
     void AddLogRecorder(std::unique_ptr<LoaderLogRecorder>&& recorder);

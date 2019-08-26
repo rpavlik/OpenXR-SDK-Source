@@ -14,13 +14,13 @@ steps:
   # - script: cmake " .. 
   #   workingDirectory: build
   #   displayName: 'Generate build system'
-   - task: MSBuild@1
-      inputs:
-        solution: '${{ parameters.sourceDir }}/build/ALL_BUILD.vcxproj'
-        maximumCpuCount: true
-        configuration: ${{ parameters.buildType }}
-   - task: MSBuild@1
-      inputs:
-        solution: '${{ parameters.sourceDir }}/build/INSTALL.vcxproj'
-        maximumCpuCount: true
-        configuration: ${{ parameters.buildType }}
+  - task: MSBuild@1
+    inputs:
+      solution: '${{ parameters.sourceDir }}/build/ALL_BUILD.vcxproj'
+      maximumCpuCount: true
+      configuration: ${{ parameters.buildType }}
+  - task: MSBuild@1
+    inputs:
+      solution: '${{ parameters.sourceDir }}/build/INSTALL.vcxproj'
+      maximumCpuCount: true
+      configuration: ${{ parameters.buildType }}

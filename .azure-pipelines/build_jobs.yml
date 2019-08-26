@@ -1,6 +1,9 @@
 parameters:
   sourceDir: '$(System.DefaultWorkingDirectory)'
 
+variables:
+  VULKAN_SDK_VERSION: 1.1.106.0
+
 jobs:
 # Build the loader, API layers, and samples on Linux
 - job: linux_build
@@ -50,6 +53,8 @@ jobs:
   displayName: 'Windows MSVC'
   pool:
     vmImage: 'windows-latest'
+  variables:
+    VULKAN_SDK: "c:\VulkanSDK\$(VULKAN_SDK_VERSION)"
   # Use the json emitted by the generator job to set up this matrix
   strategy:
     matrix: $[ dependencies.generator.outputs['winmatrix.winbuild'] ]

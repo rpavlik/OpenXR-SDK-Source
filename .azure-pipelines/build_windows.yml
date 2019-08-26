@@ -10,13 +10,17 @@ steps:
     workingDirectory: '${{ parameters.sourceDir }}'
   - script: 'cmake .. -G "${{ parameters.generator }}" ${{ parameters.cmakeArgs }}  -DCMAKE_INSTALL_PREFIX=${{ parameters.sourceDir }}/install'
     displayName: 'Generate build system'
-    workingDirectory: '${{ parameters.sourceDir }}/build' # Optional
+    workingDirectory: '${{ parameters.sourceDir }}/build'
   # - script: cmake " .. 
   #   workingDirectory: build
   #   displayName: 'Generate build system'
-  - script: cmake --build . --config ${{ parameters.buildType }}
-    workingDirectory: ${{ parameters.sourceDir }}/build
-    displayName: 'Compile'
-  - script: cmake --build . --config ${{ parameters.buildType }} --target INSTALL
-    workingDirectory: ${{ parameters.sourceDir }}/build
-    displayName: 'Install'
+   - task: MSBuild@1
+      inputs:
+        solution: '${{ parameters.sourceDir }}/build/ALL_BUILD.vcxproj'
+        maximumCpuCount: true
+        configuration: ${{ parameters.buildType }}
+   - task: MSBuild@1
+      inputs:
+        solution: '${{ parameters.sourceDir }}/build/INSTALL.vcxproj'
+        maximumCpuCount: true
+        configuration: ${{ parameters.buildType }}

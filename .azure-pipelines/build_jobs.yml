@@ -6,36 +6,36 @@ variables:
 
 jobs:
 # Build the loader, API layers, and samples on Linux
-- job: linux_build
-  displayName: 'Linux'
-  strategy:
-    matrix:
-      xlib:
-        buildType: RelWithDebInfo
-        presentationBackend: xlib
-      xcb:
-        buildType: RelWithDebInfo
-        presentationBackend: xcb
-      wayland:
-        buildType: RelWithDebInfo
-        presentationBackend: wayland
-  pool:
-    vmImage: 'ubuntu-16.04'
-  container: khronosgroup/docker-images:openxr-sdk
-  steps:
-    # First build as debug
-    - template: build_linux.yml
-      parameters:
-        sourceDir: ${{parameters.sourceDir}}
-        buildType: Debug
-        cmakeArgs: '-DPRESENTATION_BACKEND=$(PresentationBackend)'
+# - job: linux_build
+#   displayName: 'Linux'
+#   strategy:
+#     matrix:
+#       xlib:
+#         buildType: RelWithDebInfo
+#         presentationBackend: xlib
+#       xcb:
+#         buildType: RelWithDebInfo
+#         presentationBackend: xcb
+#       wayland:
+#         buildType: RelWithDebInfo
+#         presentationBackend: wayland
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   container: khronosgroup/docker-images:openxr-sdk
+#   steps:
+#     # First build as debug
+#     - template: build_linux.yml
+#       parameters:
+#         sourceDir: ${{parameters.sourceDir}}
+#         buildType: Debug
+#         cmakeArgs: '-DPRESENTATION_BACKEND=$(PresentationBackend)'
 
-    # Then build release
-    - template: build_linux.yml
-      parameters:
-        sourceDir: ${{parameters.sourceDir}}
-        buildType: RelWithDebInfo
-        cmakeArgs: '-DPRESENTATION_BACKEND=$(PresentationBackend)'
+#     # Then build release
+#     - template: build_linux.yml
+#       parameters:
+#         sourceDir: ${{parameters.sourceDir}}
+#         buildType: RelWithDebInfo
+#         cmakeArgs: '-DPRESENTATION_BACKEND=$(PresentationBackend)'
 
 # This job computes the product of the config dimensions
 - job: generator

@@ -59,7 +59,7 @@ jobs:
         sourceDir: ${{parameters.sourceDir}}
         buildType: $(buildType)
         generator: "$(generator)"
-        cmakeArgs: $(cmakeArgs)
+        cmakeArgs: $(cmakeArgs) -DBUILD_ALL_EXTENSIONS=ON
 
     - task: PublishPipelineArtifact@1
       displayName: Publish loader

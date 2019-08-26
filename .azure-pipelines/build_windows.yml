@@ -5,21 +5,30 @@ parameters:
   sourceDir: '$(System.DefaultWorkingDirectory)'
 
 steps:
+  - powershell:  ./.azure-pipelines/install_vulkan.ps1
+    displayName: Install Vulkan SDK
+    workingDirectory: '${{ parameters.sourceDir }}'
+
   - script: mkdir build
     displayName: 'Create build directory'
     workingDirectory: '${{ parameters.sourceDir }}'
+
   - script: 'cmake .. -G "${{ parameters.generator }}" ${{ parameters.cmakeArgs }}  -DCMAKE_INSTALL_PREFIX=${{ parameters.sourceDir }}/install'
     displayName: 'Generate build system'
     workingDirectory: '${{ parameters.sourceDir }}/build'
   # - script: cmake " .. 
   #   workingDirectory: build
   #   displayName: 'Generate build system'
+
   - task: MSBuild@1
+    displayName: Build all targets
     inputs:
       solution: '${{ parameters.sourceDir }}/build/ALL_BUILD.vcxproj'
       maximumCpuCount: true
       configuration: ${{ parameters.buildType }}
+
   - task: MSBuild@1
+    displayName: Install build
     inputs:
       solution: '${{ parameters.sourceDir }}/build/INSTALL.vcxproj'
       maximumCpuCount: true

@@ -6,15 +6,19 @@ parameters:
 
 steps:
 
+  - script: mkdir  $(System.DefaultWorkingDirectory)\\vulkan_sdk
+    displayName: 'Make Vulkan SDK dir'
   - task: CacheBeta@0
+    displayName: Cache Vulkan SDK
     inputs:
       key: vulkan_sdk | $(VULKAN_SDK_VERSION)
       path: $(System.DefaultWorkingDirectory)\\vulkan_sdk\\$(VULKAN_SDK_VERSION)
-    displayName: Cache Vulkan SDK
+      cacheHitVar: CACHE_RESTORED
 
   - powershell:  ./.azure-pipelines/install_vulkan.ps1
     displayName: Install Vulkan SDK
     workingDirectory: '${{ parameters.sourceDir }}'
+    condition: ne(variables.CACHE_RESTORED, 'true')
 
   - script: mkdir build
     displayName: 'Create build directory'

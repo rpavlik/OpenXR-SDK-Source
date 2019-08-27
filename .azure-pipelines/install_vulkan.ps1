@@ -17,8 +17,10 @@ $URL = "https://sdk.lunarg.com/sdk/download/$SDK_VER/windows/$FN"
 if (-not (Test-Path "$env:VULKAN_SDK/Include/vulkan/vulkan.h")) {
     Write-Output "Downloading $URL"
     $wc = New-Object System.Net.WebClient
-    $wc.DownloadFile($URL, $FN)
+    $wc.DownloadFile($URL, "$(pwd)\$FN")
 
-    Write-Output "Running $FN in silent, blocking mode"
-    Start-Process $FN -ArgumentList "/S" -Wait "/D=$env:VULKAN_SDK"
+    Write-Output "Running $FN in silent, blocking mode - installing to $env:VULKAN_SDK"
+    Start-Process $FN -Wait -ArgumentList "/S", "/D=$env:VULKAN_SDK"
+} else {
+    Write-Output "$env:VULKAN_SDK found and contains header"
 }

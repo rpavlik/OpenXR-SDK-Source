@@ -12,7 +12,7 @@ steps:
       path: $(System.DefaultWorkingDirectory)\\vulkan_sdk\\$(VULKAN_SDK_VERSION)
     displayName: Cache Vulkan SDK
 
-  - powershell:  $(System.DefaultWorkingDirectory)/.azure-pipelines/install_vulkan.ps1
+  - powershell:  ./.azure-pipelines/install_vulkan.ps1
     displayName: Install Vulkan SDK
     workingDirectory: '${{ parameters.sourceDir }}'
 

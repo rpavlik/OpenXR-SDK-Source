@@ -49,7 +49,8 @@ jobs:
   dependsOn: generator
   displayName: 'Windows MSVC'
   variables:
-    VULKAN_SDK: "c:\\VulkanSDK\\$(VULKAN_SDK_VERSION)"
+    # VULKAN_SDK: "c:\\VulkanSDK\\$(VULKAN_SDK_VERSION)"
+    VULKAN_SDK: "${{System.DefaultWorkingDirectory}}\\vulkan_sdk\\$(VULKAN_SDK_VERSION)"
   pool:
     vmImage: 'windows-latest'
   # Use the json emitted by the generator job to set up this matrix

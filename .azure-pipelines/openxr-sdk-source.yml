@@ -4,6 +4,9 @@ trigger:
     include:
       - '*'
 
+variables:
+  VULKAN_SDK_VERSION: 1.1.106.0
+  
 stages:
 - stage: Check
   jobs:

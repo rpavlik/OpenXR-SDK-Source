@@ -168,6 +168,7 @@ getSDKFilenames() {
         src/external/CMakeLists.txt \
         src/external/jsoncpp \
         src/.clang-format \
+        .azure_pipelines \
         | grep -v "gfxwrapper" \
         | grep -v "include/.gitignore" \
         | grep -v "images"

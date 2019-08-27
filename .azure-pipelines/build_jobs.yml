@@ -51,10 +51,10 @@ jobs:
 - job: windows_build
   dependsOn: generator
   displayName: 'Windows MSVC'
+  variables:
+    VULKAN_SDK: "c:\\VulkanSDK\\$(VULKAN_SDK_VERSION)"
   pool:
     vmImage: 'windows-latest'
-  variables:
-    VULKAN_SDK: "c:\VulkanSDK\$(VULKAN_SDK_VERSION)"
   # Use the json emitted by the generator job to set up this matrix
   strategy:
     matrix: $[ dependencies.generator.outputs['winmatrix.winbuild'] ]

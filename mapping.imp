@@ -1,0 +1,36 @@
+[
+    # Mapping file for include-what-you-use aka IWYU
+
+    # Don't directly include OpenXR headers
+    { "include": [ "\"openxr/openxr.h\"", "private", "<openxr/openxr.h>", "public"] },
+    { "include": [ "\"openxr/openxr_platform.h\"", "private", "<openxr/openxr_platform.h>", "public"] },
+    { "include": [ "<openxr/openxr_platform_defines.h>", "private", "<openxr/openxr.h>", "public"] },
+    { "include": [ "\"openxr/openxr_platform_defines.h\"", "private", "<openxr/openxr.h>", "public"] },
+
+    # Don't directly include OpenGL, Vulkan, etc
+    { "include": [ "@<GL/.*>", "private", "\"xr_dependencies.h\"", "public"] },
+    { "include": [ "@<vulkan/.*>", "private", "\"xr_dependencies.h\"", "public"] },
+
+    # Don't directly include exception.
+    { "include": [ "<exception>", "public", "\"ParamChecking.h\"", "public"] },
+    { "include": [ "<exception>", "public", "\"exceptions/BaseExceptions.h\"", "public"] },
+
+    # Don't directly include internal headers - not sure why this isn't working by default.
+    { "include": [ "@<bits/stdint.*>", "private", "<openxr/openxr.h>", "public"] },
+    { "include": [ "<bits/types/struct_timespec.h>", "private", "<time.h>", "public"] },
+
+    # Don't banish our streaming headers - not sure why this isn't working by default.
+    { "symbol": ["std::ofstream", "private", "<fstream>", "public"] },
+    { "symbol": ["std::ostringstream", "private", "<sstream>", "public"] },
+    { "symbol": ["std::istringstream", "private", "<sstream>", "public"] },
+
+    # Import
+    { "ref": "/usr/share/include-what-you-use/clang-6.intrinsics.imp"},
+    { "ref": "/usr/share/include-what-you-use/gcc-8.intrinsics.imp"},
+    { "ref": "/usr/share/include-what-you-use/gcc.libc.imp"},
+    { "ref": "/usr/share/include-what-you-use/gcc.stl.headers.imp"},
+    { "ref": "/usr/share/include-what-you-use/gcc.symbols.imp"},
+    { "ref": "/usr/share/include-what-you-use/iwyu.gcc.imp"},
+    { "ref": "/usr/share/include-what-you-use/libcxx.imp"},
+    { "ref": "/usr/share/include-what-you-use/stl.c.headers.imp"}
+]

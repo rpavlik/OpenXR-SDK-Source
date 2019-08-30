@@ -1,13 +1,10 @@
 # How to Build
 
-## Python v3.6+ required
+## Python v3.5+ required
 
 Certain source files are generated at build time from the `xr.xml` file, utilizing 
 python scripts. The scripts make use of the python `pathlib` module, which is 
 fully supported in python version 3.6 or later.
-
-You will also need the python `jinja2` package, available from your package
-manager or with something like `pip3 install jinja2`.
 
 ## Windows
 

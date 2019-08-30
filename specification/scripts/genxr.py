@@ -17,6 +17,7 @@
 import argparse
 import os
 import pdb
+import platform
 import re
 import sys
 import time
@@ -36,6 +37,13 @@ from pygenerator import PyOutputGenerator
 from reg import Registry
 from validitygenerator import ValidityOutputGenerator
 from xrconventions import OpenXRConventions
+
+
+if platform.python_version().startswith('2'):
+    sys.stderr.write("You are using Python 2! Python 3.5+ is required.\n" +
+                     "If you're seeing this from a source build, " +
+                     "make sure PYTHON_EXECUTABLE points to Python 3.\n")
+    sys.exit(1)
 
 # Simple timer functions
 startTime = None

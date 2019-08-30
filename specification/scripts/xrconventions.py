@@ -81,11 +81,11 @@ class OpenXRConventions(ConventionsBase):
         # Tokenize into "words"
         for elem in MAIN_RE.finditer(structname):
             if elem.group('d3d'):
-                # D3D ⇒ _D3D
+                # D3D -> _D3D
                 structure_type_parts.append(elem.group())
             elif elem.group('gl'):
-                # OpenGL ⇒ _OPENGL
-                # OpenGLES ⇒ _OPENGL_ES
+                # OpenGL -> _OPENGL
+                # OpenGLES -> _OPENGL_ES
                 structure_type_parts.append(
                     elem.group().upper().replace('ES', '_ES'))
             else:

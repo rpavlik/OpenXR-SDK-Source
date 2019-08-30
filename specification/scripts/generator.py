@@ -765,6 +765,15 @@ class OutputGenerator:
             return elem.get('category')
         return None
 
+    def paramIsArray(self, param):
+        """Check if the parameter passed in is a pointer to an array."""
+        return param.get('len') is not None
+
+    def paramIsPointer(self, param):
+        """Check if the parameter passed in is a pointer."""
+        tail = param.find('type').tail
+        return tail is not None and '*' in tail
+
     def isStructAlwaysValid(self, structname):
         """Try to do check if a structure is always considered valid (i.e. there's no rules to its acceptance)."""
         # A conventions object is required for this call.

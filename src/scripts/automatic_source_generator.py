@@ -1366,22 +1366,6 @@ class AutomaticSourceOutputGenerator(OutputGenerator):
                 # Found, so just add a new check command
                 found_state.check_commands.append(command)
 
-    # Check if the parameter passed in is a pointer
-    #   self            the AutomaticSourceOutputGenerator object
-    #   param           the XML information for the param
-    def paramIsPointer(self, param):
-        ispointer = False
-        paramtype = param.find('type')
-        if paramtype.tail is not None and '*' in paramtype.tail:
-            ispointer = True
-        return ispointer
-
-    # Check if the parameter passed in is a pointer to an array
-    #   self            the AutomaticSourceOutputGenerator object
-    #   param           the XML information for the param
-    def paramIsArray(self, param):
-        return param.get('len') is not None
-
     # Check if the parameter passed in is a static array
     #   self            the AutomaticSourceOutputGenerator object
     #   param           the XML information for the param

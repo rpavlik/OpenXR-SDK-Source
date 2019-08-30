@@ -1158,9 +1158,6 @@ class ValidityOutputGenerator(OutputGenerator):
             length = arraylengths[param_name]
             full_length = length.full_reference
 
-            # Is this just a name of a param? If false, then it's some kind of qualified name (a member of a param for instance)
-            simple_param_reference = (len(length.param_ref_parts) == 1)
-
             # Get all the array dependencies
             arrays = cmd.findall(
                 "param/[@len='{}'][@optional='true']".format(full_length))

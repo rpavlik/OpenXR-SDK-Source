@@ -64,15 +64,10 @@ class CReflectionOutputGenerator(OutputGenerator):
         self.template = JinjaTemplate(self.env, "template_{}".format(genOpts.filename))
 
     def endFile(self):
-        file_data = ''
-        try:
-            file_data += self.template.render(
-                structs=self.structs,
-                enums=self.enums,
-                bitmasks=self.bitmasks)
-        except TemplateSyntaxError as e:
-            print("{}:{} error: {}".format(e.filename, e.lineno, e.message))
-            raise e
+        file_data = self.template.render(
+            structs=self.structs,
+            enums=self.enums,
+            bitmasks=self.bitmasks)
         write(file_data, file=self.outFile)
 
         # Finish processing in superclass
@@ -90,8 +85,6 @@ class CReflectionOutputGenerator(OutputGenerator):
 
     def genStruct(self, typeinfo, typeName, alias):
         OutputGenerator.genStruct(self, typeinfo, typeName, alias)
-
-        typeElem = typeinfo.elem
 
         if alias:
             return
@@ -119,7 +112,7 @@ class CReflectionOutputGenerator(OutputGenerator):
 
             bitmaskTuples = []
             for elem in groupinfo.elem.findall('enum'):
-                (numVal, strVal) = self.enumToValue(elem, True)
+                (_, strVal) = self.enumToValue(elem, True)
                 bitmaskTuples.append((getElemName(elem), strVal))
 
             self.bitmasks.append(CBitmask(bitmaskTypeName, bitmaskTuples))

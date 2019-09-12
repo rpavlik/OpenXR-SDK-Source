@@ -5,6 +5,23 @@ namespace traits {
 //! Type trait associating an ObjectType enum value with its C++ type.
 template <ObjectType o>
 struct cpp_type;
+
+//! Type trait associating a C++ handle wrapper type with an ObjectType enum value.
+template <typename T>
+struct object_type;
+
+//! Type trait associating a C++ handle wrapper type with its C++ type.
+template <typename T>
+struct raw_handle;
+
+//! Type trait identifying C++ handle wrapper types.
+template <typename T>
+struct is_handle : std::false_type {};
+
+//! Alias for the raw handle type for a C++ handle wrapper.
+template <typename T>
+using raw_handle_t = typename raw_handle<T>::type;
+
 }  // namespace traits
 
 // forward declarations
@@ -12,6 +29,56 @@ struct cpp_type;
 //# for handle in gen.api_handles
 class /*{ project_type_name(handle.name) }*/;
 //# endfor
+
+//# for op in ('<', '>', '<=', '>=', '==', '!=')
+//! @brief /*{op}*/ comparison between C++ handle types.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE typename std::enable_if<traits::is_handle<Handle>::value, bool>::type operator/*{- op -}*/(
+    Handle const &lhs, Handle const &rhs) {
+    return lhs.get() /*{- op -}*/ rhs.get();
+}
+//! @brief /*{op}*/ comparison between a C++ handle type and raw handle.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator/*{- op -}*/(Handle const &lhs, traits::raw_handle_t<Handle> rhs) {
+    return lhs.get() /*{- op -}*/ rhs;
+}
+//! @brief /*{op}*/ comparison between raw handle and a C++ handle type.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator/*{- op -}*/(traits::raw_handle_t<Handle> lhs, Handle const &rhs) {
+    return lhs /*{- op -}*/ rhs.get();
+}
+//# endfor
+
+//! @brief Equality comparison between a C++ handle type and nullptr: true if the handle is null.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE typename std::enable_if<traits::is_handle<Handle>::value, bool>::type operator==(Handle const &lhs,
+                                                                                                   std::nullptr_t /* unused */) {
+    return lhs.get() == XR_NULL_HANDLE;
+}
+//! @brief Equality comparison between nullptr and a C++ handle type: true if the handle is null.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE typename std::enable_if<traits::is_handle<Handle>::value, bool>::type operator==(std::nullptr_t /* unused */,
+                                                                                                   Handle const &rhs) {
+    return rhs.get() == XR_NULL_HANDLE;
+}
+//! @brief Inequality comparison between a C++ handle type and nullptr: true if the handle is not null.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE typename std::enable_if<traits::is_handle<Handle>::value, bool>::type operator!=(Handle const &lhs,
+                                                                                                   std::nullptr_t /* unused */) {
+    return lhs.get() != XR_NULL_HANDLE;
+}
+//! @brief Inequality comparison between nullptr and a C++ handle type: true if the handle is not null.
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE typename std::enable_if<traits::is_handle<Handle>::value, bool>::type operator!=(std::nullptr_t /* unused */,
+                                                                                                   Handle const &rhs) {
+    return rhs.get() != XR_NULL_HANDLE;
+}
+
+//! @brief Free function accessor for the raw handle in a a C++ handle type
+template <typename Handle>
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE traits::raw_handle_t<Handle> get(Handle const &h) {
+    return h.get();
+}
 
 /*% macro shared_comments(cur_cmd, method) -%*/
 //!
@@ -226,35 +293,6 @@ class /*{shortname}*/ {
 };
 static_assert(sizeof(/*{ shortname }*/) == sizeof(/*{handle.name}*/), "handle and wrapper have different size!");
 
-//# for op in ('<', '>', '<=', '>=', '==', '!=')
-//! @brief /*{op}*/ comparison between /*{shortname}*/.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator/*{- op -}*/(/*{shortname}*/ const &lhs, /*{shortname}*/ const &rhs) { return lhs.get() /*{- op -}*/ rhs.get(); }
-//! @brief /*{op}*/ comparison between /*{shortname}*/ and raw /*{handle.name}*/.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator/*{- op -}*/(/*{shortname}*/ const &lhs, /*{handle.name}*/ rhs) { return lhs.get() /*{- op -}*/ rhs; }
-//! @brief /*{op}*/ comparison between raw /*{handle.name}*/ and /*{shortname}*/.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator/*{- op -}*/(/*{handle.name}*/ lhs, /*{shortname}*/ const &rhs) { return lhs /*{- op -}*/ rhs.get(); }
-//# endfor
-
-//! @brief Equality comparison between /*{shortname}*/ and nullptr: true if the handle is null.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(/*{shortname}*/ const &lhs, std::nullptr_t /* unused */) { return lhs.get() == XR_NULL_HANDLE; }
-//! @brief Equality comparison between nullptr and /*{shortname}*/: true if the handle is null.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(std::nullptr_t /* unused */, /*{shortname}*/ const &rhs) { return rhs.get() == XR_NULL_HANDLE; }
-//! @brief Inequality comparison between /*{shortname}*/ and nullptr: true if the handle is not null.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(/*{shortname}*/ const &lhs, std::nullptr_t /* unused */) { return lhs.get() != XR_NULL_HANDLE; }
-//! @brief Inequality comparison between nullptr and /*{shortname}*/: true if the handle is not null.
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(std::nullptr_t /* unused */, /*{shortname}*/ const &rhs) { return rhs.get() != XR_NULL_HANDLE; }
-
-//! @brief Free function accessor for the raw /*{handle.name}*/ handle in a /*{shortname}*/
-//! @relates /*{shortname}*/
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE /*{handle.name}*/ get(/*{shortname}*/ const &h) { return h.get(); }
-
 //! @brief Free "put" function for clearing and getting the address of the raw /*{handle.name}*/ handle in a /*{shortname}*/ (by reference).
 //!
 //! e.g.
@@ -287,6 +325,19 @@ template <>
 struct cpp_type<ObjectType::/*{shortname}*/> {
     using type = /*{shortname}*/;
 };
+//! @brief Explicit specialization of object_type for /*{shortname}*/
+template <>
+struct object_type</*{shortname}*/> : std::integral_constant<ObjectType, ObjectType::/*{shortname}*/> {
+};
+
+//! @brief Explicit specialization of raw_handle for /*{shortname}*/
+template <>
+struct raw_handle</*{shortname}*/> {
+    using type = /*{handle.name}*/;
+};
+
+template <>
+struct is_handle</*{shortname}*/> : std::true_type {};
 } // namespace traits
 
 /*{- protect_end(handle) }*/

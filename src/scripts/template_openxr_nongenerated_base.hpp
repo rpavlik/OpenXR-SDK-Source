@@ -74,3 +74,14 @@
 #define OPENXR_HPP_STRINGIFY2(text) #text
 #define OPENXR_HPP_STRINGIFY(text) OPENXR_HPP_STRINGIFY2(text)
 #define OPENXR_HPP_NAMESPACE_STRING OPENXR_HPP_STRINGIFY(OPENXR_HPP_NAMESPACE)
+
+namespace OPENXR_HPP_NAMESPACE {
+
+using Bool32 = XrBool32;
+using Duration = XrDuration;
+using Path = XrPath;
+using SystemId = XrSystemId;
+using Time = XrTime;
+using Version = XrVersion;
+
+}  // namespace OPENXR_HPP_NAMESPACE

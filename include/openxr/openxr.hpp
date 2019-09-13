@@ -105,6 +105,17 @@
 #define OPENXR_HPP_STRINGIFY(text) OPENXR_HPP_STRINGIFY2(text)
 #define OPENXR_HPP_NAMESPACE_STRING OPENXR_HPP_STRINGIFY(OPENXR_HPP_NAMESPACE)
 
+namespace OPENXR_HPP_NAMESPACE {
+
+using Bool32 = XrBool32;
+using Duration = XrDuration;
+using Path = XrPath;
+using SystemId = XrSystemId;
+using Time = XrTime;
+using Version = XrVersion;
+
+} // namespace OPENXR_HPP_NAMESPACE
+
 /*!
  * @brief Namespace containing all openxr.hpp entities.
  *
@@ -429,6 +440,101 @@ public:
   }
   //! @}
 };
+
+} // namespace OPENXR_HPP_NAMESPACE
+
+namespace OPENXR_HPP_NAMESPACE {
+
+template <typename FlagBitsType> struct FlagTraits {
+  enum { allFlags = 0 };
+};
+
+template <typename BitType, typename MaskType = XrFlags64> class Flags {
+public:
+  OPENXR_HPP_CONSTEXPR Flags() : m_mask(0) {}
+
+  Flags(BitType bit) : m_mask(static_cast<MaskType>(bit)) {}
+
+  Flags(Flags<BitType> const &rhs) : m_mask(rhs.m_mask) {}
+
+  explicit Flags(MaskType flags) : m_mask(flags) {}
+
+  Flags<BitType> &operator=(Flags<BitType> const &rhs) {
+    m_mask = rhs.m_mask;
+    return *this;
+  }
+
+  Flags<BitType> &operator|=(Flags<BitType> const &rhs) {
+    m_mask |= rhs.m_mask;
+    return *this;
+  }
+
+  Flags<BitType> &operator&=(Flags<BitType> const &rhs) {
+    m_mask &= rhs.m_mask;
+    return *this;
+  }
+
+  Flags<BitType> &operator^=(Flags<BitType> const &rhs) {
+    m_mask ^= rhs.m_mask;
+    return *this;
+  }
+
+  Flags<BitType> operator|(Flags<BitType> const &rhs) const {
+    Flags<BitType> result(*this);
+    result |= rhs;
+    return result;
+  }
+
+  Flags<BitType> operator&(Flags<BitType> const &rhs) const {
+    Flags<BitType> result(*this);
+    result &= rhs;
+    return result;
+  }
+
+  Flags<BitType> operator^(Flags<BitType> const &rhs) const {
+    Flags<BitType> result(*this);
+    result ^= rhs;
+    return result;
+  }
+
+  bool operator!() const { return !m_mask; }
+
+  Flags<BitType> operator~() const {
+    Flags<BitType> result(*this);
+    result.m_mask ^= FlagTraits<BitType>::allFlags;
+    return result;
+  }
+
+  bool operator==(Flags<BitType> const &rhs) const {
+    return m_mask == rhs.m_mask;
+  }
+
+  bool operator!=(Flags<BitType> const &rhs) const {
+    return m_mask != rhs.m_mask;
+  }
+
+  explicit operator bool() const { return !!m_mask; }
+
+  explicit operator MaskType() const { return m_mask; }
+
+private:
+  MaskType m_mask;
+};
+
+template <typename BitType>
+Flags<BitType> operator|(BitType bit, Flags<BitType> const &flags) {
+  return flags | bit;
+}
+
+template <typename BitType>
+Flags<BitType> operator&(BitType bit, Flags<BitType> const &flags) {
+  return flags & bit;
+}
+
+template <typename BitType>
+Flags<BitType> operator^(BitType bit, Flags<BitType> const &flags) {
+  return flags ^ bit;
+}
 
 } // namespace OPENXR_HPP_NAMESPACE
 
@@ -2150,6 +2256,168 @@ to_string(PerfSettingsNotificationLevelEXT value) {
 namespace OPENXR_HPP_NAMESPACE {
 
 /*!
+ * @defgroup enums Flags
+ * @brief C++ flags classes corresponding to OpenXR C flags and flagbits, plus
+ * associated utility functions.
+ * @{
+ */
+
+//! @brief Flags class associated with XrInstanceCreateFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInstanceCreateFlags>
+enum class InstanceCreateFlagBits : XrFlags64 {};
+
+using InstanceCreateFlags =
+    Flags<InstanceCreateFlagBits, XrInstanceCreateFlags>;
+
+//! @brief Flags class associated with XrSessionCreateFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSessionCreateFlags>
+enum class SessionCreateFlagBits : XrFlags64 {};
+
+using SessionCreateFlags = Flags<SessionCreateFlagBits, XrSessionCreateFlags>;
+
+//! @brief Flags class associated with XrSpaceVelocityFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlags>
+enum class SpaceVelocityFlagBits : XrFlags64 {
+  LinearValidBit = XR_SPACE_VELOCITY_LINEAR_VALID_BIT,
+  AngularValidBit = XR_SPACE_VELOCITY_ANGULAR_VALID_BIT
+};
+
+using SpaceVelocityFlags = Flags<SpaceVelocityFlagBits, XrSpaceVelocityFlags>;
+
+//! @brief Flags class associated with XrSpaceLocationFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlags>
+enum class SpaceLocationFlagBits : XrFlags64 {
+  OrientationValidBit = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
+  PositionValidBit = XR_SPACE_LOCATION_POSITION_VALID_BIT,
+  OrientationTrackedBit = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT,
+  PositionTrackedBit = XR_SPACE_LOCATION_POSITION_TRACKED_BIT
+};
+
+using SpaceLocationFlags = Flags<SpaceLocationFlagBits, XrSpaceLocationFlags>;
+
+//! @brief Flags class associated with XrSwapchainCreateFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlags>
+enum class SwapchainCreateFlagBits : XrFlags64 {
+  ProtectedContentBit = XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT,
+  StaticImageBit = XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
+};
+
+using SwapchainCreateFlags =
+    Flags<SwapchainCreateFlagBits, XrSwapchainCreateFlags>;
+
+//! @brief Flags class associated with XrSwapchainUsageFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainUsageFlags>
+enum class SwapchainUsageFlagBits : XrFlags64 {
+  ColorAttachmentBit = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT,
+  DepthStencilAttachmentBit = XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+  UnorderedAccessBit = XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT,
+  TransferSrcBit = XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT,
+  TransferDstBit = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,
+  SampledBit = XR_SWAPCHAIN_USAGE_SAMPLED_BIT,
+  MutableFormatBit = XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+};
+
+using SwapchainUsageFlags =
+    Flags<SwapchainUsageFlagBits, XrSwapchainUsageFlags>;
+
+//! @brief Flags class associated with XrCompositionLayerFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlags>
+enum class CompositionLayerFlagBits : XrFlags64 {
+  CorrectChromaticAberrationBit =
+      XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT,
+  BlendTextureSourceAlphaBit =
+      XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT,
+  UnpremultipliedAlphaBit = XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
+};
+
+using CompositionLayerFlags =
+    Flags<CompositionLayerFlagBits, XrCompositionLayerFlags>;
+
+//! @brief Flags class associated with XrViewStateFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlags>
+enum class ViewStateFlagBits : XrFlags64 {
+  OrientationValidBit = XR_VIEW_STATE_ORIENTATION_VALID_BIT,
+  PositionValidBit = XR_VIEW_STATE_POSITION_VALID_BIT,
+  OrientationTrackedBit = XR_VIEW_STATE_ORIENTATION_TRACKED_BIT,
+  PositionTrackedBit = XR_VIEW_STATE_POSITION_TRACKED_BIT
+};
+
+using ViewStateFlags = Flags<ViewStateFlagBits, XrViewStateFlags>;
+
+//! @brief Flags class associated with XrInputSourceLocalizedNameFlags
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlags>
+enum class InputSourceLocalizedNameFlagBits : XrFlags64 {
+  UserPathBit = XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT,
+  InteractionProfileBit =
+      XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT,
+  ComponentBit = XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
+};
+
+using InputSourceLocalizedNameFlags =
+    Flags<InputSourceLocalizedNameFlagBits, XrInputSourceLocalizedNameFlags>;
+
+//! @brief Flags class associated with XrDebugUtilsMessageSeverityFlagsEXT
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagsEXT>
+enum class DebugUtilsMessageSeverityFlagBitsEXT : XrFlags64 {
+  XrDebugUtilsMessageSeverityVerboseBit =
+      XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
+  XrDebugUtilsMessageSeverityInfoBit =
+      XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
+  XrDebugUtilsMessageSeverityWarningBit =
+      XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+  XrDebugUtilsMessageSeverityErrorBit =
+      XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+};
+
+using DebugUtilsMessageSeverityFlagsEXT =
+    Flags<DebugUtilsMessageSeverityFlagBitsEXT,
+          XrDebugUtilsMessageSeverityFlagsEXT>;
+
+//! @brief Flags class associated with XrDebugUtilsMessageTypeFlagsEXT
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagsEXT>
+enum class DebugUtilsMessageTypeFlagBitsEXT : XrFlags64 {
+  XrDebugUtilsMessageTypeGeneralBit =
+      XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT,
+  XrDebugUtilsMessageTypeValidationBit =
+      XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+  XrDebugUtilsMessageTypePerformanceBit =
+      XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+  XrDebugUtilsMessageTypeConformanceBit =
+      XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+};
+
+using DebugUtilsMessageTypeFlagsEXT =
+    Flags<DebugUtilsMessageTypeFlagBitsEXT, XrDebugUtilsMessageTypeFlagsEXT>;
+
+//! @}
+
+} // namespace OPENXR_HPP_NAMESPACE
+
+namespace OPENXR_HPP_NAMESPACE {
+
+/*!
  * @defgroup result_helpers Result helper free functions
  * @{
  */
@@ -3503,6 +3771,117 @@ OPENXR_HPP_INLINE ResultValue<UniqueHandle<T, D>> createResultValue(
 
 //! @}
 
+} // namespace OPENXR_HPP_NAMESPACE
+
+namespace OPENXR_HPP_NAMESPACE {
+
+struct ApiLayerProperties;
+struct ExtensionProperties;
+struct ApplicationInfo;
+struct InstanceCreateInfo;
+struct InstanceProperties;
+struct EventDataBuffer;
+struct SystemGetInfo;
+struct SystemGraphicsProperties;
+struct SystemTrackingProperties;
+struct SystemProperties;
+struct SessionCreateInfo;
+struct Vector3f;
+struct SpaceVelocity;
+struct Quaternionf;
+struct Posef;
+struct ReferenceSpaceCreateInfo;
+struct Extent2Df;
+struct ActionSpaceCreateInfo;
+struct SpaceLocation;
+struct ViewConfigurationProperties;
+struct ViewConfigurationView;
+struct SwapchainCreateInfo;
+struct SwapchainImageBaseHeader;
+struct SwapchainImageAcquireInfo;
+struct SwapchainImageWaitInfo;
+struct SwapchainImageReleaseInfo;
+struct SessionBeginInfo;
+struct FrameWaitInfo;
+struct FrameState;
+struct FrameBeginInfo;
+struct CompositionLayerBaseHeader;
+struct FrameEndInfo;
+struct ViewLocateInfo;
+struct ViewState;
+struct Fovf;
+struct View;
+struct ActionSetCreateInfo;
+struct ActionCreateInfo;
+struct ActionSuggestedBinding;
+struct InteractionProfileSuggestedBinding;
+struct SessionActionSetsAttachInfo;
+struct InteractionProfileState;
+struct ActionStateGetInfo;
+struct ActionStateBoolean;
+struct ActionStateFloat;
+struct Vector2f;
+struct ActionStateVector2f;
+struct ActionStatePose;
+struct ActiveActionSet;
+struct ActionsSyncInfo;
+struct BoundSourcesForActionEnumerateInfo;
+struct InputSourceLocalizedNameGetInfo;
+struct HapticActionInfo;
+struct HapticBaseHeader;
+struct BaseInStructure;
+struct BaseOutStructure;
+struct Offset2Di;
+struct Extent2Di;
+struct Rect2Di;
+struct SwapchainSubImage;
+struct CompositionLayerProjectionView;
+struct CompositionLayerProjection;
+struct CompositionLayerQuad;
+struct EventDataBaseHeader;
+struct EventDataEventsLost;
+struct EventDataInstanceLossPending;
+struct EventDataSessionStateChanged;
+struct EventDataReferenceSpaceChangePending;
+struct EventDataInteractionProfileChanged;
+struct HapticVibration;
+struct Offset2Df;
+struct Rect2Df;
+struct Vector4f;
+struct Color4f;
+struct CompositionLayerCubeKHR;
+struct InstanceCreateInfoAndroidKHR;
+struct CompositionLayerDepthInfoKHR;
+struct VulkanSwapchainFormatListCreateInfoKHR;
+struct CompositionLayerCylinderKHR;
+struct CompositionLayerEquirectKHR;
+struct GraphicsBindingOpenGLWin32KHR;
+struct GraphicsBindingOpenGLXlibKHR;
+struct GraphicsBindingOpenGLXcbKHR;
+struct GraphicsBindingOpenGLWaylandKHR;
+struct SwapchainImageOpenGLKHR;
+struct GraphicsRequirementsOpenGLKHR;
+struct GraphicsBindingOpenGLESAndroidKHR;
+struct SwapchainImageOpenGLESKHR;
+struct GraphicsRequirementsOpenGLESKHR;
+struct GraphicsBindingVulkanKHR;
+struct SwapchainImageVulkanKHR;
+struct GraphicsRequirementsVulkanKHR;
+struct GraphicsBindingD3D11KHR;
+struct SwapchainImageD3D11KHR;
+struct GraphicsRequirementsD3D11KHR;
+struct GraphicsBindingD3D12KHR;
+struct SwapchainImageD3D12KHR;
+struct GraphicsRequirementsD3D12KHR;
+struct VisibilityMaskKHR;
+struct EventDataVisibilityMaskChangedKHR;
+struct EventDataPerfSettingsEXT;
+struct DebugUtilsObjectNameInfoEXT;
+struct DebugUtilsLabelEXT;
+struct DebugUtilsMessengerCallbackDataEXT;
+struct DebugUtilsMessengerCreateInfoEXT;
+struct SpatialAnchorCreateInfoMSFT;
+struct SpatialAnchorSpaceCreateInfoMSFT;
 } // namespace OPENXR_HPP_NAMESPACE
 namespace OPENXR_HPP_NAMESPACE {
 
@@ -8535,6 +8914,1983 @@ createInstanceUnique(const XrInstanceCreateInfo *createInfo,
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 //! @}
+
+} // namespace OPENXR_HPP_NAMESPACE
+
+// BLOCK Structure Impl definitions
+namespace OPENXR_HPP_NAMESPACE {
+
+namespace traits {
+
+template <typename Type> class TypedStructTraits {
+protected:
+  TypedStructTraits(StructureType type_) : type(type_) {}
+
+private:
+  const StructureType type;
+
+public:
+  const void *next;
+};
+
+} // namespace traits
+
+struct CompositionLayerBaseHeader {
+  StructureType type;
+  const void *next;
+  CompositionLayerFlags layerFlags;
+  Space space;
+};
+
+struct ApiLayerProperties
+    : public traits::TypedStructTraits<ApiLayerProperties> {
+private:
+  using Parent = traits::TypedStructTraits<ApiLayerProperties>;
+
+public:
+  char layerName[XR_MAX_API_LAYER_NAME_SIZE];
+  Version specVersion;
+  uint32_t layerVersion;
+  char description[XR_MAX_API_LAYER_DESCRIPTION_SIZE];
+};
+static_assert(sizeof(ApiLayerProperties) == sizeof(XrApiLayerProperties),
+              "struct and wrapper have different size!");
+
+struct ExtensionProperties
+    : public traits::TypedStructTraits<ExtensionProperties> {
+private:
+  using Parent = traits::TypedStructTraits<ExtensionProperties>;
+
+public:
+  char extensionName[XR_MAX_EXTENSION_NAME_SIZE];
+  uint32_t extensionVersion;
+};
+static_assert(sizeof(ExtensionProperties) == sizeof(XrExtensionProperties),
+              "struct and wrapper have different size!");
+
+struct ApplicationInfo {
+  ApplicationInfo(const char *applicationName_ = nullptr,
+                  uint32_t applicationVersion_ = 0,
+                  const char *engineName_ = nullptr,
+                  uint32_t engineVersion_ = 0, const Version &apiVersion_ = {})
+      :
+
+        applicationVersion{applicationVersion_}, engineVersion{engineVersion_},
+        apiVersion{apiVersion_} {
+    if (nullptr != applicationName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(applicationName, applicationName_, XR_MAX_APPLICATION_NAME_SIZE);
+    }
+    if (nullptr != engineName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(engineName, engineName_, XR_MAX_ENGINE_NAME_SIZE);
+    }
+  }
+  char applicationName[XR_MAX_APPLICATION_NAME_SIZE];
+  uint32_t applicationVersion;
+  char engineName[XR_MAX_ENGINE_NAME_SIZE];
+  uint32_t engineVersion;
+  Version apiVersion;
+};
+static_assert(sizeof(ApplicationInfo) == sizeof(XrApplicationInfo),
+              "struct and wrapper have different size!");
+
+struct InstanceCreateInfo
+    : public traits::TypedStructTraits<InstanceCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<InstanceCreateInfo>;
+
+public:
+  InstanceCreateInfo(const InstanceCreateFlags &createFlags_ = {},
+                     const ApplicationInfo &applicationInfo_ = {},
+                     uint32_t enabledApiLayerCount_ = 0,
+                     const char *const *enabledApiLayerNames_ = nullptr,
+                     uint32_t enabledExtensionCount_ = 0,
+                     const char *const *enabledExtensionNames_ = nullptr)
+      :
+
+        Parent(StructureType::InstanceCreateInfo), createFlags{createFlags_},
+        applicationInfo{applicationInfo_},
+        enabledApiLayerCount{enabledApiLayerCount_},
+        enabledApiLayerNames{enabledApiLayerNames_},
+        enabledExtensionCount{enabledExtensionCount_},
+        enabledExtensionNames{enabledExtensionNames_} {}
+  InstanceCreateFlags createFlags;
+  ApplicationInfo applicationInfo;
+  uint32_t enabledApiLayerCount;
+  const char *const *enabledApiLayerNames;
+  uint32_t enabledExtensionCount;
+  const char *const *enabledExtensionNames;
+};
+static_assert(sizeof(InstanceCreateInfo) == sizeof(XrInstanceCreateInfo),
+              "struct and wrapper have different size!");
+
+struct InstanceProperties
+    : public traits::TypedStructTraits<InstanceProperties> {
+private:
+  using Parent = traits::TypedStructTraits<InstanceProperties>;
+
+public:
+  Version runtimeVersion;
+  char runtimeName[XR_MAX_RUNTIME_NAME_SIZE];
+};
+static_assert(sizeof(InstanceProperties) == sizeof(XrInstanceProperties),
+              "struct and wrapper have different size!");
+
+struct EventDataBuffer : public traits::TypedStructTraits<EventDataBuffer> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataBuffer>;
+
+public:
+  EventDataBuffer() : Parent(StructureType::EventDataBuffer) {}
+
+  uint8_t varying[4000];
+};
+static_assert(sizeof(EventDataBuffer) == sizeof(XrEventDataBuffer),
+              "struct and wrapper have different size!");
+
+struct SystemGetInfo : public traits::TypedStructTraits<SystemGetInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SystemGetInfo>;
+
+public:
+  SystemGetInfo(const FormFactor &formFactor_ = {})
+      :
+
+        Parent(StructureType::SystemGetInfo), formFactor{formFactor_} {}
+  FormFactor formFactor;
+};
+static_assert(sizeof(SystemGetInfo) == sizeof(XrSystemGetInfo),
+              "struct and wrapper have different size!");
+
+struct SystemGraphicsProperties {
+  SystemGraphicsProperties(uint32_t maxSwapchainImageHeight_ = 0,
+                           uint32_t maxSwapchainImageWidth_ = 0,
+                           uint32_t maxLayerCount_ = 0)
+      :
+
+        maxSwapchainImageHeight{maxSwapchainImageHeight_},
+        maxSwapchainImageWidth{maxSwapchainImageWidth_}, maxLayerCount{
+                                                             maxLayerCount_} {}
+  uint32_t maxSwapchainImageHeight;
+  uint32_t maxSwapchainImageWidth;
+  uint32_t maxLayerCount;
+};
+static_assert(sizeof(SystemGraphicsProperties) ==
+                  sizeof(XrSystemGraphicsProperties),
+              "struct and wrapper have different size!");
+
+struct SystemTrackingProperties {
+  SystemTrackingProperties(const Bool32 &orientationTracking_ = XR_FALSE,
+                           const Bool32 &positionTracking_ = XR_FALSE)
+      :
+
+        orientationTracking{orientationTracking_}, positionTracking{
+                                                       positionTracking_} {}
+  Bool32 orientationTracking;
+  Bool32 positionTracking;
+};
+static_assert(sizeof(SystemTrackingProperties) ==
+                  sizeof(XrSystemTrackingProperties),
+              "struct and wrapper have different size!");
+
+struct SystemProperties : public traits::TypedStructTraits<SystemProperties> {
+private:
+  using Parent = traits::TypedStructTraits<SystemProperties>;
+
+public:
+  SystemId systemId;
+  uint32_t vendorId;
+  char systemName[XR_MAX_SYSTEM_NAME_SIZE];
+  SystemGraphicsProperties graphicsProperties;
+  SystemTrackingProperties trackingProperties;
+};
+static_assert(sizeof(SystemProperties) == sizeof(XrSystemProperties),
+              "struct and wrapper have different size!");
+
+struct SessionCreateInfo : public traits::TypedStructTraits<SessionCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SessionCreateInfo>;
+
+public:
+  SessionCreateInfo(const SessionCreateFlags &createFlags_ = {},
+                    const SystemId &systemId_ = {})
+      :
+
+        Parent(StructureType::SessionCreateInfo),
+        createFlags{createFlags_}, systemId{systemId_} {}
+  SessionCreateFlags createFlags;
+  SystemId systemId;
+};
+static_assert(sizeof(SessionCreateInfo) == sizeof(XrSessionCreateInfo),
+              "struct and wrapper have different size!");
+
+struct Vector3f {
+  Vector3f(float x_ = {}, float y_ = {}, float z_ = {})
+      :
+
+        x{x_}, y{y_}, z{z_} {}
+  float x;
+  float y;
+  float z;
+};
+static_assert(sizeof(Vector3f) == sizeof(XrVector3f),
+              "struct and wrapper have different size!");
+
+struct SpaceVelocity : public traits::TypedStructTraits<SpaceVelocity> {
+private:
+  using Parent = traits::TypedStructTraits<SpaceVelocity>;
+
+public:
+  SpaceVelocity(const SpaceVelocityFlags &velocityFlags_ = {},
+                const Vector3f &linearVelocity_ = {},
+                const Vector3f &angularVelocity_ = {})
+      :
+
+        Parent(StructureType::SpaceVelocity), velocityFlags{velocityFlags_},
+        linearVelocity{linearVelocity_}, angularVelocity{angularVelocity_} {}
+  SpaceVelocityFlags velocityFlags;
+  Vector3f linearVelocity;
+  Vector3f angularVelocity;
+};
+static_assert(sizeof(SpaceVelocity) == sizeof(XrSpaceVelocity),
+              "struct and wrapper have different size!");
+
+struct Quaternionf {
+  Quaternionf(float x_ = {}, float y_ = {}, float z_ = {}, float w_ = {})
+      :
+
+        x{x_}, y{y_}, z{z_}, w{w_} {}
+  float x;
+  float y;
+  float z;
+  float w;
+};
+static_assert(sizeof(Quaternionf) == sizeof(XrQuaternionf),
+              "struct and wrapper have different size!");
+
+struct Posef {
+  Posef(const Quaternionf &orientation_ = {}, const Vector3f &position_ = {})
+      :
+
+        orientation{orientation_}, position{position_} {}
+  Quaternionf orientation;
+  Vector3f position;
+};
+static_assert(sizeof(Posef) == sizeof(XrPosef),
+              "struct and wrapper have different size!");
+
+struct ReferenceSpaceCreateInfo
+    : public traits::TypedStructTraits<ReferenceSpaceCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ReferenceSpaceCreateInfo>;
+
+public:
+  ReferenceSpaceCreateInfo(const ReferenceSpaceType &referenceSpaceType_ = {},
+                           const Posef &poseInReferenceSpace_ = {})
+      :
+
+        Parent(StructureType::ReferenceSpaceCreateInfo),
+        referenceSpaceType{referenceSpaceType_}, poseInReferenceSpace{
+                                                     poseInReferenceSpace_} {}
+  ReferenceSpaceType referenceSpaceType;
+  Posef poseInReferenceSpace;
+};
+static_assert(sizeof(ReferenceSpaceCreateInfo) ==
+                  sizeof(XrReferenceSpaceCreateInfo),
+              "struct and wrapper have different size!");
+
+struct Extent2Df {
+  Extent2Df(float width_ = {}, float height_ = {})
+      :
+
+        width{width_}, height{height_} {}
+  float width;
+  float height;
+};
+static_assert(sizeof(Extent2Df) == sizeof(XrExtent2Df),
+              "struct and wrapper have different size!");
+
+struct ActionSpaceCreateInfo
+    : public traits::TypedStructTraits<ActionSpaceCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ActionSpaceCreateInfo>;
+
+public:
+  ActionSpaceCreateInfo(const Action &action_ = {},
+                        const Path &subactionPath_ = {},
+                        const Posef &poseInActionSpace_ = {})
+      :
+
+        Parent(StructureType::ActionSpaceCreateInfo), action{action_},
+        subactionPath{subactionPath_}, poseInActionSpace{poseInActionSpace_} {}
+  Action action;
+  Path subactionPath;
+  Posef poseInActionSpace;
+};
+static_assert(sizeof(ActionSpaceCreateInfo) == sizeof(XrActionSpaceCreateInfo),
+              "struct and wrapper have different size!");
+
+struct SpaceLocation : public traits::TypedStructTraits<SpaceLocation> {
+private:
+  using Parent = traits::TypedStructTraits<SpaceLocation>;
+
+public:
+  SpaceLocation(const SpaceLocationFlags &locationFlags_ = {},
+                const Posef &pose_ = {})
+      :
+
+        Parent(StructureType::SpaceLocation),
+        locationFlags{locationFlags_}, pose{pose_} {}
+  SpaceLocationFlags locationFlags;
+  Posef pose;
+};
+static_assert(sizeof(SpaceLocation) == sizeof(XrSpaceLocation),
+              "struct and wrapper have different size!");
+
+struct ViewConfigurationProperties
+    : public traits::TypedStructTraits<ViewConfigurationProperties> {
+private:
+  using Parent = traits::TypedStructTraits<ViewConfigurationProperties>;
+
+public:
+  ViewConfigurationProperties(
+      const ViewConfigurationType &viewConfigurationType_ = {},
+      const Bool32 &fovMutable_ = XR_FALSE)
+      :
+
+        Parent(StructureType::ViewConfigurationProperties),
+        viewConfigurationType{viewConfigurationType_}, fovMutable{fovMutable_} {
+  }
+  ViewConfigurationType viewConfigurationType;
+  Bool32 fovMutable;
+};
+static_assert(sizeof(ViewConfigurationProperties) ==
+                  sizeof(XrViewConfigurationProperties),
+              "struct and wrapper have different size!");
+
+struct ViewConfigurationView
+    : public traits::TypedStructTraits<ViewConfigurationView> {
+private:
+  using Parent = traits::TypedStructTraits<ViewConfigurationView>;
+
+public:
+  ViewConfigurationView(uint32_t recommendedImageRectWidth_ = 0,
+                        uint32_t maxImageRectWidth_ = 0,
+                        uint32_t recommendedImageRectHeight_ = 0,
+                        uint32_t maxImageRectHeight_ = 0,
+                        uint32_t recommendedSwapchainSampleCount_ = 0,
+                        uint32_t maxSwapchainSampleCount_ = 0)
+      :
+
+        Parent(StructureType::ViewConfigurationView),
+        recommendedImageRectWidth{recommendedImageRectWidth_},
+        maxImageRectWidth{maxImageRectWidth_},
+        recommendedImageRectHeight{recommendedImageRectHeight_},
+        maxImageRectHeight{maxImageRectHeight_},
+        recommendedSwapchainSampleCount{recommendedSwapchainSampleCount_},
+        maxSwapchainSampleCount{maxSwapchainSampleCount_} {}
+  uint32_t recommendedImageRectWidth;
+  uint32_t maxImageRectWidth;
+  uint32_t recommendedImageRectHeight;
+  uint32_t maxImageRectHeight;
+  uint32_t recommendedSwapchainSampleCount;
+  uint32_t maxSwapchainSampleCount;
+};
+static_assert(sizeof(ViewConfigurationView) == sizeof(XrViewConfigurationView),
+              "struct and wrapper have different size!");
+
+struct SwapchainCreateInfo
+    : public traits::TypedStructTraits<SwapchainCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainCreateInfo>;
+
+public:
+  SwapchainCreateInfo(const SwapchainCreateFlags &createFlags_ = {},
+                      const SwapchainUsageFlags &usageFlags_ = {},
+                      int64_t format_ = 0, uint32_t sampleCount_ = 0,
+                      uint32_t width_ = 0, uint32_t height_ = 0,
+                      uint32_t faceCount_ = 0, uint32_t arraySize_ = 0,
+                      uint32_t mipCount_ = 0)
+      :
+
+        Parent(StructureType::SwapchainCreateInfo), createFlags{createFlags_},
+        usageFlags{usageFlags_}, format{format_},
+        sampleCount{sampleCount_}, width{width_}, height{height_},
+        faceCount{faceCount_}, arraySize{arraySize_}, mipCount{mipCount_} {}
+  SwapchainCreateFlags createFlags;
+  SwapchainUsageFlags usageFlags;
+  int64_t format;
+  uint32_t sampleCount;
+  uint32_t width;
+  uint32_t height;
+  uint32_t faceCount;
+  uint32_t arraySize;
+  uint32_t mipCount;
+};
+static_assert(sizeof(SwapchainCreateInfo) == sizeof(XrSwapchainCreateInfo),
+              "struct and wrapper have different size!");
+
+struct SwapchainImageAcquireInfo
+    : public traits::TypedStructTraits<SwapchainImageAcquireInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageAcquireInfo>;
+
+public:
+  SwapchainImageAcquireInfo()
+      :
+
+        Parent(StructureType::SwapchainImageAcquireInfo) {}
+};
+static_assert(sizeof(SwapchainImageAcquireInfo) ==
+                  sizeof(XrSwapchainImageAcquireInfo),
+              "struct and wrapper have different size!");
+
+struct SwapchainImageWaitInfo
+    : public traits::TypedStructTraits<SwapchainImageWaitInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageWaitInfo>;
+
+public:
+  SwapchainImageWaitInfo(const Duration &timeout_ = {})
+      :
+
+        Parent(StructureType::SwapchainImageWaitInfo), timeout{timeout_} {}
+  Duration timeout;
+};
+static_assert(sizeof(SwapchainImageWaitInfo) ==
+                  sizeof(XrSwapchainImageWaitInfo),
+              "struct and wrapper have different size!");
+
+struct SwapchainImageReleaseInfo
+    : public traits::TypedStructTraits<SwapchainImageReleaseInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageReleaseInfo>;
+
+public:
+  SwapchainImageReleaseInfo()
+      :
+
+        Parent(StructureType::SwapchainImageReleaseInfo) {}
+};
+static_assert(sizeof(SwapchainImageReleaseInfo) ==
+                  sizeof(XrSwapchainImageReleaseInfo),
+              "struct and wrapper have different size!");
+
+struct SessionBeginInfo : public traits::TypedStructTraits<SessionBeginInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SessionBeginInfo>;
+
+public:
+  SessionBeginInfo(
+      const ViewConfigurationType &primaryViewConfigurationType_ = {})
+      :
+
+        Parent(StructureType::SessionBeginInfo),
+        primaryViewConfigurationType{primaryViewConfigurationType_} {}
+  ViewConfigurationType primaryViewConfigurationType;
+};
+static_assert(sizeof(SessionBeginInfo) == sizeof(XrSessionBeginInfo),
+              "struct and wrapper have different size!");
+
+struct FrameWaitInfo : public traits::TypedStructTraits<FrameWaitInfo> {
+private:
+  using Parent = traits::TypedStructTraits<FrameWaitInfo>;
+
+public:
+  FrameWaitInfo()
+      :
+
+        Parent(StructureType::FrameWaitInfo) {}
+};
+static_assert(sizeof(FrameWaitInfo) == sizeof(XrFrameWaitInfo),
+              "struct and wrapper have different size!");
+
+struct FrameState : public traits::TypedStructTraits<FrameState> {
+private:
+  using Parent = traits::TypedStructTraits<FrameState>;
+
+public:
+  FrameState(const Time &predictedDisplayTime_ = {},
+             const Duration &predictedDisplayPeriod_ = {},
+             const Bool32 &shouldRender_ = XR_FALSE)
+      :
+
+        Parent(StructureType::FrameState),
+        predictedDisplayTime{predictedDisplayTime_},
+        predictedDisplayPeriod{predictedDisplayPeriod_}, shouldRender{
+                                                             shouldRender_} {}
+  Time predictedDisplayTime;
+  Duration predictedDisplayPeriod;
+  Bool32 shouldRender;
+};
+static_assert(sizeof(FrameState) == sizeof(XrFrameState),
+              "struct and wrapper have different size!");
+
+struct FrameBeginInfo : public traits::TypedStructTraits<FrameBeginInfo> {
+private:
+  using Parent = traits::TypedStructTraits<FrameBeginInfo>;
+
+public:
+  FrameBeginInfo()
+      :
+
+        Parent(StructureType::FrameBeginInfo) {}
+};
+static_assert(sizeof(FrameBeginInfo) == sizeof(XrFrameBeginInfo),
+              "struct and wrapper have different size!");
+
+struct FrameEndInfo : public traits::TypedStructTraits<FrameEndInfo> {
+private:
+  using Parent = traits::TypedStructTraits<FrameEndInfo>;
+
+public:
+  FrameEndInfo(const Time &displayTime_ = {},
+               const EnvironmentBlendMode &environmentBlendMode_ = {},
+               uint32_t layerCount_ = 0,
+               const CompositionLayerBaseHeader *const *layers_ = nullptr)
+      :
+
+        Parent(StructureType::FrameEndInfo), displayTime{displayTime_},
+        environmentBlendMode{environmentBlendMode_},
+        layerCount{layerCount_}, layers{layers_} {}
+  Time displayTime;
+  EnvironmentBlendMode environmentBlendMode;
+  uint32_t layerCount;
+  const CompositionLayerBaseHeader *const *layers;
+};
+static_assert(sizeof(FrameEndInfo) == sizeof(XrFrameEndInfo),
+              "struct and wrapper have different size!");
+
+struct ViewLocateInfo : public traits::TypedStructTraits<ViewLocateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ViewLocateInfo>;
+
+public:
+  ViewLocateInfo(const ViewConfigurationType &viewConfigurationType_ = {},
+                 const Time &displayTime_ = {}, const Space &space_ = {})
+      :
+
+        Parent(StructureType::ViewLocateInfo),
+        viewConfigurationType{viewConfigurationType_},
+        displayTime{displayTime_}, space{space_} {}
+  ViewConfigurationType viewConfigurationType;
+  Time displayTime;
+  Space space;
+};
+static_assert(sizeof(ViewLocateInfo) == sizeof(XrViewLocateInfo),
+              "struct and wrapper have different size!");
+
+struct ViewState : public traits::TypedStructTraits<ViewState> {
+private:
+  using Parent = traits::TypedStructTraits<ViewState>;
+
+public:
+  ViewState(const ViewStateFlags &viewStateFlags_ = {})
+      :
+
+        Parent(StructureType::ViewState), viewStateFlags{viewStateFlags_} {}
+  ViewStateFlags viewStateFlags;
+};
+static_assert(sizeof(ViewState) == sizeof(XrViewState),
+              "struct and wrapper have different size!");
+
+struct Fovf {
+  Fovf(float angleLeft_ = {}, float angleRight_ = {}, float angleUp_ = {},
+       float angleDown_ = {})
+      :
+
+        angleLeft{angleLeft_},
+        angleRight{angleRight_}, angleUp{angleUp_}, angleDown{angleDown_} {}
+  float angleLeft;
+  float angleRight;
+  float angleUp;
+  float angleDown;
+};
+static_assert(sizeof(Fovf) == sizeof(XrFovf),
+              "struct and wrapper have different size!");
+
+struct View : public traits::TypedStructTraits<View> {
+private:
+  using Parent = traits::TypedStructTraits<View>;
+
+public:
+  View(const Posef &pose_ = {}, const Fovf &fov_ = {})
+      :
+
+        Parent(StructureType::View), pose{pose_}, fov{fov_} {}
+  Posef pose;
+  Fovf fov;
+};
+static_assert(sizeof(View) == sizeof(XrView),
+              "struct and wrapper have different size!");
+
+struct ActionSetCreateInfo
+    : public traits::TypedStructTraits<ActionSetCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ActionSetCreateInfo>;
+
+public:
+  ActionSetCreateInfo(const char *actionSetName_ = nullptr,
+                      const char *localizedActionSetName_ = nullptr,
+                      uint32_t priority_ = 0)
+      :
+
+        Parent(StructureType::ActionSetCreateInfo), priority{priority_} {
+    if (nullptr != actionSetName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(actionSetName, actionSetName_, XR_MAX_ACTION_SET_NAME_SIZE);
+    }
+    if (nullptr != localizedActionSetName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(localizedActionSetName, localizedActionSetName_,
+              XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE);
+    }
+  }
+  char actionSetName[XR_MAX_ACTION_SET_NAME_SIZE];
+  char localizedActionSetName[XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE];
+  uint32_t priority;
+};
+static_assert(sizeof(ActionSetCreateInfo) == sizeof(XrActionSetCreateInfo),
+              "struct and wrapper have different size!");
+
+struct ActionCreateInfo : public traits::TypedStructTraits<ActionCreateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ActionCreateInfo>;
+
+public:
+  ActionCreateInfo(const char *actionName_ = nullptr,
+                   const ActionType &actionType_ = {},
+                   uint32_t countSubactionPaths_ = 0,
+                   const Path *subactionPaths_ = nullptr,
+                   const char *localizedActionName_ = nullptr)
+      :
+
+        Parent(StructureType::ActionCreateInfo), actionType{actionType_},
+        countSubactionPaths{countSubactionPaths_}, subactionPaths{
+                                                       subactionPaths_} {
+    if (nullptr != actionName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(actionName, actionName_, XR_MAX_ACTION_NAME_SIZE);
+    }
+    if (nullptr != localizedActionName_) {
+      // FIXME what is the safe way to do this?
+      strncpy(localizedActionName, localizedActionName_,
+              XR_MAX_LOCALIZED_ACTION_NAME_SIZE);
+    }
+  }
+  char actionName[XR_MAX_ACTION_NAME_SIZE];
+  ActionType actionType;
+  uint32_t countSubactionPaths;
+  const Path *subactionPaths;
+  char localizedActionName[XR_MAX_LOCALIZED_ACTION_NAME_SIZE];
+};
+static_assert(sizeof(ActionCreateInfo) == sizeof(XrActionCreateInfo),
+              "struct and wrapper have different size!");
+
+struct ActionSuggestedBinding {
+  ActionSuggestedBinding(const Action &action_ = {}, const Path &binding_ = {})
+      :
+
+        action{action_}, binding{binding_} {}
+  Action action;
+  Path binding;
+};
+static_assert(sizeof(ActionSuggestedBinding) ==
+                  sizeof(XrActionSuggestedBinding),
+              "struct and wrapper have different size!");
+
+struct InteractionProfileSuggestedBinding
+    : public traits::TypedStructTraits<InteractionProfileSuggestedBinding> {
+private:
+  using Parent = traits::TypedStructTraits<InteractionProfileSuggestedBinding>;
+
+public:
+  InteractionProfileSuggestedBinding(
+      const Path &interactionProfile_ = {},
+      uint32_t countSuggestedBindings_ = 0,
+      const ActionSuggestedBinding *suggestedBindings_ = nullptr)
+      :
+
+        Parent(StructureType::InteractionProfileSuggestedBinding),
+        interactionProfile{interactionProfile_},
+        countSuggestedBindings{countSuggestedBindings_},
+        suggestedBindings{suggestedBindings_} {}
+  Path interactionProfile;
+  uint32_t countSuggestedBindings;
+  const ActionSuggestedBinding *suggestedBindings;
+};
+static_assert(sizeof(InteractionProfileSuggestedBinding) ==
+                  sizeof(XrInteractionProfileSuggestedBinding),
+              "struct and wrapper have different size!");
+
+struct SessionActionSetsAttachInfo
+    : public traits::TypedStructTraits<SessionActionSetsAttachInfo> {
+private:
+  using Parent = traits::TypedStructTraits<SessionActionSetsAttachInfo>;
+
+public:
+  SessionActionSetsAttachInfo(uint32_t countActionSets_ = 0,
+                              const ActionSet *actionSets_ = nullptr)
+      :
+
+        Parent(StructureType::SessionActionSetsAttachInfo),
+        countActionSets{countActionSets_}, actionSets{actionSets_} {}
+  uint32_t countActionSets;
+  const ActionSet *actionSets;
+};
+static_assert(sizeof(SessionActionSetsAttachInfo) ==
+                  sizeof(XrSessionActionSetsAttachInfo),
+              "struct and wrapper have different size!");
+
+struct InteractionProfileState
+    : public traits::TypedStructTraits<InteractionProfileState> {
+private:
+  using Parent = traits::TypedStructTraits<InteractionProfileState>;
+
+public:
+  InteractionProfileState(const Path &interactionProfile_ = {})
+      :
+
+        Parent(StructureType::InteractionProfileState),
+        interactionProfile{interactionProfile_} {}
+  Path interactionProfile;
+};
+static_assert(sizeof(InteractionProfileState) ==
+                  sizeof(XrInteractionProfileState),
+              "struct and wrapper have different size!");
+
+struct ActionStateGetInfo
+    : public traits::TypedStructTraits<ActionStateGetInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ActionStateGetInfo>;
+
+public:
+  ActionStateGetInfo(const Action &action_ = {},
+                     const Path &subactionPath_ = {})
+      :
+
+        Parent(StructureType::ActionStateGetInfo), action{action_},
+        subactionPath{subactionPath_} {}
+  Action action;
+  Path subactionPath;
+};
+static_assert(sizeof(ActionStateGetInfo) == sizeof(XrActionStateGetInfo),
+              "struct and wrapper have different size!");
+
+struct ActionStateBoolean
+    : public traits::TypedStructTraits<ActionStateBoolean> {
+private:
+  using Parent = traits::TypedStructTraits<ActionStateBoolean>;
+
+public:
+  ActionStateBoolean(const Bool32 &currentState_ = XR_FALSE,
+                     const Bool32 &changedSinceLastSync_ = XR_FALSE,
+                     const Time &lastChangeTime_ = {},
+                     const Bool32 &isActive_ = XR_FALSE)
+      :
+
+        Parent(StructureType::ActionStateBoolean), currentState{currentState_},
+        changedSinceLastSync{changedSinceLastSync_},
+        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
+  Bool32 currentState;
+  Bool32 changedSinceLastSync;
+  Time lastChangeTime;
+  Bool32 isActive;
+};
+static_assert(sizeof(ActionStateBoolean) == sizeof(XrActionStateBoolean),
+              "struct and wrapper have different size!");
+
+struct ActionStateFloat : public traits::TypedStructTraits<ActionStateFloat> {
+private:
+  using Parent = traits::TypedStructTraits<ActionStateFloat>;
+
+public:
+  ActionStateFloat(float currentState_ = {},
+                   const Bool32 &changedSinceLastSync_ = XR_FALSE,
+                   const Time &lastChangeTime_ = {},
+                   const Bool32 &isActive_ = XR_FALSE)
+      :
+
+        Parent(StructureType::ActionStateFloat), currentState{currentState_},
+        changedSinceLastSync{changedSinceLastSync_},
+        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
+  float currentState;
+  Bool32 changedSinceLastSync;
+  Time lastChangeTime;
+  Bool32 isActive;
+};
+static_assert(sizeof(ActionStateFloat) == sizeof(XrActionStateFloat),
+              "struct and wrapper have different size!");
+
+struct Vector2f {
+  Vector2f(float x_ = {}, float y_ = {})
+      :
+
+        x{x_}, y{y_} {}
+  float x;
+  float y;
+};
+static_assert(sizeof(Vector2f) == sizeof(XrVector2f),
+              "struct and wrapper have different size!");
+
+struct ActionStateVector2f
+    : public traits::TypedStructTraits<ActionStateVector2f> {
+private:
+  using Parent = traits::TypedStructTraits<ActionStateVector2f>;
+
+public:
+  ActionStateVector2f(const Vector2f &currentState_ = {},
+                      const Bool32 &changedSinceLastSync_ = XR_FALSE,
+                      const Time &lastChangeTime_ = {},
+                      const Bool32 &isActive_ = XR_FALSE)
+      :
+
+        Parent(StructureType::ActionStateVector2F), currentState{currentState_},
+        changedSinceLastSync{changedSinceLastSync_},
+        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
+  Vector2f currentState;
+  Bool32 changedSinceLastSync;
+  Time lastChangeTime;
+  Bool32 isActive;
+};
+static_assert(sizeof(ActionStateVector2f) == sizeof(XrActionStateVector2f),
+              "struct and wrapper have different size!");
+
+struct ActionStatePose : public traits::TypedStructTraits<ActionStatePose> {
+private:
+  using Parent = traits::TypedStructTraits<ActionStatePose>;
+
+public:
+  ActionStatePose(const Bool32 &isActive_ = XR_FALSE)
+      :
+
+        Parent(StructureType::ActionStatePose), isActive{isActive_} {}
+  Bool32 isActive;
+};
+static_assert(sizeof(ActionStatePose) == sizeof(XrActionStatePose),
+              "struct and wrapper have different size!");
+
+struct ActiveActionSet {
+  ActiveActionSet(const ActionSet &actionSet_ = {},
+                  const Path &subactionPath_ = {})
+      :
+
+        actionSet{actionSet_}, subactionPath{subactionPath_} {}
+  ActionSet actionSet;
+  Path subactionPath;
+};
+static_assert(sizeof(ActiveActionSet) == sizeof(XrActiveActionSet),
+              "struct and wrapper have different size!");
+
+struct ActionsSyncInfo : public traits::TypedStructTraits<ActionsSyncInfo> {
+private:
+  using Parent = traits::TypedStructTraits<ActionsSyncInfo>;
+
+public:
+  ActionsSyncInfo(uint32_t countActiveActionSets_ = 0,
+                  const ActiveActionSet *activeActionSets_ = nullptr)
+      :
+
+        Parent(StructureType::ActionsSyncInfo),
+        countActiveActionSets{countActiveActionSets_}, activeActionSets{
+                                                           activeActionSets_} {}
+  uint32_t countActiveActionSets;
+  const ActiveActionSet *activeActionSets;
+};
+static_assert(sizeof(ActionsSyncInfo) == sizeof(XrActionsSyncInfo),
+              "struct and wrapper have different size!");
+
+struct BoundSourcesForActionEnumerateInfo
+    : public traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo> {
+private:
+  using Parent = traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo>;
+
+public:
+  BoundSourcesForActionEnumerateInfo(const Action &action_ = {})
+      :
+
+        Parent(StructureType::BoundSourcesForActionEnumerateInfo),
+        action{action_} {}
+  Action action;
+};
+static_assert(sizeof(BoundSourcesForActionEnumerateInfo) ==
+                  sizeof(XrBoundSourcesForActionEnumerateInfo),
+              "struct and wrapper have different size!");
+
+struct InputSourceLocalizedNameGetInfo
+    : public traits::TypedStructTraits<InputSourceLocalizedNameGetInfo> {
+private:
+  using Parent = traits::TypedStructTraits<InputSourceLocalizedNameGetInfo>;
+
+public:
+  InputSourceLocalizedNameGetInfo(
+      const Path &sourcePath_ = {},
+      const InputSourceLocalizedNameFlags &whichComponents_ = {})
+      :
+
+        Parent(StructureType::InputSourceLocalizedNameGetInfo),
+        sourcePath{sourcePath_}, whichComponents{whichComponents_} {}
+  Path sourcePath;
+  InputSourceLocalizedNameFlags whichComponents;
+};
+static_assert(sizeof(InputSourceLocalizedNameGetInfo) ==
+                  sizeof(XrInputSourceLocalizedNameGetInfo),
+              "struct and wrapper have different size!");
+
+struct HapticActionInfo : public traits::TypedStructTraits<HapticActionInfo> {
+private:
+  using Parent = traits::TypedStructTraits<HapticActionInfo>;
+
+public:
+  HapticActionInfo(const Action &action_ = {}, const Path &subactionPath_ = {})
+      :
+
+        Parent(StructureType::HapticActionInfo), action{action_},
+        subactionPath{subactionPath_} {}
+  Action action;
+  Path subactionPath;
+};
+static_assert(sizeof(HapticActionInfo) == sizeof(XrHapticActionInfo),
+              "struct and wrapper have different size!");
+
+struct Offset2Di {
+  Offset2Di(int32_t x_ = 0, int32_t y_ = 0)
+      :
+
+        x{x_}, y{y_} {}
+  int32_t x;
+  int32_t y;
+};
+static_assert(sizeof(Offset2Di) == sizeof(XrOffset2Di),
+              "struct and wrapper have different size!");
+
+struct Extent2Di {
+  Extent2Di(int32_t width_ = 0, int32_t height_ = 0)
+      :
+
+        width{width_}, height{height_} {}
+  int32_t width;
+  int32_t height;
+};
+static_assert(sizeof(Extent2Di) == sizeof(XrExtent2Di),
+              "struct and wrapper have different size!");
+
+struct Rect2Di {
+  Rect2Di(const Offset2Di &offset_ = {}, const Extent2Di &extent_ = {})
+      :
+
+        offset{offset_}, extent{extent_} {}
+  Offset2Di offset;
+  Extent2Di extent;
+};
+static_assert(sizeof(Rect2Di) == sizeof(XrRect2Di),
+              "struct and wrapper have different size!");
+
+struct SwapchainSubImage {
+  SwapchainSubImage(const Swapchain &swapchain_ = {},
+                    const Rect2Di &imageRect_ = {},
+                    uint32_t imageArrayIndex_ = 0)
+      :
+
+        swapchain{swapchain_}, imageRect{imageRect_}, imageArrayIndex{
+                                                          imageArrayIndex_} {}
+  Swapchain swapchain;
+  Rect2Di imageRect;
+  uint32_t imageArrayIndex;
+};
+static_assert(sizeof(SwapchainSubImage) == sizeof(XrSwapchainSubImage),
+              "struct and wrapper have different size!");
+
+struct CompositionLayerProjectionView
+    : public traits::TypedStructTraits<CompositionLayerProjectionView> {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerProjectionView>;
+
+public:
+  CompositionLayerProjectionView(const Posef &pose_ = {}, const Fovf &fov_ = {},
+                                 const SwapchainSubImage &subImage_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerProjectionView), pose{pose_},
+        fov{fov_}, subImage{subImage_} {}
+  Posef pose;
+  Fovf fov;
+  SwapchainSubImage subImage;
+};
+static_assert(sizeof(CompositionLayerProjectionView) ==
+                  sizeof(XrCompositionLayerProjectionView),
+              "struct and wrapper have different size!");
+
+struct CompositionLayerProjection
+    : public traits::TypedStructTraits<CompositionLayerProjection> {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerProjection>;
+
+public:
+  CompositionLayerProjection(
+      const CompositionLayerFlags &layerFlags_ = {}, const Space &space_ = {},
+      uint32_t viewCount_ = 0,
+      const CompositionLayerProjectionView *views_ = nullptr)
+      :
+
+        Parent(StructureType::CompositionLayerProjection),
+        layerFlags{layerFlags_}, space{space_}, viewCount{viewCount_},
+        views{views_} {}
+  CompositionLayerFlags layerFlags;
+  Space space;
+  uint32_t viewCount;
+  const CompositionLayerProjectionView *views;
+};
+static_assert(sizeof(CompositionLayerProjection) ==
+                  sizeof(XrCompositionLayerProjection),
+              "struct and wrapper have different size!");
+
+struct CompositionLayerQuad
+    : public traits::TypedStructTraits<CompositionLayerQuad> {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerQuad>;
+
+public:
+  CompositionLayerQuad(const CompositionLayerFlags &layerFlags_ = {},
+                       const Space &space_ = {},
+                       const EyeVisibility &eyeVisibility_ = {},
+                       const SwapchainSubImage &subImage_ = {},
+                       const Posef &pose_ = {}, const Extent2Df &size_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerQuad),
+        layerFlags{layerFlags_}, space{space_}, eyeVisibility{eyeVisibility_},
+        subImage{subImage_}, pose{pose_}, size{size_} {}
+  CompositionLayerFlags layerFlags;
+  Space space;
+  EyeVisibility eyeVisibility;
+  SwapchainSubImage subImage;
+  Posef pose;
+  Extent2Df size;
+};
+static_assert(sizeof(CompositionLayerQuad) == sizeof(XrCompositionLayerQuad),
+              "struct and wrapper have different size!");
+
+struct EventDataEventsLost
+    : public traits::TypedStructTraits<EventDataEventsLost> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataEventsLost>;
+
+public:
+  EventDataEventsLost(uint32_t lostEventCount_ = 0)
+      :
+
+        Parent(StructureType::EventDataEventsLost), lostEventCount{
+                                                        lostEventCount_} {}
+  uint32_t lostEventCount;
+};
+static_assert(sizeof(EventDataEventsLost) == sizeof(XrEventDataEventsLost),
+              "struct and wrapper have different size!");
+
+struct EventDataInstanceLossPending
+    : public traits::TypedStructTraits<EventDataInstanceLossPending> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataInstanceLossPending>;
+
+public:
+  EventDataInstanceLossPending(const Time &lossTime_ = {})
+      :
+
+        Parent(StructureType::EventDataInstanceLossPending), lossTime{
+                                                                 lossTime_} {}
+  Time lossTime;
+};
+static_assert(sizeof(EventDataInstanceLossPending) ==
+                  sizeof(XrEventDataInstanceLossPending),
+              "struct and wrapper have different size!");
+
+struct EventDataSessionStateChanged
+    : public traits::TypedStructTraits<EventDataSessionStateChanged> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataSessionStateChanged>;
+
+public:
+  EventDataSessionStateChanged(const Session &session_ = {},
+                               const SessionState &state_ = {},
+                               const Time &time_ = {})
+      :
+
+        Parent(StructureType::EventDataSessionStateChanged), session{session_},
+        state{state_}, time{time_} {}
+  Session session;
+  SessionState state;
+  Time time;
+};
+static_assert(sizeof(EventDataSessionStateChanged) ==
+                  sizeof(XrEventDataSessionStateChanged),
+              "struct and wrapper have different size!");
+
+struct EventDataReferenceSpaceChangePending
+    : public traits::TypedStructTraits<EventDataReferenceSpaceChangePending> {
+private:
+  using Parent =
+      traits::TypedStructTraits<EventDataReferenceSpaceChangePending>;
+
+public:
+  EventDataReferenceSpaceChangePending(
+      const Session &session_ = {},
+      const ReferenceSpaceType &referenceSpaceType_ = {},
+      const Time &changeTime_ = {}, const Bool32 &poseValid_ = XR_FALSE,
+      const Posef &poseInPreviousSpace_ = {})
+      :
+
+        Parent(StructureType::EventDataReferenceSpaceChangePending),
+        session{session_}, referenceSpaceType{referenceSpaceType_},
+        changeTime{changeTime_}, poseValid{poseValid_},
+        poseInPreviousSpace{poseInPreviousSpace_} {}
+  Session session;
+  ReferenceSpaceType referenceSpaceType;
+  Time changeTime;
+  Bool32 poseValid;
+  Posef poseInPreviousSpace;
+};
+static_assert(sizeof(EventDataReferenceSpaceChangePending) ==
+                  sizeof(XrEventDataReferenceSpaceChangePending),
+              "struct and wrapper have different size!");
+
+struct EventDataInteractionProfileChanged
+    : public traits::TypedStructTraits<EventDataInteractionProfileChanged> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataInteractionProfileChanged>;
+
+public:
+  EventDataInteractionProfileChanged(const Session &session_ = {})
+      :
+
+        Parent(StructureType::EventDataInteractionProfileChanged),
+        session{session_} {}
+  Session session;
+};
+static_assert(sizeof(EventDataInteractionProfileChanged) ==
+                  sizeof(XrEventDataInteractionProfileChanged),
+              "struct and wrapper have different size!");
+
+struct HapticVibration : public traits::TypedStructTraits<HapticVibration> {
+private:
+  using Parent = traits::TypedStructTraits<HapticVibration>;
+
+public:
+  HapticVibration(const Duration &duration_ = {}, float frequency_ = {},
+                  float amplitude_ = {})
+      :
+
+        Parent(StructureType::HapticVibration), duration{duration_},
+        frequency{frequency_}, amplitude{amplitude_} {}
+  Duration duration;
+  float frequency;
+  float amplitude;
+};
+static_assert(sizeof(HapticVibration) == sizeof(XrHapticVibration),
+              "struct and wrapper have different size!");
+
+struct Offset2Df {
+  Offset2Df(float x_ = {}, float y_ = {})
+      :
+
+        x{x_}, y{y_} {}
+  float x;
+  float y;
+};
+static_assert(sizeof(Offset2Df) == sizeof(XrOffset2Df),
+              "struct and wrapper have different size!");
+
+struct Rect2Df {
+  Rect2Df(const Offset2Df &offset_ = {}, const Extent2Df &extent_ = {})
+      :
+
+        offset{offset_}, extent{extent_} {}
+  Offset2Df offset;
+  Extent2Df extent;
+};
+static_assert(sizeof(Rect2Df) == sizeof(XrRect2Df),
+              "struct and wrapper have different size!");
+
+struct Vector4f {
+  Vector4f(float x_ = {}, float y_ = {}, float z_ = {}, float w_ = {})
+      :
+
+        x{x_}, y{y_}, z{z_}, w{w_} {}
+  float x;
+  float y;
+  float z;
+  float w;
+};
+static_assert(sizeof(Vector4f) == sizeof(XrVector4f),
+              "struct and wrapper have different size!");
+
+struct Color4f {
+  Color4f(float r_ = {}, float g_ = {}, float b_ = {}, float a_ = {})
+      :
+
+        r{r_}, g{g_}, b{b_}, a{a_} {}
+  float r;
+  float g;
+  float b;
+  float a;
+};
+static_assert(sizeof(Color4f) == sizeof(XrColor4f),
+              "struct and wrapper have different size!");
+
+struct CompositionLayerCubeKHR
+    : public traits::TypedStructTraits<CompositionLayerCubeKHR> {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerCubeKHR>;
+
+public:
+  CompositionLayerCubeKHR(const CompositionLayerFlags &layerFlags_ = {},
+                          const Space &space_ = {},
+                          const EyeVisibility &eyeVisibility_ = {},
+                          const Swapchain &swapchain_ = {},
+                          uint32_t imageArrayIndex_ = 0,
+                          const Quaternionf &orientation_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerCubeKHR), layerFlags{layerFlags_},
+        space{space_}, eyeVisibility{eyeVisibility_}, swapchain{swapchain_},
+        imageArrayIndex{imageArrayIndex_}, orientation{orientation_} {}
+  CompositionLayerFlags layerFlags;
+  Space space;
+  EyeVisibility eyeVisibility;
+  Swapchain swapchain;
+  uint32_t imageArrayIndex;
+  Quaternionf orientation;
+};
+static_assert(sizeof(CompositionLayerCubeKHR) ==
+                  sizeof(XrCompositionLayerCubeKHR),
+              "struct and wrapper have different size!");
+
+#if defined(XR_USE_PLATFORM_ANDROID)
+struct InstanceCreateInfoAndroidKHR
+    : public traits::TypedStructTraits<InstanceCreateInfoAndroidKHR> {
+private:
+  using Parent = traits::TypedStructTraits<InstanceCreateInfoAndroidKHR>;
+
+public:
+  InstanceCreateInfoAndroidKHR(
+      void *XR_MAY_ALIAS applicationVM_ = nullptr,
+      void *XR_MAY_ALIAS applicationActivity_ = nullptr)
+      :
+
+        Parent(StructureType::InstanceCreateInfoAndroidKHR),
+        applicationVM{applicationVM_}, applicationActivity{
+                                           applicationActivity_} {}
+  void *XR_MAY_ALIAS applicationVM;
+  void *XR_MAY_ALIAS applicationActivity;
+};
+static_assert(sizeof(InstanceCreateInfoAndroidKHR) ==
+                  sizeof(XrInstanceCreateInfoAndroidKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_PLATFORM_ANDROID)
+
+    struct CompositionLayerDepthInfoKHR : public traits::TypedStructTraits <
+    CompositionLayerDepthInfoKHR > {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerDepthInfoKHR>;
+
+public:
+  CompositionLayerDepthInfoKHR(const SwapchainSubImage &subImage_ = {},
+                               float minDepth_ = {}, float maxDepth_ = {},
+                               float nearZ_ = {}, float farZ_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerDepthInfoKHR),
+        subImage{subImage_}, minDepth{minDepth_}, maxDepth{maxDepth_},
+        nearZ{nearZ_}, farZ{farZ_} {}
+  SwapchainSubImage subImage;
+  float minDepth;
+  float maxDepth;
+  float nearZ;
+  float farZ;
+};
+static_assert(sizeof(CompositionLayerDepthInfoKHR) ==
+                  sizeof(XrCompositionLayerDepthInfoKHR),
+              "struct and wrapper have different size!");
+
+#if defined(XR_USE_GRAPHICS_API_VULKAN)
+struct VulkanSwapchainFormatListCreateInfoKHR
+    : public traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR> {
+private:
+  using Parent =
+      traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR>;
+
+public:
+  VulkanSwapchainFormatListCreateInfoKHR(uint32_t viewFormatCount_ = 0,
+                                         const VkFormat *viewFormats_ = nullptr)
+      :
+
+        Parent(StructureType::VulkanSwapchainFormatListCreateInfoKHR),
+        viewFormatCount{viewFormatCount_}, viewFormats{viewFormats_} {}
+  uint32_t viewFormatCount;
+  const VkFormat *viewFormats;
+};
+static_assert(sizeof(VulkanSwapchainFormatListCreateInfoKHR) ==
+                  sizeof(XrVulkanSwapchainFormatListCreateInfoKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
+
+    struct CompositionLayerCylinderKHR : public traits::TypedStructTraits <
+    CompositionLayerCylinderKHR > {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerCylinderKHR>;
+
+public:
+  CompositionLayerCylinderKHR(const CompositionLayerFlags &layerFlags_ = {},
+                              const Space &space_ = {},
+                              const EyeVisibility &eyeVisibility_ = {},
+                              const SwapchainSubImage &subImage_ = {},
+                              const Posef &pose_ = {}, float radius_ = {},
+                              float centralAngle_ = {}, float aspectRatio_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerCylinderKHR),
+        layerFlags{layerFlags_}, space{space_}, eyeVisibility{eyeVisibility_},
+        subImage{subImage_}, pose{pose_}, radius{radius_},
+        centralAngle{centralAngle_}, aspectRatio{aspectRatio_} {}
+  CompositionLayerFlags layerFlags;
+  Space space;
+  EyeVisibility eyeVisibility;
+  SwapchainSubImage subImage;
+  Posef pose;
+  float radius;
+  float centralAngle;
+  float aspectRatio;
+};
+static_assert(sizeof(CompositionLayerCylinderKHR) ==
+                  sizeof(XrCompositionLayerCylinderKHR),
+              "struct and wrapper have different size!");
+
+struct CompositionLayerEquirectKHR
+    : public traits::TypedStructTraits<CompositionLayerEquirectKHR> {
+private:
+  using Parent = traits::TypedStructTraits<CompositionLayerEquirectKHR>;
+
+public:
+  CompositionLayerEquirectKHR(const CompositionLayerFlags &layerFlags_ = {},
+                              const Space &space_ = {},
+                              const EyeVisibility &eyeVisibility_ = {},
+                              const SwapchainSubImage &subImage_ = {},
+                              const Posef &pose_ = {}, float radius_ = {},
+                              const Vector2f &scale_ = {},
+                              const Vector2f &bias_ = {})
+      :
+
+        Parent(StructureType::CompositionLayerEquirectKHR),
+        layerFlags{layerFlags_}, space{space_},
+        eyeVisibility{eyeVisibility_}, subImage{subImage_}, pose{pose_},
+        radius{radius_}, scale{scale_}, bias{bias_} {}
+  CompositionLayerFlags layerFlags;
+  Space space;
+  EyeVisibility eyeVisibility;
+  SwapchainSubImage subImage;
+  Posef pose;
+  float radius;
+  Vector2f scale;
+  Vector2f bias;
+};
+static_assert(sizeof(CompositionLayerEquirectKHR) ==
+                  sizeof(XrCompositionLayerEquirectKHR),
+              "struct and wrapper have different size!");
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
+struct GraphicsBindingOpenGLWin32KHR
+    : public traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR> {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR>;
+
+public:
+  GraphicsBindingOpenGLWin32KHR(HDC hDC_ = {}, HGLRC hGLRC_ = {})
+      :
+
+        Parent(StructureType::GraphicsBindingOpenglWin32KHR), hDC{hDC_},
+        hGLRC{hGLRC_} {}
+  HDC hDC;
+  HGLRC hGLRC;
+};
+static_assert(sizeof(GraphicsBindingOpenGLWin32KHR) ==
+                  sizeof(XrGraphicsBindingOpenGLWin32KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
+    struct GraphicsBindingOpenGLXlibKHR : public traits::TypedStructTraits <
+    GraphicsBindingOpenGLXlibKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLXlibKHR>;
+
+public:
+  GraphicsBindingOpenGLXlibKHR(Display *xDisplay_ = nullptr,
+                               uint32_t visualid_ = 0,
+                               GLXFBConfig glxFBConfig_ = {},
+                               GLXDrawable glxDrawable_ = {},
+                               GLXContext glxContext_ = {})
+      :
+
+        Parent(StructureType::GraphicsBindingOpenglXlibKHR),
+        xDisplay{xDisplay_}, visualid{visualid_}, glxFBConfig{glxFBConfig_},
+        glxDrawable{glxDrawable_}, glxContext{glxContext_} {}
+  Display *xDisplay;
+  uint32_t visualid;
+  GLXFBConfig glxFBConfig;
+  GLXDrawable glxDrawable;
+  GLXContext glxContext;
+};
+static_assert(sizeof(GraphicsBindingOpenGLXlibKHR) ==
+                  sizeof(XrGraphicsBindingOpenGLXlibKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
+    struct GraphicsBindingOpenGLXcbKHR : public traits::TypedStructTraits <
+    GraphicsBindingOpenGLXcbKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLXcbKHR>;
+
+public:
+  GraphicsBindingOpenGLXcbKHR(xcb_connection_t *connection_ = {},
+                              uint32_t screenNumber_ = 0,
+                              xcb_glx_fbconfig_t fbconfigid_ = {},
+                              xcb_visualid_t visualid_ = {},
+                              xcb_glx_drawable_t glxDrawable_ = {},
+                              xcb_glx_context_t glxContext_ = {})
+      :
+
+        Parent(StructureType::GraphicsBindingOpenglXcbKHR),
+        connection{connection_}, screenNumber{screenNumber_},
+        fbconfigid{fbconfigid_}, visualid{visualid_}, glxDrawable{glxDrawable_},
+        glxContext{glxContext_} {}
+  xcb_connection_t *connection;
+  uint32_t screenNumber;
+  xcb_glx_fbconfig_t fbconfigid;
+  xcb_visualid_t visualid;
+  xcb_glx_drawable_t glxDrawable;
+  xcb_glx_context_t glxContext;
+};
+static_assert(sizeof(GraphicsBindingOpenGLXcbKHR) ==
+                  sizeof(XrGraphicsBindingOpenGLXcbKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WAYLAND)
+    struct GraphicsBindingOpenGLWaylandKHR : public traits::TypedStructTraits <
+    GraphicsBindingOpenGLWaylandKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLWaylandKHR>;
+
+public:
+  GraphicsBindingOpenGLWaylandKHR(struct wl_display *display_ = {})
+      :
+
+        Parent(StructureType::GraphicsBindingOpenglWaylandKHR), display{
+                                                                    display_} {}
+  struct wl_display *display;
+};
+static_assert(sizeof(GraphicsBindingOpenGLWaylandKHR) ==
+                  sizeof(XrGraphicsBindingOpenGLWaylandKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL) &&
+       // defined(XR_USE_PLATFORM_WAYLAND)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL)
+    struct SwapchainImageOpenGLKHR : public traits::TypedStructTraits <
+    SwapchainImageOpenGLKHR > {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageOpenGLKHR>;
+
+public:
+  SwapchainImageOpenGLKHR(uint32_t image_ = 0)
+      :
+
+        Parent(StructureType::SwapchainImageOpenglKHR), image{image_} {}
+  uint32_t image;
+};
+static_assert(sizeof(SwapchainImageOpenGLKHR) ==
+                  sizeof(XrSwapchainImageOpenGLKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL)
+    struct GraphicsRequirementsOpenGLKHR : public traits::TypedStructTraits <
+    GraphicsRequirementsOpenGLKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsRequirementsOpenGLKHR>;
+
+public:
+  GraphicsRequirementsOpenGLKHR(const Version &minApiVersionSupported_ = {},
+                                const Version &maxApiVersionSupported_ = {})
+      :
+
+        Parent(StructureType::GraphicsRequirementsOpenglKHR),
+        minApiVersionSupported{minApiVersionSupported_},
+        maxApiVersionSupported{maxApiVersionSupported_} {}
+  Version minApiVersionSupported;
+  Version maxApiVersionSupported;
+};
+static_assert(sizeof(GraphicsRequirementsOpenGLKHR) ==
+                  sizeof(XrGraphicsRequirementsOpenGLKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL_ES) && defined(XR_USE_PLATFORM_ANDROID)
+    struct GraphicsBindingOpenGLESAndroidKHR : public traits::
+        TypedStructTraits < GraphicsBindingOpenGLESAndroidKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLESAndroidKHR>;
+
+public:
+  GraphicsBindingOpenGLESAndroidKHR(EGLDisplay display_ = {},
+                                    EGLConfig config_ = {},
+                                    EGLContext context_ = {})
+      :
+
+        Parent(StructureType::GraphicsBindingOpenglEsAndroidKHR),
+        display{display_}, config{config_}, context{context_} {}
+  EGLDisplay display;
+  EGLConfig config;
+  EGLContext context;
+};
+static_assert(sizeof(GraphicsBindingOpenGLESAndroidKHR) ==
+                  sizeof(XrGraphicsBindingOpenGLESAndroidKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES) &&
+       // defined(XR_USE_PLATFORM_ANDROID)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
+    struct SwapchainImageOpenGLESKHR : public traits::TypedStructTraits <
+    SwapchainImageOpenGLESKHR > {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageOpenGLESKHR>;
+
+public:
+  SwapchainImageOpenGLESKHR(uint32_t image_ = 0)
+      :
+
+        Parent(StructureType::SwapchainImageOpenglEsKHR), image{image_} {}
+  uint32_t image;
+};
+static_assert(sizeof(SwapchainImageOpenGLESKHR) ==
+                  sizeof(XrSwapchainImageOpenGLESKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
+
+#if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
+    struct GraphicsRequirementsOpenGLESKHR : public traits::TypedStructTraits <
+    GraphicsRequirementsOpenGLESKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsRequirementsOpenGLESKHR>;
+
+public:
+  GraphicsRequirementsOpenGLESKHR(const Version &minApiVersionSupported_ = {},
+                                  const Version &maxApiVersionSupported_ = {})
+      :
+
+        Parent(StructureType::GraphicsRequirementsOpenglEsKHR),
+        minApiVersionSupported{minApiVersionSupported_},
+        maxApiVersionSupported{maxApiVersionSupported_} {}
+  Version minApiVersionSupported;
+  Version maxApiVersionSupported;
+};
+static_assert(sizeof(GraphicsRequirementsOpenGLESKHR) ==
+                  sizeof(XrGraphicsRequirementsOpenGLESKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
+
+#if defined(XR_USE_GRAPHICS_API_VULKAN)
+    struct GraphicsBindingVulkanKHR : public traits::TypedStructTraits <
+    GraphicsBindingVulkanKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingVulkanKHR>;
+
+public:
+  GraphicsBindingVulkanKHR(VkInstance instance_ = {},
+                           VkPhysicalDevice physicalDevice_ = {},
+                           VkDevice device_ = {},
+                           uint32_t queueFamilyIndex_ = 0,
+                           uint32_t queueIndex_ = 0)
+      :
+
+        Parent(StructureType::GraphicsBindingVulkanKHR), instance{instance_},
+        physicalDevice{physicalDevice_}, device{device_},
+        queueFamilyIndex{queueFamilyIndex_}, queueIndex{queueIndex_} {}
+  VkInstance instance;
+  VkPhysicalDevice physicalDevice;
+  VkDevice device;
+  uint32_t queueFamilyIndex;
+  uint32_t queueIndex;
+};
+static_assert(sizeof(GraphicsBindingVulkanKHR) ==
+                  sizeof(XrGraphicsBindingVulkanKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
+
+#if defined(XR_USE_GRAPHICS_API_VULKAN)
+    struct SwapchainImageVulkanKHR : public traits::TypedStructTraits <
+    SwapchainImageVulkanKHR > {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageVulkanKHR>;
+
+public:
+  SwapchainImageVulkanKHR(VkImage image_ = {})
+      :
+
+        Parent(StructureType::SwapchainImageVulkanKHR), image{image_} {}
+  VkImage image;
+};
+static_assert(sizeof(SwapchainImageVulkanKHR) ==
+                  sizeof(XrSwapchainImageVulkanKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
+
+#if defined(XR_USE_GRAPHICS_API_VULKAN)
+    struct GraphicsRequirementsVulkanKHR : public traits::TypedStructTraits <
+    GraphicsRequirementsVulkanKHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsRequirementsVulkanKHR>;
+
+public:
+  GraphicsRequirementsVulkanKHR(const Version &minApiVersionSupported_ = {},
+                                const Version &maxApiVersionSupported_ = {})
+      :
+
+        Parent(StructureType::GraphicsRequirementsVulkanKHR),
+        minApiVersionSupported{minApiVersionSupported_},
+        maxApiVersionSupported{maxApiVersionSupported_} {}
+  Version minApiVersionSupported;
+  Version maxApiVersionSupported;
+};
+static_assert(sizeof(GraphicsRequirementsVulkanKHR) ==
+                  sizeof(XrGraphicsRequirementsVulkanKHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
+
+#if defined(XR_USE_GRAPHICS_API_D3D11)
+    struct GraphicsBindingD3D11KHR : public traits::TypedStructTraits <
+    GraphicsBindingD3D11KHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingD3D11KHR>;
+
+public:
+  GraphicsBindingD3D11KHR(ID3D11Device *device_ = nullptr)
+      :
+
+        Parent(StructureType::GraphicsBindingD3D11KHR), device{device_} {}
+  ID3D11Device *device;
+};
+static_assert(sizeof(GraphicsBindingD3D11KHR) ==
+                  sizeof(XrGraphicsBindingD3D11KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D11)
+
+#if defined(XR_USE_GRAPHICS_API_D3D11)
+    struct SwapchainImageD3D11KHR : public traits::TypedStructTraits <
+    SwapchainImageD3D11KHR > {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageD3D11KHR>;
+
+public:
+  SwapchainImageD3D11KHR(ID3D11Texture2D *texture_ = nullptr)
+      :
+
+        Parent(StructureType::SwapchainImageD3D11KHR), texture{texture_} {}
+  ID3D11Texture2D *texture;
+};
+static_assert(sizeof(SwapchainImageD3D11KHR) ==
+                  sizeof(XrSwapchainImageD3D11KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D11)
+
+#if defined(XR_USE_GRAPHICS_API_D3D11)
+    struct GraphicsRequirementsD3D11KHR : public traits::TypedStructTraits <
+    GraphicsRequirementsD3D11KHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsRequirementsD3D11KHR>;
+
+public:
+  GraphicsRequirementsD3D11KHR(LUID adapterLuid_ = {},
+                               D3D_FEATURE_LEVEL minFeatureLevel_ = {})
+      :
+
+        Parent(StructureType::GraphicsRequirementsD3D11KHR),
+        adapterLuid{adapterLuid_}, minFeatureLevel{minFeatureLevel_} {}
+  LUID adapterLuid;
+  D3D_FEATURE_LEVEL minFeatureLevel;
+};
+static_assert(sizeof(GraphicsRequirementsD3D11KHR) ==
+                  sizeof(XrGraphicsRequirementsD3D11KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D11)
+
+#if defined(XR_USE_GRAPHICS_API_D3D12)
+    struct GraphicsBindingD3D12KHR : public traits::TypedStructTraits <
+    GraphicsBindingD3D12KHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsBindingD3D12KHR>;
+
+public:
+  GraphicsBindingD3D12KHR(ID3D12Device *device_ = nullptr,
+                          ID3D12CommandQueue *queue_ = nullptr)
+      :
+
+        Parent(StructureType::GraphicsBindingD3D12KHR), device{device_},
+        queue{queue_} {}
+  ID3D12Device *device;
+  ID3D12CommandQueue *queue;
+};
+static_assert(sizeof(GraphicsBindingD3D12KHR) ==
+                  sizeof(XrGraphicsBindingD3D12KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D12)
+
+#if defined(XR_USE_GRAPHICS_API_D3D12)
+    struct SwapchainImageD3D12KHR : public traits::TypedStructTraits <
+    SwapchainImageD3D12KHR > {
+private:
+  using Parent = traits::TypedStructTraits<SwapchainImageD3D12KHR>;
+
+public:
+  SwapchainImageD3D12KHR(ID3D12Resource *texture_ = nullptr)
+      :
+
+        Parent(StructureType::SwapchainImageD3D12KHR), texture{texture_} {}
+  ID3D12Resource *texture;
+};
+static_assert(sizeof(SwapchainImageD3D12KHR) ==
+                  sizeof(XrSwapchainImageD3D12KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D12)
+
+#if defined(XR_USE_GRAPHICS_API_D3D12)
+    struct GraphicsRequirementsD3D12KHR : public traits::TypedStructTraits <
+    GraphicsRequirementsD3D12KHR > {
+private:
+  using Parent = traits::TypedStructTraits<GraphicsRequirementsD3D12KHR>;
+
+public:
+  GraphicsRequirementsD3D12KHR(LUID adapterLuid_ = {},
+                               D3D_FEATURE_LEVEL minFeatureLevel_ = {})
+      :
+
+        Parent(StructureType::GraphicsRequirementsD3D12KHR),
+        adapterLuid{adapterLuid_}, minFeatureLevel{minFeatureLevel_} {}
+  LUID adapterLuid;
+  D3D_FEATURE_LEVEL minFeatureLevel;
+};
+static_assert(sizeof(GraphicsRequirementsD3D12KHR) ==
+                  sizeof(XrGraphicsRequirementsD3D12KHR),
+              "struct and wrapper have different size!");
+#endif // defined(XR_USE_GRAPHICS_API_D3D12)
+
+    struct VisibilityMaskKHR : public traits::TypedStructTraits <
+    VisibilityMaskKHR > {
+private:
+  using Parent = traits::TypedStructTraits<VisibilityMaskKHR>;
+
+public:
+  VisibilityMaskKHR(uint32_t vertexCapacityInput_ = 0,
+                    uint32_t vertexCountOutput_ = 0,
+                    Vector2f *vertices_ = nullptr,
+                    uint32_t indexCapacityInput_ = 0,
+                    uint32_t indexCountOutput_ = 0,
+                    uint32_t *indices_ = nullptr)
+      :
+
+        Parent(StructureType::VisibilityMaskKHR),
+        vertexCapacityInput{vertexCapacityInput_},
+        vertexCountOutput{vertexCountOutput_}, vertices{vertices_},
+        indexCapacityInput{indexCapacityInput_},
+        indexCountOutput{indexCountOutput_}, indices{indices_} {}
+  uint32_t vertexCapacityInput;
+  uint32_t vertexCountOutput;
+  Vector2f *vertices;
+  uint32_t indexCapacityInput;
+  uint32_t indexCountOutput;
+  uint32_t *indices;
+};
+static_assert(sizeof(VisibilityMaskKHR) == sizeof(XrVisibilityMaskKHR),
+              "struct and wrapper have different size!");
+
+struct EventDataVisibilityMaskChangedKHR
+    : public traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR>;
+
+public:
+  EventDataVisibilityMaskChangedKHR(
+      const Session &session_ = {},
+      const ViewConfigurationType &viewConfigurationType_ = {},
+      uint32_t viewIndex_ = 0)
+      :
+
+        Parent(StructureType::EventDataVisibilityMaskChangedKHR),
+        session{session_},
+        viewConfigurationType{viewConfigurationType_}, viewIndex{viewIndex_} {}
+  Session session;
+  ViewConfigurationType viewConfigurationType;
+  uint32_t viewIndex;
+};
+static_assert(sizeof(EventDataVisibilityMaskChangedKHR) ==
+                  sizeof(XrEventDataVisibilityMaskChangedKHR),
+              "struct and wrapper have different size!");
+
+struct EventDataPerfSettingsEXT
+    : public traits::TypedStructTraits<EventDataPerfSettingsEXT> {
+private:
+  using Parent = traits::TypedStructTraits<EventDataPerfSettingsEXT>;
+
+public:
+  EventDataPerfSettingsEXT(
+      const PerfSettingsDomainEXT &domain_ = {},
+      const PerfSettingsSubDomainEXT &subDomain_ = {},
+      const PerfSettingsNotificationLevelEXT &fromLevel_ = {},
+      const PerfSettingsNotificationLevelEXT &toLevel_ = {})
+      :
+
+        Parent(StructureType::EventDataPerfSettingsEXT), domain{domain_},
+        subDomain{subDomain_}, fromLevel{fromLevel_}, toLevel{toLevel_} {}
+  PerfSettingsDomainEXT domain;
+  PerfSettingsSubDomainEXT subDomain;
+  PerfSettingsNotificationLevelEXT fromLevel;
+  PerfSettingsNotificationLevelEXT toLevel;
+};
+static_assert(sizeof(EventDataPerfSettingsEXT) ==
+                  sizeof(XrEventDataPerfSettingsEXT),
+              "struct and wrapper have different size!");
+
+struct DebugUtilsObjectNameInfoEXT
+    : public traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT> {
+private:
+  using Parent = traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT>;
+
+public:
+  DebugUtilsObjectNameInfoEXT(const ObjectType &objectType_ = {},
+                              uint64_t objectHandle_ = 0,
+                              const char *objectName_ = nullptr)
+      :
+
+        Parent(StructureType::DebugUtilsObjectNameInfoEXT),
+        objectType{objectType_}, objectHandle{objectHandle_},
+        objectName{objectName_} {}
+  ObjectType objectType;
+  uint64_t objectHandle;
+  const char *objectName;
+};
+static_assert(sizeof(DebugUtilsObjectNameInfoEXT) ==
+                  sizeof(XrDebugUtilsObjectNameInfoEXT),
+              "struct and wrapper have different size!");
+
+struct DebugUtilsLabelEXT
+    : public traits::TypedStructTraits<DebugUtilsLabelEXT> {
+private:
+  using Parent = traits::TypedStructTraits<DebugUtilsLabelEXT>;
+
+public:
+  DebugUtilsLabelEXT(const char *labelName_ = nullptr)
+      :
+
+        Parent(StructureType::DebugUtilsLabelEXT), labelName{labelName_} {}
+  const char *labelName;
+};
+static_assert(sizeof(DebugUtilsLabelEXT) == sizeof(XrDebugUtilsLabelEXT),
+              "struct and wrapper have different size!");
+
+struct DebugUtilsMessengerCallbackDataEXT
+    : public traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT> {
+private:
+  using Parent = traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT>;
+
+public:
+  DebugUtilsMessengerCallbackDataEXT(
+      const char *messageId_ = nullptr, const char *functionName_ = nullptr,
+      const char *message_ = nullptr, uint32_t objectCount_ = 0,
+      DebugUtilsObjectNameInfoEXT *objects_ = nullptr,
+      uint32_t sessionLabelCount_ = 0,
+      DebugUtilsLabelEXT *sessionLabels_ = nullptr)
+      :
+
+        Parent(StructureType::DebugUtilsMessengerCallbackDataEXT),
+        messageId{messageId_}, functionName{functionName_}, message{message_},
+        objectCount{objectCount_}, objects{objects_},
+        sessionLabelCount{sessionLabelCount_}, sessionLabels{sessionLabels_} {}
+  const char *messageId;
+  const char *functionName;
+  const char *message;
+  uint32_t objectCount;
+  DebugUtilsObjectNameInfoEXT *objects;
+  uint32_t sessionLabelCount;
+  DebugUtilsLabelEXT *sessionLabels;
+};
+static_assert(sizeof(DebugUtilsMessengerCallbackDataEXT) ==
+                  sizeof(XrDebugUtilsMessengerCallbackDataEXT),
+              "struct and wrapper have different size!");
+
+struct DebugUtilsMessengerCreateInfoEXT
+    : public traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT> {
+private:
+  using Parent = traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT>;
+
+public:
+  DebugUtilsMessengerCreateInfoEXT(
+      const DebugUtilsMessageSeverityFlagsEXT &messageSeverities_ = {},
+      const DebugUtilsMessageTypeFlagsEXT &messageTypes_ = {},
+      PFN_xrDebugUtilsMessengerCallbackEXT userCallback_ = nullptr,
+      void *XR_MAY_ALIAS userData_ = nullptr)
+      :
+
+        Parent(StructureType::DebugUtilsMessengerCreateInfoEXT),
+        messageSeverities{messageSeverities_}, messageTypes{messageTypes_},
+        userCallback{userCallback_}, userData{userData_} {}
+  DebugUtilsMessageSeverityFlagsEXT messageSeverities;
+  DebugUtilsMessageTypeFlagsEXT messageTypes;
+  PFN_xrDebugUtilsMessengerCallbackEXT userCallback;
+  void *XR_MAY_ALIAS userData;
+};
+static_assert(sizeof(DebugUtilsMessengerCreateInfoEXT) ==
+                  sizeof(XrDebugUtilsMessengerCreateInfoEXT),
+              "struct and wrapper have different size!");
+
+struct SpatialAnchorCreateInfoMSFT
+    : public traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT> {
+private:
+  using Parent = traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT>;
+
+public:
+  SpatialAnchorCreateInfoMSFT(const Space &space_ = {}, const Posef &pose_ = {},
+                              const Time &time_ = {})
+      :
+
+        Parent(StructureType::SpatialAnchorCreateInfoMSFT), space{space_},
+        pose{pose_}, time{time_} {}
+  Space space;
+  Posef pose;
+  Time time;
+};
+static_assert(sizeof(SpatialAnchorCreateInfoMSFT) ==
+                  sizeof(XrSpatialAnchorCreateInfoMSFT),
+              "struct and wrapper have different size!");
+
+struct SpatialAnchorSpaceCreateInfoMSFT
+    : public traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT> {
+private:
+  using Parent = traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT>;
+
+public:
+  SpatialAnchorSpaceCreateInfoMSFT(const SpatialAnchorMSFT &anchor_ = {},
+                                   const Posef &poseInAnchorSpace_ = {})
+      :
+
+        Parent(StructureType::SpatialAnchorSpaceCreateInfoMSFT),
+        anchor{anchor_}, poseInAnchorSpace{poseInAnchorSpace_} {}
+  SpatialAnchorMSFT anchor;
+  Posef poseInAnchorSpace;
+};
+static_assert(sizeof(SpatialAnchorSpaceCreateInfoMSFT) ==
+                  sizeof(XrSpatialAnchorSpaceCreateInfoMSFT),
+              "struct and wrapper have different size!");
 
 } // namespace OPENXR_HPP_NAMESPACE
 

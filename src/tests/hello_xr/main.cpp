@@ -4,6 +4,7 @@
 #include "platformplugin.h"
 #include "graphicsplugin.h"
 #include "openxr_program.h"
+#include <openxr/openxr.hpp>
 
 namespace {
 

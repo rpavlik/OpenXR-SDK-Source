@@ -4145,7 +4145,7 @@ Result destroy (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getInstanceProperties (
-    XrInstanceProperties* instanceProperties, Dispatch&& d = Dispatch{}) const;
+    InstanceProperties& instanceProperties, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetInstanceProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4154,7 +4154,7 @@ Result getInstanceProperties (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getInstanceProperties (
-        XrInstanceProperties* instanceProperties, Dispatch&& d = Dispatch{}) const;
+        InstanceProperties& instanceProperties, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4171,7 +4171,7 @@ Result getInstanceProperties (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result pollEvent (
-    XrEventDataBuffer* eventData, Dispatch&& d = Dispatch{}) const;
+    EventDataBuffer& eventData, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrPollEvent wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4180,7 +4180,7 @@ Result pollEvent (
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result pollEvent (
-        XrEventDataBuffer* eventData, Dispatch&& d = Dispatch{}) const;
+        EventDataBuffer& eventData, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4257,7 +4257,7 @@ Result structureTypeToString (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getSystem (
-    const XrSystemGetInfo* getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
+    const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetSystem wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4266,7 +4266,7 @@ Result getSystem (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getSystem (
-        const XrSystemGetInfo* getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
+        const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4283,7 +4283,7 @@ Result getSystem (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getSystemProperties (
-    XrSystemId systemId, XrSystemProperties* properties, Dispatch&& d = Dispatch{}) const;
+    XrSystemId systemId, SystemProperties& properties, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetSystemProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4292,7 +4292,7 @@ Result getSystemProperties (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getSystemProperties (
-        XrSystemId systemId, XrSystemProperties* properties, Dispatch&& d = Dispatch{}) const;
+        XrSystemId systemId, SystemProperties& properties, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4302,23 +4302,30 @@ Result getSystemProperties (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrEnumerateEnvironmentBlendModes wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result enumerateEnvironmentBlendModes (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, EnvironmentBlendMode& environmentBlendModes, Dispatch&& d = Dispatch{}) const;
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, XrEnvironmentBlendMode* environmentBlendModes, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-    template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type enumerateEnvironmentBlendModes (
-        XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, EnvironmentBlendMode& environmentBlendModes, Dispatch&& d = Dispatch{}) const;
+    template <typename Allocator = ::std::allocator<EnvironmentBlendMode>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type enumerateEnvironmentBlendModes (
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d = Dispatch{}) const;
+
+    //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
+
+    template <typename Allocator = ::std::allocator<EnvironmentBlendMode>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type enumerateEnvironmentBlendModes (
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4334,7 +4341,7 @@ Result enumerateEnvironmentBlendModes (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createSession (
-    const XrSessionCreateInfo* createInfo, Session& session, Dispatch&& d = Dispatch{}) const;
+    const SessionCreateInfo& createInfo, Session& session, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSession wrapper - enhanced mode.
@@ -4343,7 +4350,7 @@ Result createSession (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Session>::type createSession (
-        const XrSessionCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const SessionCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -4353,7 +4360,7 @@ Result createSession (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type createSessionUnique (
-        const XrSessionCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const SessionCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4363,23 +4370,30 @@ Result createSession (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrEnumerateViewConfigurations wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result enumerateViewConfigurations (
-    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, ViewConfigurationType& viewConfigurationTypes, Dispatch&& d = Dispatch{}) const;
+    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, XrViewConfigurationType* viewConfigurationTypes, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-    template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type enumerateViewConfigurations (
-        XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, ViewConfigurationType& viewConfigurationTypes, Dispatch&& d = Dispatch{}) const;
+    template <typename Allocator = ::std::allocator<ViewConfigurationType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::vector<ViewConfigurationType, Allocator>>::type enumerateViewConfigurations (
+        XrSystemId systemId, Dispatch&& d = Dispatch{}) const;
+
+    //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
+
+    template <typename Allocator = ::std::allocator<ViewConfigurationType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::vector<ViewConfigurationType, Allocator>>::type enumerateViewConfigurations (
+        XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4396,7 +4410,7 @@ Result enumerateViewConfigurations (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getViewConfigurationProperties (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, XrViewConfigurationProperties* configurationProperties, Dispatch&& d = Dispatch{}) const;
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetViewConfigurationProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4405,7 +4419,7 @@ Result getViewConfigurationProperties (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getViewConfigurationProperties (
-        XrSystemId systemId, ViewConfigurationType viewConfigurationType, XrViewConfigurationProperties* configurationProperties, Dispatch&& d = Dispatch{}) const;
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4513,7 +4527,7 @@ Result pathToString (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createActionSet (
-    const XrActionSetCreateInfo* createInfo, ActionSet& actionSet, Dispatch&& d = Dispatch{}) const;
+    const ActionSetCreateInfo& createInfo, ActionSet& actionSet, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateActionSet wrapper - enhanced mode.
@@ -4522,7 +4536,7 @@ Result createActionSet (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<ActionSet>::type createActionSet (
-        const XrActionSetCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionSetCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -4532,7 +4546,7 @@ Result createActionSet (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type createActionSetUnique (
-        const XrActionSetCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionSetCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4549,7 +4563,7 @@ Result createActionSet (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result suggestInteractionProfileBindings (
-    const XrInteractionProfileSuggestedBinding* suggestedBindings, Dispatch&& d = Dispatch{}) const;
+    const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSuggestInteractionProfileBindings wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4558,7 +4572,7 @@ Result suggestInteractionProfileBindings (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type suggestInteractionProfileBindings (
-        const XrInteractionProfileSuggestedBinding* suggestedBindings, Dispatch&& d = Dispatch{}) const;
+        const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4577,7 +4591,7 @@ Result suggestInteractionProfileBindings (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getOpenGLGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLKHR* graphicsRequirements, Dispatch&& d) const;
+    XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4588,7 +4602,7 @@ Result getOpenGLGraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getOpenGLGraphicsRequirementsKHR (
-        XrSystemId systemId, XrGraphicsRequirementsOpenGLKHR* graphicsRequirements, Dispatch&& d) const;
+        XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4607,7 +4621,7 @@ Result getOpenGLGraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getOpenGLESGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLESKHR* graphicsRequirements, Dispatch&& d) const;
+    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4618,7 +4632,7 @@ Result getOpenGLESGraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getOpenGLESGraphicsRequirementsKHR (
-        XrSystemId systemId, XrGraphicsRequirementsOpenGLESKHR* graphicsRequirements, Dispatch&& d) const;
+        XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4745,7 +4759,7 @@ Result getVulkanGraphicsDeviceKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getVulkanGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsVulkanKHR* graphicsRequirements, Dispatch&& d) const;
+    XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4756,7 +4770,7 @@ Result getVulkanGraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getVulkanGraphicsRequirementsKHR (
-        XrSystemId systemId, XrGraphicsRequirementsVulkanKHR* graphicsRequirements, Dispatch&& d) const;
+        XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4775,7 +4789,7 @@ Result getVulkanGraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getD3D11GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D11KHR* graphicsRequirements, Dispatch&& d) const;
+    XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4786,7 +4800,7 @@ Result getD3D11GraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getD3D11GraphicsRequirementsKHR (
-        XrSystemId systemId, XrGraphicsRequirementsD3D11KHR* graphicsRequirements, Dispatch&& d) const;
+        XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4805,7 +4819,7 @@ Result getD3D11GraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getD3D12GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D12KHR* graphicsRequirements, Dispatch&& d) const;
+    XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4816,7 +4830,7 @@ Result getD3D12GraphicsRequirementsKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getD3D12GraphicsRequirementsKHR (
-        XrSystemId systemId, XrGraphicsRequirementsD3D12KHR* graphicsRequirements, Dispatch&& d) const;
+        XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4955,7 +4969,7 @@ Result convertTimeToTimespecTimeKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result setDebugUtilsObjectNameEXT (
-    const XrDebugUtilsObjectNameInfoEXT* nameInfo, Dispatch&& d) const;
+    const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSetDebugUtilsObjectNameEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -4966,7 +4980,7 @@ Result setDebugUtilsObjectNameEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type setDebugUtilsObjectNameEXT (
-        const XrDebugUtilsObjectNameInfoEXT* nameInfo, Dispatch&& d) const;
+        const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4984,7 +4998,7 @@ Result setDebugUtilsObjectNameEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result createDebugUtilsMessengerEXT (
-    const XrDebugUtilsMessengerCreateInfoEXT* createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const;
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateDebugUtilsMessengerEXT wrapper - enhanced mode.
@@ -4995,7 +5009,7 @@ Result createDebugUtilsMessengerEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<DebugUtilsMessengerEXT>::type createDebugUtilsMessengerEXT (
-        const XrDebugUtilsMessengerCreateInfoEXT* createInfo, Dispatch&& d) const;
+        const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5007,7 +5021,7 @@ Result createDebugUtilsMessengerEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<UniqueHandle<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>>::type createDebugUtilsMessengerUniqueEXT (
-        const XrDebugUtilsMessengerCreateInfoEXT* createInfo, Dispatch&& d) const;
+        const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5026,7 +5040,7 @@ Result createDebugUtilsMessengerEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result submitDebugUtilsMessageEXT (
-    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const XrDebugUtilsMessengerCallbackDataEXT* callbackData, Dispatch&& d) const;
+    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSubmitDebugUtilsMessageEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5037,7 +5051,7 @@ Result submitDebugUtilsMessageEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type submitDebugUtilsMessageEXT (
-        XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const XrDebugUtilsMessengerCallbackDataEXT* callbackData, Dispatch&& d) const;
+        XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5305,7 +5319,7 @@ Result destroy (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result enumerateReferenceSpaces (
-    uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, ReferenceSpaceType& spaces, Dispatch&& d = Dispatch{}) const;
+    uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, XrReferenceSpaceType* spaces, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrEnumerateReferenceSpaces wrapper - enhanced mode.
@@ -5338,7 +5352,7 @@ Result enumerateReferenceSpaces (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createReferenceSpace (
-    const XrReferenceSpaceCreateInfo* createInfo, Space& space, Dispatch&& d = Dispatch{}) const;
+    const ReferenceSpaceCreateInfo& createInfo, Space& space, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateReferenceSpace wrapper - enhanced mode.
@@ -5347,7 +5361,7 @@ Result createReferenceSpace (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Space>::type createReferenceSpace (
-        const XrReferenceSpaceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5357,7 +5371,7 @@ Result createReferenceSpace (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createReferenceSpaceUnique (
-        const XrReferenceSpaceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5374,7 +5388,7 @@ Result createReferenceSpace (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getReferenceSpaceBoundsRect (
-    ReferenceSpaceType referenceSpaceType, XrExtent2Df* bounds, Dispatch&& d = Dispatch{}) const;
+    ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetReferenceSpaceBoundsRect wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5383,7 +5397,7 @@ Result getReferenceSpaceBoundsRect (
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result getReferenceSpaceBoundsRect (
-        ReferenceSpaceType referenceSpaceType, XrExtent2Df* bounds, Dispatch&& d = Dispatch{}) const;
+        ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5399,7 +5413,7 @@ Result getReferenceSpaceBoundsRect (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createActionSpace (
-    const XrActionSpaceCreateInfo* createInfo, Space& space, Dispatch&& d = Dispatch{}) const;
+    const ActionSpaceCreateInfo& createInfo, Space& space, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateActionSpace wrapper - enhanced mode.
@@ -5408,7 +5422,7 @@ Result createActionSpace (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Space>::type createActionSpace (
-        const XrActionSpaceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5418,7 +5432,7 @@ Result createActionSpace (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createActionSpaceUnique (
-        const XrActionSpaceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5467,7 +5481,7 @@ Result enumerateSwapchainFormats (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createSwapchain (
-    const XrSwapchainCreateInfo* createInfo, Swapchain& swapchain, Dispatch&& d = Dispatch{}) const;
+    const SwapchainCreateInfo& createInfo, Swapchain& swapchain, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSwapchain wrapper - enhanced mode.
@@ -5476,7 +5490,7 @@ Result createSwapchain (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Swapchain>::type createSwapchain (
-        const XrSwapchainCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const SwapchainCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5486,7 +5500,7 @@ Result createSwapchain (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type createSwapchainUnique (
-        const XrSwapchainCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const SwapchainCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5503,7 +5517,7 @@ Result createSwapchain (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result beginSession (
-    const XrSessionBeginInfo* beginInfo, Dispatch&& d = Dispatch{}) const;
+    const SessionBeginInfo& beginInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrBeginSession wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5512,7 +5526,7 @@ Result beginSession (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type beginSession (
-        const XrSessionBeginInfo* beginInfo, Dispatch&& d = Dispatch{}) const;
+        const SessionBeginInfo& beginInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5581,7 +5595,7 @@ Result requestExitSession (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result waitFrame (
-    const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState, Dispatch&& d = Dispatch{}) const;
+    const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrWaitFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5590,7 +5604,7 @@ Result waitFrame (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type waitFrame (
-        const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState, Dispatch&& d = Dispatch{}) const;
+        const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5607,7 +5621,7 @@ Result waitFrame (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result beginFrame (
-    const XrFrameBeginInfo* frameBeginInfo, Dispatch&& d = Dispatch{}) const;
+    const FrameBeginInfo& frameBeginInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrBeginFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5616,7 +5630,7 @@ Result beginFrame (
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result beginFrame (
-        const XrFrameBeginInfo* frameBeginInfo, Dispatch&& d = Dispatch{}) const;
+        const FrameBeginInfo& frameBeginInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5633,7 +5647,7 @@ Result beginFrame (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result endFrame (
-    const XrFrameEndInfo* frameEndInfo, Dispatch&& d = Dispatch{}) const;
+    const FrameEndInfo& frameEndInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrEndFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5642,7 +5656,7 @@ Result endFrame (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type endFrame (
-        const XrFrameEndInfo* frameEndInfo, Dispatch&& d = Dispatch{}) const;
+        const FrameEndInfo& frameEndInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5658,7 +5672,7 @@ Result endFrame (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result locateViews (
-    const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d = Dispatch{}) const;
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrLocateViews wrapper - enhanced mode.
@@ -5667,7 +5681,7 @@ Result locateViews (
 
     template <typename Allocator = ::std::allocator<View>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::vector<View, Allocator>>::type locateViews (
-        const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, Dispatch&& d = Dispatch{}) const;
+        const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Dispatch&& d = Dispatch{}) const;
 
     //! @brief xrLocateViews wrapper - enhanced mode, stateful allocator for two-call result.
     //!
@@ -5675,7 +5689,7 @@ Result locateViews (
 
     template <typename Allocator = ::std::allocator<View>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::vector<View, Allocator>>::type locateViews (
-        const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const;
+        const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5692,7 +5706,7 @@ Result locateViews (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result attachSessionActionSets (
-    const XrSessionActionSetsAttachInfo* attachInfo, Dispatch&& d = Dispatch{}) const;
+    const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrAttachSessionActionSets wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5701,7 +5715,7 @@ Result attachSessionActionSets (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type attachSessionActionSets (
-        const XrSessionActionSetsAttachInfo* attachInfo, Dispatch&& d = Dispatch{}) const;
+        const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5718,7 +5732,7 @@ Result attachSessionActionSets (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getCurrentInteractionProfile (
-    XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile, Dispatch&& d = Dispatch{}) const;
+    XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetCurrentInteractionProfile wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5727,7 +5741,7 @@ Result getCurrentInteractionProfile (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getCurrentInteractionProfile (
-        XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile, Dispatch&& d = Dispatch{}) const;
+        XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5744,7 +5758,7 @@ Result getCurrentInteractionProfile (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateBoolean (
-    const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state, Dispatch&& d = Dispatch{}) const;
+    const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetActionStateBoolean wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5753,7 +5767,7 @@ Result getActionStateBoolean (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getActionStateBoolean (
-        const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state, Dispatch&& d = Dispatch{}) const;
+        const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5770,7 +5784,7 @@ Result getActionStateBoolean (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateFloat (
-    const XrActionStateGetInfo* getInfo, XrActionStateFloat* state, Dispatch&& d = Dispatch{}) const;
+    const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetActionStateFloat wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5779,7 +5793,7 @@ Result getActionStateFloat (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getActionStateFloat (
-        const XrActionStateGetInfo* getInfo, XrActionStateFloat* state, Dispatch&& d = Dispatch{}) const;
+        const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5796,7 +5810,7 @@ Result getActionStateFloat (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateVector2f (
-    const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state, Dispatch&& d = Dispatch{}) const;
+    const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetActionStateVector2f wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5805,7 +5819,7 @@ Result getActionStateVector2f (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getActionStateVector2f (
-        const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state, Dispatch&& d = Dispatch{}) const;
+        const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5822,7 +5836,7 @@ Result getActionStateVector2f (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStatePose (
-    const XrActionStateGetInfo* getInfo, XrActionStatePose* state, Dispatch&& d = Dispatch{}) const;
+    const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetActionStatePose wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5831,7 +5845,7 @@ Result getActionStatePose (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type getActionStatePose (
-        const XrActionStateGetInfo* getInfo, XrActionStatePose* state, Dispatch&& d = Dispatch{}) const;
+        const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5848,7 +5862,7 @@ Result getActionStatePose (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result syncActions (
-    const XrActionsSyncInfo* syncInfo, Dispatch&& d = Dispatch{}) const;
+    const ActionsSyncInfo& syncInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSyncActions wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5857,7 +5871,7 @@ Result syncActions (
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result syncActions (
-        const XrActionsSyncInfo* syncInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionsSyncInfo& syncInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5873,7 +5887,7 @@ Result syncActions (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result enumerateBoundSourcesForAction (
-    const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d = Dispatch{}) const;
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode.
@@ -5882,7 +5896,7 @@ Result enumerateBoundSourcesForAction (
 
     template <typename Allocator = ::std::allocator<Path>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::vector<Path, Allocator>>::type enumerateBoundSourcesForAction (
-        const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, Dispatch&& d = Dispatch{}) const;
+        const BoundSourcesForActionEnumerateInfo& enumerateInfo, Dispatch&& d = Dispatch{}) const;
 
     //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode, stateful allocator for two-call result.
     //!
@@ -5890,7 +5904,7 @@ Result enumerateBoundSourcesForAction (
 
     template <typename Allocator = ::std::allocator<Path>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::vector<Path, Allocator>>::type enumerateBoundSourcesForAction (
-        const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
+        const BoundSourcesForActionEnumerateInfo& enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5906,7 +5920,7 @@ Result enumerateBoundSourcesForAction (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result getInputSourceLocalizedName (
-    const XrInputSourceLocalizedNameGetInfo* getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d = Dispatch{}) const;
+    const InputSourceLocalizedNameGetInfo& getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrGetInputSourceLocalizedName wrapper - enhanced mode.
@@ -5915,7 +5929,7 @@ Result getInputSourceLocalizedName (
 
     template <typename Allocator = ::std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getInputSourceLocalizedName (
-        const XrInputSourceLocalizedNameGetInfo* getInfo, Dispatch&& d = Dispatch{}) const;
+        const InputSourceLocalizedNameGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
     //! @brief xrGetInputSourceLocalizedName wrapper - enhanced mode, stateful allocator for two-call result.
     //!
@@ -5923,7 +5937,7 @@ Result getInputSourceLocalizedName (
 
     template <typename Allocator = ::std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getInputSourceLocalizedName (
-        const XrInputSourceLocalizedNameGetInfo* getInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
+        const InputSourceLocalizedNameGetInfo& getInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5940,7 +5954,7 @@ Result getInputSourceLocalizedName (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result applyHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d = Dispatch{}) const;
+    const HapticActionInfo& hapticActionInfo, const HapticBaseHeader& hapticFeedback, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrApplyHapticFeedback wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5949,7 +5963,7 @@ Result applyHapticFeedback (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type applyHapticFeedback (
-        const XrHapticActionInfo* hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d = Dispatch{}) const;
+        const HapticActionInfo& hapticActionInfo, const HapticBaseHeader& hapticFeedback, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5966,7 +5980,7 @@ Result applyHapticFeedback (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result stopHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, Dispatch&& d = Dispatch{}) const;
+    const HapticActionInfo& hapticActionInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrStopHapticFeedback wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -5975,7 +5989,7 @@ Result stopHapticFeedback (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type stopHapticFeedback (
-        const XrHapticActionInfo* hapticActionInfo, Dispatch&& d = Dispatch{}) const;
+        const HapticActionInfo& hapticActionInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6023,7 +6037,7 @@ Result setAndroidApplicationThreadKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result createSwapchainAndroidSurfaceKHR (
-    const XrSwapchainCreateInfo* info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const;
+    const SwapchainCreateInfo& info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper - enhanced mode.
@@ -6034,7 +6048,7 @@ Result createSwapchainAndroidSurfaceKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<jobject>::type createSwapchainAndroidSurfaceKHR (
-        const XrSwapchainCreateInfo* info, Swapchain& swapchain, Dispatch&& d) const;
+        const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -6046,7 +6060,7 @@ Result createSwapchainAndroidSurfaceKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type createSwapchainAndroidSurfaceUniqueKHR (
-        const XrSwapchainCreateInfo* info, Swapchain& swapchain, Dispatch&& d) const;
+        const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6065,7 +6079,7 @@ Result createSwapchainAndroidSurfaceKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result getVisibilityMaskKHR (
-    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, XrVisibilityMaskKHR* visibilityMask, Dispatch&& d) const;
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetVisibilityMaskKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -6076,7 +6090,7 @@ Result getVisibilityMaskKHR (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type getVisibilityMaskKHR (
-        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, XrVisibilityMaskKHR* visibilityMask, Dispatch&& d) const;
+        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6155,7 +6169,7 @@ Result thermalGetTemperatureTrendEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result sessionBeginDebugUtilsLabelRegionEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const;
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSessionBeginDebugUtilsLabelRegionEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -6166,7 +6180,7 @@ Result sessionBeginDebugUtilsLabelRegionEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type sessionBeginDebugUtilsLabelRegionEXT (
-        const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const;
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6215,7 +6229,7 @@ Result sessionEndDebugUtilsLabelRegionEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result sessionInsertDebugUtilsLabelEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const;
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSessionInsertDebugUtilsLabelEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -6226,7 +6240,7 @@ Result sessionInsertDebugUtilsLabelEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     ResultValueType<void>::type sessionInsertDebugUtilsLabelEXT (
-        const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const;
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6244,7 +6258,7 @@ Result sessionInsertDebugUtilsLabelEXT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result createSpatialAnchorMSFT (
-    const XrSpatialAnchorCreateInfoMSFT* createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const;
+    const SpatialAnchorCreateInfoMSFT& createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSpatialAnchorMSFT wrapper - enhanced mode.
@@ -6255,7 +6269,7 @@ Result createSpatialAnchorMSFT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<SpatialAnchorMSFT>::type createSpatialAnchorMSFT (
-        const XrSpatialAnchorCreateInfoMSFT* createInfo, Dispatch&& d) const;
+        const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -6267,7 +6281,7 @@ Result createSpatialAnchorMSFT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type createSpatialAnchorUniqueMSFT (
-        const XrSpatialAnchorCreateInfoMSFT* createInfo, Dispatch&& d) const;
+        const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6285,7 +6299,7 @@ Result createSpatialAnchorMSFT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
 template <typename Dispatch>
 Result createSpatialAnchorSpaceMSFT (
-    const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Space& space, Dispatch&& d) const;
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Space& space, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper - enhanced mode.
@@ -6296,7 +6310,7 @@ Result createSpatialAnchorSpaceMSFT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<Space>::type createSpatialAnchorSpaceMSFT (
-        const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Dispatch&& d) const;
+        const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -6308,7 +6322,7 @@ Result createSpatialAnchorSpaceMSFT (
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
     typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createSpatialAnchorSpaceUniqueMSFT (
-        const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Dispatch&& d) const;
+        const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6551,7 +6565,7 @@ class Space {
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result locateSpace (
-    Space baseSpace, XrTime time, XrSpaceLocation* location, Dispatch&& d = Dispatch{}) const;
+    Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrLocateSpace wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -6560,7 +6574,7 @@ Result locateSpace (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type locateSpace (
-        Space baseSpace, XrTime time, XrSpaceLocation* location, Dispatch&& d = Dispatch{}) const;
+        Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7140,7 +7154,7 @@ Result enumerateSwapchainImages (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result acquireSwapchainImage (
-    const XrSwapchainImageAcquireInfo* acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
+    const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrAcquireSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -7149,7 +7163,7 @@ Result acquireSwapchainImage (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type acquireSwapchainImage (
-        const XrSwapchainImageAcquireInfo* acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
+        const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7166,7 +7180,7 @@ Result acquireSwapchainImage (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result waitSwapchainImage (
-    const XrSwapchainImageWaitInfo* waitInfo, Dispatch&& d = Dispatch{}) const;
+    const SwapchainImageWaitInfo& waitInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrWaitSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -7175,7 +7189,7 @@ Result waitSwapchainImage (
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result waitSwapchainImage (
-        const XrSwapchainImageWaitInfo* waitInfo, Dispatch&& d = Dispatch{}) const;
+        const SwapchainImageWaitInfo& waitInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7192,7 +7206,7 @@ Result waitSwapchainImage (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result releaseSwapchainImage (
-    const XrSwapchainImageReleaseInfo* releaseInfo, Dispatch&& d = Dispatch{}) const;
+    const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrReleaseSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
@@ -7201,7 +7215,7 @@ Result releaseSwapchainImage (
 
     template <typename Dispatch = DispatchLoaderStatic>
     ResultValueType<void>::type releaseSwapchainImage (
-        const XrSwapchainImageReleaseInfo* releaseInfo, Dispatch&& d = Dispatch{}) const;
+        const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7469,7 +7483,7 @@ Result destroy (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createAction (
-    const XrActionCreateInfo* createInfo, Action& action, Dispatch&& d = Dispatch{}) const;
+    const ActionCreateInfo& createInfo, Action& action, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateAction wrapper - enhanced mode.
@@ -7478,7 +7492,7 @@ Result createAction (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Action>::type createAction (
-        const XrActionCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -7488,7 +7502,7 @@ Result createAction (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type createActionUnique (
-        const XrActionCreateInfo* createInfo, Dispatch&& d = Dispatch{}) const;
+        const ActionCreateInfo& createInfo, Dispatch&& d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8202,7 +8216,7 @@ Result enumerateInstanceExtensionProperties (
 
 template <typename Dispatch = DispatchLoaderStatic>
 Result createInstance (
-    const XrInstanceCreateInfo* createInfo, Instance& instance, Dispatch&& d = Dispatch{}) ;
+    const InstanceCreateInfo& createInfo, Instance& instance, Dispatch&& d = Dispatch{}) ;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateInstance wrapper - enhanced mode.
@@ -8211,7 +8225,7 @@ Result createInstance (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<Instance>::type createInstance (
-        const XrInstanceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) ;
+        const InstanceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) ;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -8221,7 +8235,7 @@ Result createInstance (
 
     template <typename Dispatch = DispatchLoaderStatic>
     typename ResultValueType<UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type createInstanceUnique (
-        const XrInstanceCreateInfo* createInfo, Dispatch&& d = Dispatch{}) ;
+        const InstanceCreateInfo& createInfo, Dispatch&& d = Dispatch{}) ;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8244,7 +8258,7 @@ protected:
 private:
     const StructureType type;
 public:
-	const void* next{ nullptr };
+    const void* next{ nullptr };
 };
 
 }  // namespace traits
@@ -8515,9 +8529,9 @@ static_assert( sizeof( SessionCreateInfo) == sizeof( XrSessionCreateInfo), "stru
 struct Vector3f{
     // ctor
     Vector3f(
-        float x_ = {},
-        float y_ = {},
-        float z_ = {}
+        float x_ = 0.0f,
+        float y_ = 0.0f,
+        float z_ = 0.0f
     ) : 
         x{ x_ },
         y{ y_ },
@@ -8567,10 +8581,10 @@ static_assert( sizeof( SpaceVelocity) == sizeof( XrSpaceVelocity), "struct and w
 struct Quaternionf{
     // ctor
     Quaternionf(
-        float x_ = {},
-        float y_ = {},
-        float z_ = {},
-        float w_ = {}
+        float x_ = 0.0f,
+        float y_ = 0.0f,
+        float z_ = 0.0f,
+        float w_ = 1.0f
     ) : 
         x{ x_ },
         y{ y_ },
@@ -8640,8 +8654,8 @@ static_assert( sizeof( ReferenceSpaceCreateInfo) == sizeof( XrReferenceSpaceCrea
 struct Extent2Df{
     // ctor
     Extent2Df(
-        float width_ = {},
-        float height_ = {}
+        float width_ = 0.0f,
+        float height_ = 0.0f
     ) : 
         width{ width_ },
         height{ height_ }
@@ -9051,10 +9065,10 @@ static_assert( sizeof( ViewState) == sizeof( XrViewState), "struct and wrapper h
 struct Fovf{
     // ctor
     Fovf(
-        float angleLeft_ = {},
-        float angleRight_ = {},
-        float angleUp_ = {},
-        float angleDown_ = {}
+        float angleLeft_ = 0.0f,
+        float angleRight_ = 0.0f,
+        float angleUp_ = 0.0f,
+        float angleDown_ = 0.0f
     ) : 
         angleLeft{ angleLeft_ },
         angleRight{ angleRight_ },
@@ -9332,7 +9346,7 @@ private:
 public:
     // ctor
     ActionStateFloat(
-        float currentState_ = {},
+        float currentState_ = 0.0f,
         const Bool32& changedSinceLastSync_ = XR_FALSE,
         const Time& lastChangeTime_ = {},
         const Bool32& isActive_ = XR_FALSE
@@ -9360,8 +9374,8 @@ static_assert( sizeof( ActionStateFloat) == sizeof( XrActionStateFloat), "struct
 struct Vector2f{
     // ctor
     Vector2f(
-        float x_ = {},
-        float y_ = {}
+        float x_ = 0.0f,
+        float y_ = 0.0f
     ) : 
         x{ x_ },
         y{ y_ }
@@ -9867,8 +9881,8 @@ public:
     // ctor
     HapticVibration(
         const Duration& duration_ = {},
-        float frequency_ = {},
-        float amplitude_ = {}
+        float frequency_ = 0.0f,
+        float amplitude_ = 0.0f
     ) : 
     Parent(StructureType::HapticVibration),
         duration{ duration_ },
@@ -9891,8 +9905,8 @@ static_assert( sizeof( HapticVibration) == sizeof( XrHapticVibration), "struct a
 struct Offset2Df{
     // ctor
     Offset2Df(
-        float x_ = {},
-        float y_ = {}
+        float x_ = 0.0f,
+        float y_ = 0.0f
     ) : 
         x{ x_ },
         y{ y_ }
@@ -9933,10 +9947,10 @@ static_assert( sizeof( Rect2Df) == sizeof( XrRect2Df), "struct and wrapper have 
 struct Vector4f{
     // ctor
     Vector4f(
-        float x_ = {},
-        float y_ = {},
-        float z_ = {},
-        float w_ = {}
+        float x_ = 0.0f,
+        float y_ = 0.0f,
+        float z_ = 0.0f,
+        float w_ = 0.0f
     ) : 
         x{ x_ },
         y{ y_ },
@@ -9960,10 +9974,10 @@ static_assert( sizeof( Vector4f) == sizeof( XrVector4f), "struct and wrapper hav
 struct Color4f{
     // ctor
     Color4f(
-        float r_ = {},
-        float g_ = {},
-        float b_ = {},
-        float a_ = {}
+        float r_ = 0.0f,
+        float g_ = 0.0f,
+        float b_ = 0.0f,
+        float a_ = 0.0f
     ) : 
         r{ r_ },
         g{ g_ },
@@ -10053,10 +10067,10 @@ public:
     // ctor
     CompositionLayerDepthInfoKHR(
         const SwapchainSubImage& subImage_ = {},
-        float minDepth_ = {},
-        float maxDepth_ = {},
-        float nearZ_ = {},
-        float farZ_ = {}
+        float minDepth_ = 0.0f,
+        float maxDepth_ = 0.0f,
+        float nearZ_ = 0.0f,
+        float farZ_ = 0.0f
     ) : 
     Parent(StructureType::CompositionLayerDepthInfoKHR),
         subImage{ subImage_ },
@@ -10116,9 +10130,9 @@ public:
         const EyeVisibility& eyeVisibility_ = {},
         const SwapchainSubImage& subImage_ = {},
         const Posef& pose_ = {},
-        float radius_ = {},
-        float centralAngle_ = {},
-        float aspectRatio_ = {}
+        float radius_ = 0.0f,
+        float centralAngle_ = 0.0f,
+        float aspectRatio_ = 0.0f
     ) : 
     Parent(StructureType::CompositionLayerCylinderKHR),
         layerFlags{ layerFlags_ },
@@ -10159,7 +10173,7 @@ public:
         const EyeVisibility& eyeVisibility_ = {},
         const SwapchainSubImage& subImage_ = {},
         const Posef& pose_ = {},
-        float radius_ = {},
+        float radius_ = 0.0f,
         const Vector2f& scale_ = {},
         const Vector2f& bias_ = {}
     ) : 
@@ -12943,6 +12957,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ApiLayerProperties, All
     
     Result result = static_cast<Result>( d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+
         return impl::createResultValue(result,properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
     }
     do {
@@ -12970,6 +12985,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ApiLayerProperties, All
     
     Result result = static_cast<Result>( d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+
         return impl::createResultValue(result,properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
     }
     do {
@@ -13013,6 +13029,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ExtensionProperties, Al
     
     Result result = static_cast<Result>( d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+
         return impl::createResultValue(result,properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
     }
     do {
@@ -13040,6 +13057,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ExtensionProperties, Al
     
     Result result = static_cast<Result>( d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+
         return impl::createResultValue(result,properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
     }
     do {
@@ -13067,8 +13085,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ExtensionProperties, Al
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result createInstance (
-    const XrInstanceCreateInfo* createInfo, Instance& instance, Dispatch&& d)  {
-    Result result = static_cast<Result>( d.xrCreateInstance(createInfo, instance.put()) );
+    const InstanceCreateInfo& createInfo, Instance& instance, Dispatch&& d)  {
+    Result result = static_cast<Result>( d.xrCreateInstance(&(createInfo.operator const XrInstanceCreateInfo&()), instance.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13076,18 +13094,18 @@ OPENXR_HPP_INLINE Result createInstance (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Instance>::type createInstance (
-    const XrInstanceCreateInfo* createInfo, Dispatch&& d)  {
+    const InstanceCreateInfo& createInfo, Dispatch&& d)  {
     Instance handle;
-    Result result = static_cast<Result>( d.xrCreateInstance(createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateInstance(&(createInfo.operator const XrInstanceCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::createInstance");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type createInstanceUnique (
-    const XrInstanceCreateInfo* createInfo, Dispatch&& d)  {
+    const InstanceCreateInfo& createInfo, Dispatch&& d)  {
     Instance handle;
-    Result result = static_cast<Result>( d.xrCreateInstance(createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateInstance(&(createInfo.operator const XrInstanceCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Instance,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::createInstanceUnique");
 }
@@ -13132,8 +13150,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::destroy (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getInstanceProperties (
-    XrInstanceProperties* instanceProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), instanceProperties) );
+    InstanceProperties& instanceProperties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), &(instanceProperties.operator XrInstanceProperties&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13141,8 +13159,8 @@ OPENXR_HPP_INLINE Result Instance::getInstanceProperties (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getInstanceProperties (
-    XrInstanceProperties* instanceProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), instanceProperties) );
+    InstanceProperties& instanceProperties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), &(instanceProperties.operator XrInstanceProperties&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getInstanceProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13158,8 +13176,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getInstanceProperties (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::pollEvent (
-    XrEventDataBuffer* eventData, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrPollEvent(this->get(), eventData) );
+    EventDataBuffer& eventData, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrPollEvent(this->get(), &(eventData.operator XrEventDataBuffer&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13167,8 +13185,8 @@ OPENXR_HPP_INLINE Result Instance::pollEvent (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::pollEvent (
-    XrEventDataBuffer* eventData, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrPollEvent(this->get(), eventData) );
+    EventDataBuffer& eventData, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrPollEvent(this->get(), &(eventData.operator XrEventDataBuffer&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::pollEvent", {Result::Success, Result::EventUnavailable});
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13244,8 +13262,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::structureTypeToString (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystem (
-    const XrSystemGetInfo* getInfo, XrSystemId* systemId, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystem(this->get(), getInfo, systemId) );
+    const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo&()), systemId) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13253,8 +13271,8 @@ OPENXR_HPP_INLINE Result Instance::getSystem (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystem (
-    const XrSystemGetInfo* getInfo, XrSystemId* systemId, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystem(this->get(), getInfo, systemId) );
+    const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo&()), systemId) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystem");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13270,8 +13288,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystem (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystemProperties (
-    XrSystemId systemId, XrSystemProperties* properties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, properties) );
+    XrSystemId systemId, SystemProperties& properties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, &(properties.operator XrSystemProperties&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13279,8 +13297,8 @@ OPENXR_HPP_INLINE Result Instance::getSystemProperties (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystemProperties (
-    XrSystemId systemId, XrSystemProperties* properties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, properties) );
+    XrSystemId systemId, SystemProperties& properties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, &(properties.operator XrSystemProperties&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystemProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13293,25 +13311,67 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystemProperties (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::enumerateEnvironmentBlendModes (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, EnvironmentBlendMode& environmentBlendModes, Dispatch&& d) const {
-    XrEnvironmentBlendMode environmentBlendModes_tmp;
-    Result result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, environmentBlendModeCountOutput, environmentBlendModes_tmp) );
-    environmentBlendModes = static_cast<EnvironmentBlendMode>(environmentBlendModes_tmp);
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, XrEnvironmentBlendMode* environmentBlendModes, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, environmentBlendModeCountOutput, environmentBlendModes) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+template <typename Allocator, typename Dispatch>
+OPENXR_HPP_INLINE typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type Instance::enumerateEnvironmentBlendModes (
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d) const {
+    // Two-call idiom
+    ::std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes;
+            uint32_t environmentBlendModeCountOutput = 0;
+    uint32_t environmentBlendModeCapacityInput = 0;
+    
+    
+    Result result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, nullptr) );
+    if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
 
+        return impl::createResultValue(result,environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    }
+    do {
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+        environmentBlendModeCapacityInput = static_cast<uint32_t>(environmentBlendModes.size());
+        result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, reinterpret_cast<XrEnvironmentBlendMode*>(environmentBlendModes.data())) );
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <= environmentBlendModes.size());
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+    }
+    
+    return impl::createResultValue(result,environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    
+}
 
-template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::enumerateEnvironmentBlendModes (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, EnvironmentBlendMode& environmentBlendModes, Dispatch&& d) const {
-    XrEnvironmentBlendMode environmentBlendModes_tmp;
-    Result result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, environmentBlendModeCountOutput, environmentBlendModes_tmp) );
-    environmentBlendModes = static_cast<EnvironmentBlendMode>(environmentBlendModes_tmp);
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+template <typename Allocator, typename Dispatch>
+OPENXR_HPP_INLINE typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type Instance::enumerateEnvironmentBlendModes (
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const {
+    // Two-call idiom
+    ::std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes{vectorAllocator};
+        uint32_t environmentBlendModeCountOutput = 0;
+    uint32_t environmentBlendModeCapacityInput = 0;
+    
+    
+    Result result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, nullptr) );
+    if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
+
+        return impl::createResultValue(result,environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    }
+    do {
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+        environmentBlendModeCapacityInput = static_cast<uint32_t>(environmentBlendModes.size());
+        result = static_cast<Result>( d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, reinterpret_cast<XrEnvironmentBlendMode*>(environmentBlendModes.data())) );
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <= environmentBlendModes.size());
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+    }
+    
+    return impl::createResultValue(result,environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13325,8 +13385,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::enumerateEnvironmentBlen
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createSession (
-    const XrSessionCreateInfo* createInfo, Session& session, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateSession(this->get(), createInfo, session.put()) );
+    const SessionCreateInfo& createInfo, Session& session, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateSession(this->get(), &(createInfo.operator const XrSessionCreateInfo&()), session.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13334,18 +13394,18 @@ OPENXR_HPP_INLINE Result Instance::createSession (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Session>::type Instance::createSession (
-    const XrSessionCreateInfo* createInfo, Dispatch&& d) const {
+    const SessionCreateInfo& createInfo, Dispatch&& d) const {
     Session handle;
-    Result result = static_cast<Result>( d.xrCreateSession(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSession(this->get(), &(createInfo.operator const XrSessionCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSession");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type Instance::createSessionUnique (
-    const XrSessionCreateInfo* createInfo, Dispatch&& d) const {
+    const SessionCreateInfo& createInfo, Dispatch&& d) const {
     Session handle;
-    Result result = static_cast<Result>( d.xrCreateSession(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSession(this->get(), &(createInfo.operator const XrSessionCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Session,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSessionUnique");
 }
@@ -13389,10 +13449,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::destroy (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::enumerateReferenceSpaces (
-    uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, ReferenceSpaceType& spaces, Dispatch&& d) const {
-    XrReferenceSpaceType spaces_tmp;
-    Result result = static_cast<Result>( d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, spaceCountOutput, spaces_tmp) );
-    spaces = static_cast<ReferenceSpaceType>(spaces_tmp);
+    uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, XrReferenceSpaceType* spaces, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, spaceCountOutput, spaces) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13404,8 +13462,10 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ReferenceSpaceType, All
             uint32_t spaceCountOutput = 0;
     uint32_t spaceCapacityInput = 0;
     
+    
     Result result = static_cast<Result>( d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
+
         return impl::createResultValue(result,spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
     }
     do {
@@ -13417,6 +13477,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ReferenceSpaceType, All
         OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
         spaces.resize(spaceCountOutput);
     }
+    
     return impl::createResultValue(result,spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
     
 }
@@ -13429,9 +13490,10 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ReferenceSpaceType, All
         uint32_t spaceCountOutput = 0;
     uint32_t spaceCapacityInput = 0;
     
-    XrReferenceSpaceType spaces_tmp;
+    
     Result result = static_cast<Result>( d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
+
         return impl::createResultValue(result,spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
     }
     do {
@@ -13443,7 +13505,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ReferenceSpaceType, All
         OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
         spaces.resize(spaceCountOutput);
     }
-    spaces = static_cast<ReferenceSpaceType>(spaces_tmp);
+    
     return impl::createResultValue(result,spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
     
 }
@@ -13459,8 +13521,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ReferenceSpaceType, All
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createReferenceSpace (
-    const XrReferenceSpaceCreateInfo* createInfo, Space& space, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), createInfo, space.put()) );
+    const ReferenceSpaceCreateInfo& createInfo, Space& space, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo&()), space.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13468,18 +13530,18 @@ OPENXR_HPP_INLINE Result Session::createReferenceSpace (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createReferenceSpace (
-    const XrReferenceSpaceCreateInfo* createInfo, Dispatch&& d) const {
+    const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createReferenceSpace");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createReferenceSpaceUnique (
-    const XrReferenceSpaceCreateInfo* createInfo, Dispatch&& d) const {
+    const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateReferenceSpace(this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Space,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createReferenceSpaceUnique");
 }
@@ -13498,8 +13560,8 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefCo
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect (
-    ReferenceSpaceType referenceSpaceType, XrExtent2Df* bounds, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), bounds) );
+    ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), &(bounds.operator XrExtent2Df&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13507,8 +13569,8 @@ OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect (
-    ReferenceSpaceType referenceSpaceType, XrExtent2Df* bounds, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), bounds) );
+    ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), &(bounds.operator XrExtent2Df&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getReferenceSpaceBoundsRect", {Result::Success, Result::SpaceBoundsUnavailable});
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13523,8 +13585,8 @@ OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createActionSpace (
-    const XrActionSpaceCreateInfo* createInfo, Space& space, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), createInfo, space.put()) );
+    const ActionSpaceCreateInfo& createInfo, Space& space, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), &(createInfo.operator const XrActionSpaceCreateInfo&()), space.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13532,18 +13594,18 @@ OPENXR_HPP_INLINE Result Session::createActionSpace (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createActionSpace (
-    const XrActionSpaceCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionSpaceCreateInfo& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), &(createInfo.operator const XrActionSpaceCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createActionSpace");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createActionSpaceUnique (
-    const XrActionSpaceCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionSpaceCreateInfo& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateActionSpace(this->get(), &(createInfo.operator const XrActionSpaceCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Space,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createActionSpaceUnique");
 }
@@ -13562,8 +13624,8 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefCo
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Space::locateSpace (
-    Space baseSpace, XrTime time, XrSpaceLocation* location, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, location) );
+    Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, &(location.operator XrSpaceLocation&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13571,8 +13633,8 @@ OPENXR_HPP_INLINE Result Space::locateSpace (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Space::locateSpace (
-    Space baseSpace, XrTime time, XrSpaceLocation* location, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, location) );
+    Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, &(location.operator XrSpaceLocation&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13611,25 +13673,67 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Space::destroy (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::enumerateViewConfigurations (
-    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, ViewConfigurationType& viewConfigurationTypes, Dispatch&& d) const {
-    XrViewConfigurationType viewConfigurationTypes_tmp;
-    Result result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, viewConfigurationTypeCountOutput, viewConfigurationTypes_tmp) );
-    viewConfigurationTypes = static_cast<ViewConfigurationType>(viewConfigurationTypes_tmp);
+    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, XrViewConfigurationType* viewConfigurationTypes, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, viewConfigurationTypeCountOutput, viewConfigurationTypes) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+template <typename Allocator, typename Dispatch>
+OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ViewConfigurationType, Allocator>>::type Instance::enumerateViewConfigurations (
+    XrSystemId systemId, Dispatch&& d) const {
+    // Two-call idiom
+    ::std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes;
+            uint32_t viewConfigurationTypeCountOutput = 0;
+    uint32_t viewConfigurationTypeCapacityInput = 0;
+    
+    
+    Result result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, nullptr) );
+    if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
 
+        return impl::createResultValue(result,viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    }
+    do {
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+        viewConfigurationTypeCapacityInput = static_cast<uint32_t>(viewConfigurationTypes.size());
+        result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, reinterpret_cast<XrViewConfigurationType*>(viewConfigurationTypes.data())) );
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <= viewConfigurationTypes.size());
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+    }
+    
+    return impl::createResultValue(result,viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    
+}
 
-template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::enumerateViewConfigurations (
-    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, ViewConfigurationType& viewConfigurationTypes, Dispatch&& d) const {
-    XrViewConfigurationType viewConfigurationTypes_tmp;
-    Result result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, viewConfigurationTypeCountOutput, viewConfigurationTypes_tmp) );
-    viewConfigurationTypes = static_cast<ViewConfigurationType>(viewConfigurationTypes_tmp);
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+template <typename Allocator, typename Dispatch>
+OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ViewConfigurationType, Allocator>>::type Instance::enumerateViewConfigurations (
+    XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const {
+    // Two-call idiom
+    ::std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes{vectorAllocator};
+        uint32_t viewConfigurationTypeCountOutput = 0;
+    uint32_t viewConfigurationTypeCapacityInput = 0;
+    
+    
+    Result result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, nullptr) );
+    if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
+
+        return impl::createResultValue(result,viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    }
+    do {
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+        viewConfigurationTypeCapacityInput = static_cast<uint32_t>(viewConfigurationTypes.size());
+        result = static_cast<Result>( d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, reinterpret_cast<XrViewConfigurationType*>(viewConfigurationTypes.data())) );
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <= viewConfigurationTypes.size());
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+    }
+    
+    return impl::createResultValue(result,viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13644,8 +13748,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::enumerateViewConfigurati
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getViewConfigurationProperties (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, XrViewConfigurationProperties* configurationProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), configurationProperties) );
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), &(configurationProperties.operator XrViewConfigurationProperties&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13653,8 +13757,8 @@ OPENXR_HPP_INLINE Result Instance::getViewConfigurationProperties (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getViewConfigurationProperties (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, XrViewConfigurationProperties* configurationProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), configurationProperties) );
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), &(configurationProperties.operator XrViewConfigurationProperties&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getViewConfigurationProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13685,6 +13789,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ViewConfigurationView, 
     
     Result result = static_cast<Result>( d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+
         return impl::createResultValue(result,views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
     }
     do {
@@ -13712,6 +13817,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ViewConfigurationView, 
     
     Result result = static_cast<Result>( d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+
         return impl::createResultValue(result,views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
     }
     do {
@@ -13755,6 +13861,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<int64_t, Allocator>>::t
     
     Result result = static_cast<Result>( d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
+
         return impl::createResultValue(result,formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
     }
     do {
@@ -13782,6 +13889,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<int64_t, Allocator>>::t
     
     Result result = static_cast<Result>( d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
+
         return impl::createResultValue(result,formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
     }
     do {
@@ -13809,8 +13917,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<int64_t, Allocator>>::t
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSwapchain (
-    const XrSwapchainCreateInfo* createInfo, Swapchain& swapchain, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), createInfo, swapchain.put()) );
+    const SwapchainCreateInfo& createInfo, Swapchain& swapchain, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), &(createInfo.operator const XrSwapchainCreateInfo&()), swapchain.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -13818,18 +13926,18 @@ OPENXR_HPP_INLINE Result Session::createSwapchain (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Swapchain>::type Session::createSwapchain (
-    const XrSwapchainCreateInfo* createInfo, Dispatch&& d) const {
+    const SwapchainCreateInfo& createInfo, Dispatch&& d) const {
     Swapchain handle;
-    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), &(createInfo.operator const XrSwapchainCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchain");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type Session::createSwapchainUnique (
-    const XrSwapchainCreateInfo* createInfo, Dispatch&& d) const {
+    const SwapchainCreateInfo& createInfo, Dispatch&& d) const {
     Swapchain handle;
-    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSwapchain(this->get(), &(createInfo.operator const XrSwapchainCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Swapchain,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainUnique");
 }
@@ -13889,6 +13997,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocat
     
     Result result = static_cast<Result>( d.xrEnumerateSwapchainImages(this->get(), imageCapacityInput, &imageCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || imageCountOutput == 0) {
+
         return impl::createResultValue(result,images, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::enumerateSwapchainImages");
     }
     do {
@@ -13916,6 +14025,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocat
     
     Result result = static_cast<Result>( d.xrEnumerateSwapchainImages(this->get(), imageCapacityInput, &imageCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || imageCountOutput == 0) {
+
         return impl::createResultValue(result,images, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::enumerateSwapchainImages");
     }
     do {
@@ -13944,8 +14054,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocat
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::acquireSwapchainImage (
-    const XrSwapchainImageAcquireInfo* acquireInfo, uint32_t* index, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), acquireInfo, index) );
+    const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), &(acquireInfo.operator const XrSwapchainImageAcquireInfo&()), index) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13953,8 +14063,8 @@ OPENXR_HPP_INLINE Result Swapchain::acquireSwapchainImage (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::acquireSwapchainImage (
-    const XrSwapchainImageAcquireInfo* acquireInfo, uint32_t* index, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), acquireInfo, index) );
+    const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), &(acquireInfo.operator const XrSwapchainImageAcquireInfo&()), index) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::acquireSwapchainImage");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13970,8 +14080,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::acquireSwapchainImage (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage (
-    const XrSwapchainImageWaitInfo* waitInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrWaitSwapchainImage(this->get(), waitInfo) );
+    const SwapchainImageWaitInfo& waitInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrWaitSwapchainImage(this->get(), &(waitInfo.operator const XrSwapchainImageWaitInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -13979,8 +14089,8 @@ OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage (
-    const XrSwapchainImageWaitInfo* waitInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrWaitSwapchainImage(this->get(), waitInfo) );
+    const SwapchainImageWaitInfo& waitInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrWaitSwapchainImage(this->get(), &(waitInfo.operator const XrSwapchainImageWaitInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::waitSwapchainImage", {Result::Success, Result::TimeoutExpired});
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -13996,8 +14106,8 @@ OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::releaseSwapchainImage (
-    const XrSwapchainImageReleaseInfo* releaseInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrReleaseSwapchainImage(this->get(), releaseInfo) );
+    const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrReleaseSwapchainImage(this->get(), &(releaseInfo.operator const XrSwapchainImageReleaseInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14005,8 +14115,8 @@ OPENXR_HPP_INLINE Result Swapchain::releaseSwapchainImage (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::releaseSwapchainImage (
-    const XrSwapchainImageReleaseInfo* releaseInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrReleaseSwapchainImage(this->get(), releaseInfo) );
+    const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrReleaseSwapchainImage(this->get(), &(releaseInfo.operator const XrSwapchainImageReleaseInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::releaseSwapchainImage");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14022,8 +14132,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::releaseSwapchainImage (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::beginSession (
-    const XrSessionBeginInfo* beginInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrBeginSession(this->get(), beginInfo) );
+    const SessionBeginInfo& beginInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrBeginSession(this->get(), &(beginInfo.operator const XrSessionBeginInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14031,8 +14141,8 @@ OPENXR_HPP_INLINE Result Session::beginSession (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::beginSession (
-    const XrSessionBeginInfo* beginInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrBeginSession(this->get(), beginInfo) );
+    const SessionBeginInfo& beginInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrBeginSession(this->get(), &(beginInfo.operator const XrSessionBeginInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginSession");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14100,8 +14210,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::requestExitSession (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::waitFrame (
-    const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), frameWaitInfo, frameState) );
+    const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo&()), &(frameState.operator XrFrameState&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14109,8 +14219,8 @@ OPENXR_HPP_INLINE Result Session::waitFrame (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::waitFrame (
-    const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), frameWaitInfo, frameState) );
+    const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo&()), &(frameState.operator XrFrameState&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14126,8 +14236,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::waitFrame (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::beginFrame (
-    const XrFrameBeginInfo* frameBeginInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrBeginFrame(this->get(), frameBeginInfo) );
+    const FrameBeginInfo& frameBeginInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrBeginFrame(this->get(), &(frameBeginInfo.operator const XrFrameBeginInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14135,8 +14245,8 @@ OPENXR_HPP_INLINE Result Session::beginFrame (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::beginFrame (
-    const XrFrameBeginInfo* frameBeginInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrBeginFrame(this->get(), frameBeginInfo) );
+    const FrameBeginInfo& frameBeginInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrBeginFrame(this->get(), &(frameBeginInfo.operator const XrFrameBeginInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginFrame", {Result::Success, Result::FrameDiscarded});
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14152,8 +14262,8 @@ OPENXR_HPP_INLINE Result Session::beginFrame (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::endFrame (
-    const XrFrameEndInfo* frameEndInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrEndFrame(this->get(), frameEndInfo) );
+    const FrameEndInfo& frameEndInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEndFrame(this->get(), &(frameEndInfo.operator const XrFrameEndInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14161,8 +14271,8 @@ OPENXR_HPP_INLINE Result Session::endFrame (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::endFrame (
-    const XrFrameEndInfo* frameEndInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrEndFrame(this->get(), frameEndInfo) );
+    const FrameEndInfo& frameEndInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEndFrame(this->get(), &(frameEndInfo.operator const XrFrameEndInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::endFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14177,28 +14287,29 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::endFrame (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::locateViews (
-    const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrLocateViews(this->get(), viewLocateInfo, viewState, viewCapacityInput, viewCountOutput, views) );
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrLocateViews(this->get(), &(viewLocateInfo.operator const XrViewLocateInfo&()), viewState, viewCapacityInput, viewCountOutput, views) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type Session::locateViews (
-    const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, Dispatch&& d) const {
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<View, Allocator> views;
             uint32_t viewCountOutput = 0;
     uint32_t viewCapacityInput = 0;
     
     
-    Result result = static_cast<Result>( d.xrLocateViews(this->get(), viewLocateInfo, viewState, viewCapacityInput, &viewCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrLocateViews(this->get(), &(viewLocateInfo.operator const XrViewLocateInfo&()), viewState, viewCapacityInput, &viewCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+
         return impl::createResultValue(result,views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
     }
     do {
         views.resize(viewCountOutput);
         viewCapacityInput = static_cast<uint32_t>(views.size());
-        result = static_cast<Result>( d.xrLocateViews(this->get(), viewLocateInfo, viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())) );
+        result = static_cast<Result>( d.xrLocateViews(this->get(), &(viewLocateInfo.operator const XrViewLocateInfo&()), viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
@@ -14211,21 +14322,22 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type Session::locateViews (
-    const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const {
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<View, Allocator> views{vectorAllocator};
         uint32_t viewCountOutput = 0;
     uint32_t viewCapacityInput = 0;
     
     
-    Result result = static_cast<Result>( d.xrLocateViews(this->get(), viewLocateInfo, viewState, viewCapacityInput, &viewCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrLocateViews(this->get(), &(viewLocateInfo.operator const XrViewLocateInfo&()), viewState, viewCapacityInput, &viewCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+
         return impl::createResultValue(result,views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
     }
     do {
         views.resize(viewCountOutput);
         viewCapacityInput = static_cast<uint32_t>(views.size());
-        result = static_cast<Result>( d.xrLocateViews(this->get(), viewLocateInfo, viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())) );
+        result = static_cast<Result>( d.xrLocateViews(this->get(), &(viewLocateInfo.operator const XrViewLocateInfo&()), viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
@@ -14290,6 +14402,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
     Result result = static_cast<Result>( d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
     }
     do {
@@ -14319,6 +14432,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{vectorAllocator};
     Result result = static_cast<Result>( d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
     }
     do {
@@ -14347,8 +14461,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createActionSet (
-    const XrActionSetCreateInfo* createInfo, ActionSet& actionSet, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), createInfo, actionSet.put()) );
+    const ActionSetCreateInfo& createInfo, ActionSet& actionSet, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), &(createInfo.operator const XrActionSetCreateInfo&()), actionSet.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14356,18 +14470,18 @@ OPENXR_HPP_INLINE Result Instance::createActionSet (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<ActionSet>::type Instance::createActionSet (
-    const XrActionSetCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionSetCreateInfo& createInfo, Dispatch&& d) const {
     ActionSet handle;
-    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), &(createInfo.operator const XrActionSetCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createActionSet");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type Instance::createActionSetUnique (
-    const XrActionSetCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionSetCreateInfo& createInfo, Dispatch&& d) const {
     ActionSet handle;
-    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateActionSet(this->get(), &(createInfo.operator const XrActionSetCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<ActionSet,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createActionSetUnique");
 }
@@ -14411,8 +14525,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type ActionSet::destroy (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result ActionSet::createAction (
-    const XrActionCreateInfo* createInfo, Action& action, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateAction(this->get(), createInfo, action.put()) );
+    const ActionCreateInfo& createInfo, Action& action, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateAction(this->get(), &(createInfo.operator const XrActionCreateInfo&()), action.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14420,18 +14534,18 @@ OPENXR_HPP_INLINE Result ActionSet::createAction (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Action>::type ActionSet::createAction (
-    const XrActionCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionCreateInfo& createInfo, Dispatch&& d) const {
     Action handle;
-    Result result = static_cast<Result>( d.xrCreateAction(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateAction(this->get(), &(createInfo.operator const XrActionCreateInfo&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createAction");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type ActionSet::createActionUnique (
-    const XrActionCreateInfo* createInfo, Dispatch&& d) const {
+    const ActionCreateInfo& createInfo, Dispatch&& d) const {
     Action handle;
-    Result result = static_cast<Result>( d.xrCreateAction(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateAction(this->get(), &(createInfo.operator const XrActionCreateInfo&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Action,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createActionUnique");
 }
@@ -14476,8 +14590,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Action::destroy (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::suggestInteractionProfileBindings (
-    const XrInteractionProfileSuggestedBinding* suggestedBindings, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSuggestInteractionProfileBindings(this->get(), suggestedBindings) );
+    const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSuggestInteractionProfileBindings(this->get(), &(suggestedBindings.operator const XrInteractionProfileSuggestedBinding&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14485,8 +14599,8 @@ OPENXR_HPP_INLINE Result Instance::suggestInteractionProfileBindings (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::suggestInteractionProfileBindings (
-    const XrInteractionProfileSuggestedBinding* suggestedBindings, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSuggestInteractionProfileBindings(this->get(), suggestedBindings) );
+    const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSuggestInteractionProfileBindings(this->get(), &(suggestedBindings.operator const XrInteractionProfileSuggestedBinding&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::suggestInteractionProfileBindings");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14502,8 +14616,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::suggestInteractionProfil
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::attachSessionActionSets (
-    const XrSessionActionSetsAttachInfo* attachInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrAttachSessionActionSets(this->get(), attachInfo) );
+    const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrAttachSessionActionSets(this->get(), &(attachInfo.operator const XrSessionActionSetsAttachInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14511,8 +14625,8 @@ OPENXR_HPP_INLINE Result Session::attachSessionActionSets (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::attachSessionActionSets (
-    const XrSessionActionSetsAttachInfo* attachInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrAttachSessionActionSets(this->get(), attachInfo) );
+    const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrAttachSessionActionSets(this->get(), &(attachInfo.operator const XrSessionActionSetsAttachInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::attachSessionActionSets");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14528,8 +14642,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::attachSessionActionSets (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getCurrentInteractionProfile (
-    XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, interactionProfile) );
+    XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, &(interactionProfile.operator XrInteractionProfileState&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14537,8 +14651,8 @@ OPENXR_HPP_INLINE Result Session::getCurrentInteractionProfile (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getCurrentInteractionProfile (
-    XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, interactionProfile) );
+    XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, &(interactionProfile.operator XrInteractionProfileState&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getCurrentInteractionProfile");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14554,8 +14668,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getCurrentInteractionProf
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateBoolean (
-    const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateBoolean&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14563,8 +14677,8 @@ OPENXR_HPP_INLINE Result Session::getActionStateBoolean (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateBoolean (
-    const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateBoolean&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateBoolean");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14580,8 +14694,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateBoolean (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateFloat (
-    const XrActionStateGetInfo* getInfo, XrActionStateFloat* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateFloat&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14589,8 +14703,8 @@ OPENXR_HPP_INLINE Result Session::getActionStateFloat (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateFloat (
-    const XrActionStateGetInfo* getInfo, XrActionStateFloat* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateFloat&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateFloat");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14606,8 +14720,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateFloat (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateVector2f (
-    const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateVector2f&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14615,8 +14729,8 @@ OPENXR_HPP_INLINE Result Session::getActionStateVector2f (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateVector2f (
-    const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateVector2f&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateVector2f");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14632,8 +14746,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateVector2f (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStatePose (
-    const XrActionStateGetInfo* getInfo, XrActionStatePose* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStatePose&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14641,8 +14755,8 @@ OPENXR_HPP_INLINE Result Session::getActionStatePose (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStatePose (
-    const XrActionStateGetInfo* getInfo, XrActionStatePose* state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), getInfo, state) );
+    const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStatePose&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStatePose");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14658,8 +14772,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStatePose (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::syncActions (
-    const XrActionsSyncInfo* syncInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSyncActions(this->get(), syncInfo) );
+    const ActionsSyncInfo& syncInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSyncActions(this->get(), &(syncInfo.operator const XrActionsSyncInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14667,8 +14781,8 @@ OPENXR_HPP_INLINE Result Session::syncActions (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::syncActions (
-    const XrActionsSyncInfo* syncInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSyncActions(this->get(), syncInfo) );
+    const ActionsSyncInfo& syncInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSyncActions(this->get(), &(syncInfo.operator const XrActionsSyncInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::syncActions", {Result::Success, Result::SessionNotFocused});
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14683,28 +14797,29 @@ OPENXR_HPP_INLINE Result Session::syncActions (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::enumerateBoundSourcesForAction (
-    const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), enumerateInfo, sourceCapacityInput, sourceCountOutput, sources) );
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo&()), sourceCapacityInput, sourceCountOutput, sources) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type Session::enumerateBoundSourcesForAction (
-    const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, Dispatch&& d) const {
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<Path, Allocator> sources;
             uint32_t sourceCountOutput = 0;
     uint32_t sourceCapacityInput = 0;
     
     
-    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), enumerateInfo, sourceCapacityInput, &sourceCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo&()), sourceCapacityInput, &sourceCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
+
         return impl::createResultValue(result,sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
     }
     do {
         sources.resize(sourceCountOutput);
         sourceCapacityInput = static_cast<uint32_t>(sources.size());
-        result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), enumerateInfo, sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())) );
+        result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo&()), sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
@@ -14717,21 +14832,22 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type Session::enumerateBoundSourcesForAction (
-    const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const {
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<Path, Allocator> sources{vectorAllocator};
         uint32_t sourceCountOutput = 0;
     uint32_t sourceCapacityInput = 0;
     
     
-    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), enumerateInfo, sourceCapacityInput, &sourceCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo&()), sourceCapacityInput, &sourceCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
+
         return impl::createResultValue(result,sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
     }
     do {
         sources.resize(sourceCountOutput);
         sourceCapacityInput = static_cast<uint32_t>(sources.size());
-        result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), enumerateInfo, sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())) );
+        result = static_cast<Result>( d.xrEnumerateBoundSourcesForAction(this->get(), &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo&()), sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
@@ -14753,14 +14869,14 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getInputSourceLocalizedName (
-    const XrInputSourceLocalizedNameGetInfo* getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), getInfo, bufferCapacityInput, bufferCountOutput, buffer) );
+    const InputSourceLocalizedNameGetInfo& getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), &(getInfo.operator const XrInputSourceLocalizedNameGetInfo&()), bufferCapacityInput, bufferCountOutput, buffer) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Session::getInputSourceLocalizedName (
-    const XrInputSourceLocalizedNameGetInfo* getInfo, Dispatch&& d) const {
+    const InputSourceLocalizedNameGetInfo& getInfo, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<char, Allocator> buffer;
             uint32_t bufferCountOutput = 0;
@@ -14768,14 +14884,15 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     
     
     std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
-    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), getInfo, bufferCapacityInput, &bufferCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), &(getInfo.operator const XrInputSourceLocalizedNameGetInfo&()), bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
     }
     do {
         buffer.resize(bufferCountOutput);
         bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-        result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), getInfo, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())) );
+        result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), &(getInfo.operator const XrInputSourceLocalizedNameGetInfo&()), bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
@@ -14789,7 +14906,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Session::getInputSourceLocalizedName (
-    const XrInputSourceLocalizedNameGetInfo* getInfo, Allocator const& vectorAllocator, Dispatch&& d) const {
+    const InputSourceLocalizedNameGetInfo& getInfo, Allocator const& vectorAllocator, Dispatch&& d) const {
     // Two-call idiom
     ::std::vector<char, Allocator> buffer{vectorAllocator};
         uint32_t bufferCountOutput = 0;
@@ -14797,14 +14914,15 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     
     
     std::basic_string<char, std::char_traits<char>, Allocator> str{vectorAllocator};
-    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), getInfo, bufferCapacityInput, &bufferCountOutput, nullptr) );
+    Result result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), &(getInfo.operator const XrInputSourceLocalizedNameGetInfo&()), bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
     }
     do {
         buffer.resize(bufferCountOutput);
         bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-        result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), getInfo, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())) );
+        result = static_cast<Result>( d.xrGetInputSourceLocalizedName(this->get(), &(getInfo.operator const XrInputSourceLocalizedNameGetInfo&()), bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())) );
     } while (result == xr::Result::ErrorSizeInsufficient);
     if (result == xr::Result::Success) {
         OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
@@ -14828,8 +14946,8 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::applyHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrApplyHapticFeedback(this->get(), hapticActionInfo, hapticFeedback) );
+    const HapticActionInfo& hapticActionInfo, const HapticBaseHeader& hapticFeedback, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrApplyHapticFeedback(this->get(), &(hapticActionInfo.operator const XrHapticActionInfo&()), &(hapticFeedback.operator const XrHapticBaseHeader&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14837,8 +14955,8 @@ OPENXR_HPP_INLINE Result Session::applyHapticFeedback (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::applyHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrApplyHapticFeedback(this->get(), hapticActionInfo, hapticFeedback) );
+    const HapticActionInfo& hapticActionInfo, const HapticBaseHeader& hapticFeedback, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrApplyHapticFeedback(this->get(), &(hapticActionInfo.operator const XrHapticActionInfo&()), &(hapticFeedback.operator const XrHapticBaseHeader&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::applyHapticFeedback");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14854,8 +14972,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::applyHapticFeedback (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::stopHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrStopHapticFeedback(this->get(), hapticActionInfo) );
+    const HapticActionInfo& hapticActionInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrStopHapticFeedback(this->get(), &(hapticActionInfo.operator const XrHapticActionInfo&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14863,8 +14981,8 @@ OPENXR_HPP_INLINE Result Session::stopHapticFeedback (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::stopHapticFeedback (
-    const XrHapticActionInfo* hapticActionInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrStopHapticFeedback(this->get(), hapticActionInfo) );
+    const HapticActionInfo& hapticActionInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrStopHapticFeedback(this->get(), &(hapticActionInfo.operator const XrHapticActionInfo&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::stopHapticFeedback");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14905,8 +15023,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::setAndroidApplicationThre
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSwapchainAndroidSurfaceKHR (
-    const XrSwapchainCreateInfo* info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), info, swapchain.put(), surface) );
+    const SwapchainCreateInfo& info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), &(info.operator const XrSwapchainCreateInfo&()), swapchain.put(), surface) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14914,18 +15032,18 @@ OPENXR_HPP_INLINE Result Session::createSwapchainAndroidSurfaceKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<jobject>::type Session::createSwapchainAndroidSurfaceKHR (
-    const XrSwapchainCreateInfo* info, Swapchain& swapchain, Dispatch&& d) const {
+    const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const {
     jobject handle;
-    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), info, swapchain.put(), handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), &(info.operator const XrSwapchainCreateInfo&()), swapchain.put(), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainAndroidSurfaceKHR");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type Session::createSwapchainAndroidSurfaceUniqueKHR (
-    const XrSwapchainCreateInfo* info, Swapchain& swapchain, Dispatch&& d) const {
+    const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const {
     jobject handle;
-    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), info, swapchain.put(), handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), &(info.operator const XrSwapchainCreateInfo&()), swapchain.put(), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<jobject,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainAndroidSurfaceUniqueKHR");
 }
@@ -14944,8 +15062,8 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<jobject, impl::RemoveRef
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLKHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14953,8 +15071,8 @@ OPENXR_HPP_INLINE Result Instance::getOpenGLGraphicsRequirementsKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLKHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -14970,8 +15088,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLGraphicsRequire
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLESGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLESKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLESKHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14979,8 +15097,8 @@ OPENXR_HPP_INLINE Result Instance::getOpenGLESGraphicsRequirementsKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLESGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsOpenGLESKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLESKHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLESGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15012,6 +15130,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
     Result result = static_cast<Result>( d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
     }
     do {
@@ -15041,6 +15160,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{vectorAllocator};
     Result result = static_cast<Result>( d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
     }
     do {
@@ -15086,6 +15206,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
     Result result = static_cast<Result>( d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
     }
     do {
@@ -15115,6 +15236,7 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
     std::basic_string<char, std::char_traits<char>, Allocator> str{vectorAllocator};
     Result result = static_cast<Result>( d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr) );
     if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+
         return impl::createResultValue(result,str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
     }
     do {
@@ -15170,8 +15292,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsDeviceK
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsVulkanKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsVulkanKHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15179,8 +15301,8 @@ OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsRequirementsKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsVulkanKHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsVulkanKHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15196,8 +15318,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsRequire
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D11GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D11KHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D11KHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15205,8 +15327,8 @@ OPENXR_HPP_INLINE Result Instance::getD3D11GraphicsRequirementsKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D11GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D11KHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D11KHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D11GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15222,8 +15344,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D11GraphicsRequirem
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D12GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D12KHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D12KHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15231,8 +15353,8 @@ OPENXR_HPP_INLINE Result Instance::getD3D12GraphicsRequirementsKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D12GraphicsRequirementsKHR (
-    XrSystemId systemId, XrGraphicsRequirementsD3D12KHR* graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, graphicsRequirements) );
+    XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D12KHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D12GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15248,8 +15370,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D12GraphicsRequirem
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getVisibilityMaskKHR (
-    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, XrVisibilityMaskKHR* visibilityMask, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), visibilityMask) );
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), &(visibilityMask.operator XrVisibilityMaskKHR&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15257,8 +15379,8 @@ OPENXR_HPP_INLINE Result Session::getVisibilityMaskKHR (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::getVisibilityMaskKHR (
-    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, XrVisibilityMaskKHR* visibilityMask, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), visibilityMask) );
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), &(visibilityMask.operator XrVisibilityMaskKHR&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getVisibilityMaskKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15434,8 +15556,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::thermalGetTemperatureTren
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::setDebugUtilsObjectNameEXT (
-    const XrDebugUtilsObjectNameInfoEXT* nameInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSetDebugUtilsObjectNameEXT(this->get(), nameInfo) );
+    const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSetDebugUtilsObjectNameEXT(this->get(), &(nameInfo.operator const XrDebugUtilsObjectNameInfoEXT&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15443,8 +15565,8 @@ OPENXR_HPP_INLINE Result Instance::setDebugUtilsObjectNameEXT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::setDebugUtilsObjectNameEXT (
-    const XrDebugUtilsObjectNameInfoEXT* nameInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSetDebugUtilsObjectNameEXT(this->get(), nameInfo) );
+    const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSetDebugUtilsObjectNameEXT(this->get(), &(nameInfo.operator const XrDebugUtilsObjectNameInfoEXT&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::setDebugUtilsObjectNameEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15459,8 +15581,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::setDebugUtilsObjectNameE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createDebugUtilsMessengerEXT (
-    const XrDebugUtilsMessengerCreateInfoEXT* createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), createInfo, messenger.put()) );
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT&()), messenger.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15468,18 +15590,18 @@ OPENXR_HPP_INLINE Result Instance::createDebugUtilsMessengerEXT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<DebugUtilsMessengerEXT>::type Instance::createDebugUtilsMessengerEXT (
-    const XrDebugUtilsMessengerCreateInfoEXT* createInfo, Dispatch&& d) const {
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const {
     DebugUtilsMessengerEXT handle;
-    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createDebugUtilsMessengerEXT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>>::type Instance::createDebugUtilsMessengerUniqueEXT (
-    const XrDebugUtilsMessengerCreateInfoEXT* createInfo, Dispatch&& d) const {
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const {
     DebugUtilsMessengerEXT handle;
-    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateDebugUtilsMessengerEXT(this->get(), &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<DebugUtilsMessengerEXT,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createDebugUtilsMessengerUniqueEXT");
 }
@@ -15524,8 +15646,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type DebugUtilsMessengerEXT::destroy (
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::submitDebugUtilsMessageEXT (
-    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const XrDebugUtilsMessengerCallbackDataEXT* callbackData, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, callbackData) );
+    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, &(callbackData.operator const XrDebugUtilsMessengerCallbackDataEXT&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15533,8 +15655,8 @@ OPENXR_HPP_INLINE Result Instance::submitDebugUtilsMessageEXT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Instance::submitDebugUtilsMessageEXT (
-    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const XrDebugUtilsMessengerCallbackDataEXT* callbackData, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, callbackData) );
+    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, &(callbackData.operator const XrDebugUtilsMessengerCallbackDataEXT&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::submitDebugUtilsMessageEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15550,8 +15672,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::submitDebugUtilsMessageE
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionBeginDebugUtilsLabelRegionEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), labelInfo) );
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15559,8 +15681,8 @@ OPENXR_HPP_INLINE Result Session::sessionBeginDebugUtilsLabelRegionEXT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionBeginDebugUtilsLabelRegionEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), labelInfo) );
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::sessionBeginDebugUtilsLabelRegionEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15602,8 +15724,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionEndDebugUtilsLabel
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionInsertDebugUtilsLabelEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSessionInsertDebugUtilsLabelEXT(this->get(), labelInfo) );
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSessionInsertDebugUtilsLabelEXT(this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT&())) );
     return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15611,8 +15733,8 @@ OPENXR_HPP_INLINE Result Session::sessionInsertDebugUtilsLabelEXT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionInsertDebugUtilsLabelEXT (
-    const XrDebugUtilsLabelEXT* labelInfo, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrSessionInsertDebugUtilsLabelEXT(this->get(), labelInfo) );
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrSessionInsertDebugUtilsLabelEXT(this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT&())) );
     return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::sessionInsertDebugUtilsLabelEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -15627,8 +15749,8 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionInsertDebugUtilsLa
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSpatialAnchorMSFT (
-    const XrSpatialAnchorCreateInfoMSFT* createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), createInfo, anchor.put()) );
+    const SpatialAnchorCreateInfoMSFT& createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT&()), anchor.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15636,18 +15758,18 @@ OPENXR_HPP_INLINE Result Session::createSpatialAnchorMSFT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<SpatialAnchorMSFT>::type Session::createSpatialAnchorMSFT (
-    const XrSpatialAnchorCreateInfoMSFT* createInfo, Dispatch&& d) const {
+    const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const {
     SpatialAnchorMSFT handle;
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorMSFT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type Session::createSpatialAnchorUniqueMSFT (
-    const XrSpatialAnchorCreateInfoMSFT* createInfo, Dispatch&& d) const {
+    const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const {
     SpatialAnchorMSFT handle;
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<SpatialAnchorMSFT,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorUniqueMSFT");
 }
@@ -15665,8 +15787,8 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<SpatialAnchorMSFT, impl:
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSpatialAnchorSpaceMSFT (
-    const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Space& space, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), createInfo, space.put()) );
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Space& space, Dispatch&& d) const {
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT&()), space.put()) );
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15674,18 +15796,18 @@ OPENXR_HPP_INLINE Result Session::createSpatialAnchorSpaceMSFT (
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createSpatialAnchorSpaceMSFT (
-    const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Dispatch&& d) const {
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT&()), handle.put()) );
     return impl::createResultValue(result,handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorSpaceMSFT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createSpatialAnchorSpaceUniqueMSFT (
-    const XrSpatialAnchorSpaceCreateInfoMSFT* createInfo, Dispatch&& d) const {
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const {
     Space handle;
-    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), createInfo, handle.put()) );
+    Result result = static_cast<Result>( d.xrCreateSpatialAnchorSpaceMSFT(this->get(), &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT&()), handle.put()) );
     ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
     return impl::createResultValue<Space,impl::RemoveRefConst<Dispatch>>(result,handle,deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorSpaceUniqueMSFT");
 }

@@ -56,7 +56,7 @@ struct /*{projected_type -}*/ {
     /*{projected_type -}*/ (
     //# for member in struct.members if not cpp_hidden_member(member) 
         //# set projected_member_type = project_type_name(member.type)
-        //# set param_decl = project_cppdecl(member, defaulted=True, suffix="_", input=True)
+        //# set param_decl = project_cppdecl(struct, member, defaulted=True, suffix="_", input=True)
         /*{param_decl}*/ /*{- "," if not loop.last }*/
     //# endfor        
     ) : 
@@ -81,7 +81,7 @@ struct /*{projected_type -}*/ {
 
     // member decl
     //# for member in struct.members if not cpp_hidden_member(member) 
-    /*{ project_cppdecl(member) }*/;
+    /*{ project_cppdecl(struct, member) }*/;
     //# endfor
 };
 static_assert( sizeof( /*{projected_type -}*/ ) == sizeof( /*{struct.name-}*/), "struct and wrapper have different size!" );

@@ -8969,10 +8969,8 @@ template <typename Type> class TypedStructTraits {
 protected:
   TypedStructTraits(StructureType type_) : type(type_) {}
 
-private:
-  const StructureType type;
-
 public:
+  const StructureType type;
   const void *next{nullptr};
 };
 

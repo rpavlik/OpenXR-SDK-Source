@@ -9,7 +9,7 @@ class TypedStructTraits {
 protected:
     TypedStructTraits(StructureType type_) : type(type_) {}
 public:
-    const StructureType type;
+    StructureType type;
     const void* next{ nullptr };
 };
 

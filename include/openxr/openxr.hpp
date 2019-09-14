@@ -4138,7 +4138,6 @@ Result destroy (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetInstanceProperties wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
@@ -4147,14 +4146,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getInstanceProperties (
     InstanceProperties& instanceProperties, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetInstanceProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetInstanceProperties wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getInstanceProperties (
-        InstanceProperties& instanceProperties, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<InstanceProperties>::type getInstanceProperties (
+        Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4250,7 +4249,6 @@ Result structureTypeToString (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetSystem wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
@@ -4259,14 +4257,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getSystem (
     const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetSystem wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetSystem wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getSystem (
-        const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<SystemId>::type getSystem (
+        const SystemGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4276,7 +4274,6 @@ Result getSystem (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetSystemProperties wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
@@ -4285,14 +4282,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getSystemProperties (
     XrSystemId systemId, SystemProperties& properties, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetSystemProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetSystemProperties wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getSystemProperties (
-        XrSystemId systemId, SystemProperties& properties, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<SystemProperties>::type getSystemProperties (
+        XrSystemId systemId, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4403,7 +4400,6 @@ Result enumerateViewConfigurations (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetViewConfigurationProperties wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
@@ -4412,14 +4408,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getViewConfigurationProperties (
     XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetViewConfigurationProperties wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetViewConfigurationProperties wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getViewConfigurationProperties (
-        XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<ViewConfigurationProperties>::type getViewConfigurationProperties (
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4462,7 +4458,6 @@ Result enumerateViewConfigurationViews (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrStringToPath wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
@@ -4471,14 +4466,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result stringToPath (
     const char* pathString, XrPath* path, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrStringToPath wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrStringToPath wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type stringToPath (
-        const char* pathString, XrPath* path, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<Path>::type stringToPath (
+        const char* pathString, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4582,7 +4577,6 @@ Result suggestInteractionProfileBindings (
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
@@ -4593,16 +4587,16 @@ template <typename Dispatch>
 Result getOpenGLGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getOpenGLGraphicsRequirementsKHR (
-        XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const;
+    typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type getOpenGLGraphicsRequirementsKHR (
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4612,7 +4606,6 @@ Result getOpenGLGraphicsRequirementsKHR (
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
@@ -4623,16 +4616,16 @@ template <typename Dispatch>
 Result getOpenGLESGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getOpenGLESGraphicsRequirementsKHR (
-        XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const;
+    typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type getOpenGLESGraphicsRequirementsKHR (
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4720,7 +4713,6 @@ Result getVulkanDeviceExtensionsKHR (
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetVulkanGraphicsDeviceKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
@@ -4731,16 +4723,16 @@ template <typename Dispatch>
 Result getVulkanGraphicsDeviceKHR (
     XrSystemId systemId, VkInstance vkInstance, VkPhysicalDevice* vkPhysicalDevice, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetVulkanGraphicsDeviceKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetVulkanGraphicsDeviceKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getVulkanGraphicsDeviceKHR (
-        XrSystemId systemId, VkInstance vkInstance, VkPhysicalDevice* vkPhysicalDevice, Dispatch&& d) const;
+    typename ResultValueType<VkPhysicalDevice>::type getVulkanGraphicsDeviceKHR (
+        XrSystemId systemId, VkInstance vkInstance, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4750,7 +4742,6 @@ Result getVulkanGraphicsDeviceKHR (
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
@@ -4761,16 +4752,16 @@ template <typename Dispatch>
 Result getVulkanGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getVulkanGraphicsRequirementsKHR (
-        XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const;
+    typename ResultValueType<GraphicsRequirementsVulkanKHR>::type getVulkanGraphicsRequirementsKHR (
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4780,7 +4771,6 @@ Result getVulkanGraphicsRequirementsKHR (
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
@@ -4791,16 +4781,16 @@ template <typename Dispatch>
 Result getD3D11GraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getD3D11GraphicsRequirementsKHR (
-        XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const;
+    typename ResultValueType<GraphicsRequirementsD3D11KHR>::type getD3D11GraphicsRequirementsKHR (
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4810,7 +4800,6 @@ Result getD3D11GraphicsRequirementsKHR (
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
@@ -4821,16 +4810,16 @@ template <typename Dispatch>
 Result getD3D12GraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getD3D12GraphicsRequirementsKHR (
-        XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const;
+    typename ResultValueType<GraphicsRequirementsD3D12KHR>::type getD3D12GraphicsRequirementsKHR (
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4840,7 +4829,6 @@ Result getD3D12GraphicsRequirementsKHR (
 
 #if defined(XR_USE_PLATFORM_WIN32)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
@@ -4851,16 +4839,16 @@ template <typename Dispatch>
 Result convertWin32PerformanceCounterToTimeKHR (
     const LARGE_INTEGER* performanceCounter, XrTime* time, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type convertWin32PerformanceCounterToTimeKHR (
-        const LARGE_INTEGER* performanceCounter, XrTime* time, Dispatch&& d) const;
+    typename ResultValueType<Time>::type convertWin32PerformanceCounterToTimeKHR (
+        const LARGE_INTEGER* performanceCounter, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4870,7 +4858,6 @@ Result convertWin32PerformanceCounterToTimeKHR (
 
 #if defined(XR_USE_PLATFORM_WIN32)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
@@ -4881,16 +4868,16 @@ template <typename Dispatch>
 Result convertTimeToWin32PerformanceCounterKHR (
     XrTime time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type convertTimeToWin32PerformanceCounterKHR (
-        XrTime time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const;
+    typename ResultValueType<LARGE_INTEGER>::type convertTimeToWin32PerformanceCounterKHR (
+        XrTime time, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4900,7 +4887,6 @@ Result convertTimeToWin32PerformanceCounterKHR (
 
 #if defined(XR_USE_TIMESPEC)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrConvertTimespecTimeToTimeKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
@@ -4911,16 +4897,16 @@ template <typename Dispatch>
 Result convertTimespecTimeToTimeKHR (
     const struct timespec* timespecTime, XrTime* time, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrConvertTimespecTimeToTimeKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrConvertTimespecTimeToTimeKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type convertTimespecTimeToTimeKHR (
-        const struct timespec* timespecTime, XrTime* time, Dispatch&& d) const;
+    typename ResultValueType<Time>::type convertTimespecTimeToTimeKHR (
+        const struct timespec* timespecTime, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4930,7 +4916,6 @@ Result convertTimespecTimeToTimeKHR (
 
 #if defined(XR_USE_TIMESPEC)
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrConvertTimeToTimespecTimeKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
@@ -4941,16 +4926,16 @@ template <typename Dispatch>
 Result convertTimeToTimespecTimeKHR (
     XrTime time, struct timespec* timespecTime, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrConvertTimeToTimespecTimeKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrConvertTimeToTimespecTimeKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type convertTimeToTimespecTimeKHR (
-        XrTime time, struct timespec* timespecTime, Dispatch&& d) const;
+    typename ResultValueType<timespec>::type convertTimeToTimespecTimeKHR (
+        XrTime time, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5588,7 +5573,6 @@ Result requestExitSession (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrWaitFrame wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
@@ -5597,14 +5581,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result waitFrame (
     const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrWaitFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrWaitFrame wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type waitFrame (
-        const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<FrameState>::type waitFrame (
+        const FrameWaitInfo& frameWaitInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5725,7 +5709,6 @@ Result attachSessionActionSets (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetCurrentInteractionProfile wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
@@ -5734,14 +5717,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getCurrentInteractionProfile (
     XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetCurrentInteractionProfile wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetCurrentInteractionProfile wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getCurrentInteractionProfile (
-        XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<InteractionProfileState>::type getCurrentInteractionProfile (
+        XrPath topLevelUserPath, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5751,7 +5734,6 @@ Result getCurrentInteractionProfile (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetActionStateBoolean wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
@@ -5760,14 +5742,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateBoolean (
     const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetActionStateBoolean wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetActionStateBoolean wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getActionStateBoolean (
-        const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<ActionStateBoolean>::type getActionStateBoolean (
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5777,7 +5759,6 @@ Result getActionStateBoolean (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetActionStateFloat wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
@@ -5786,14 +5767,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateFloat (
     const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetActionStateFloat wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetActionStateFloat wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getActionStateFloat (
-        const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<ActionStateFloat>::type getActionStateFloat (
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5803,7 +5784,6 @@ Result getActionStateFloat (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetActionStateVector2f wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
@@ -5812,14 +5792,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStateVector2f (
     const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetActionStateVector2f wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetActionStateVector2f wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getActionStateVector2f (
-        const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<ActionStateVector2f>::type getActionStateVector2f (
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5829,7 +5809,6 @@ Result getActionStateVector2f (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetActionStatePose wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
@@ -5838,14 +5817,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result getActionStatePose (
     const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetActionStatePose wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetActionStatePose wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type getActionStatePose (
-        const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<ActionStatePose>::type getActionStatePose (
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6070,7 +6049,6 @@ Result createSwapchainAndroidSurfaceKHR (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrGetVisibilityMaskKHR wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
@@ -6081,16 +6059,16 @@ template <typename Dispatch>
 Result getVisibilityMaskKHR (
     ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrGetVisibilityMaskKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrGetVisibilityMaskKHR wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
 //!
 //! @note No default dispatch is provided as this is a non-core function,
 //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
     template <typename Dispatch>
-    ResultValueType<void>::type getVisibilityMaskKHR (
-        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const;
+    typename ResultValueType<VisibilityMaskKHR>::type getVisibilityMaskKHR (
+        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6558,7 +6536,6 @@ class Space {
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrLocateSpace wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
@@ -6567,14 +6544,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result locateSpace (
     Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrLocateSpace wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrLocateSpace wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type locateSpace (
-        Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<SpaceLocation>::type locateSpace (
+        Space baseSpace, XrTime time, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7147,7 +7124,6 @@ Result enumerateSwapchainImages (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrAcquireSwapchainImage wrapper.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
@@ -7156,14 +7132,14 @@ template <typename Dispatch = DispatchLoaderStatic>
 Result acquireSwapchainImage (
     const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
 
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-    //! @brief xrAcquireSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
+    //! @brief xrAcquireSwapchainImage wrapper - enhanced mode.
     //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
 
     template <typename Dispatch = DispatchLoaderStatic>
-    ResultValueType<void>::type acquireSwapchainImage (
-        const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d = Dispatch{}) const;
+    typename ResultValueType<uint32_t>::type acquireSwapchainImage (
+        const SwapchainImageAcquireInfo& acquireInfo, Dispatch&& d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8256,7 +8232,7 @@ class TypedStructTraits {
 protected:
     TypedStructTraits(StructureType type_) : type(type_) {}
 public:
-    const StructureType type;
+    StructureType type;
     const void* next{ nullptr };
 };
 
@@ -13146,21 +13122,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::destroy (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getInstanceProperties (
     InstanceProperties& instanceProperties, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), &(instanceProperties.operator XrInstanceProperties&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getInstanceProperties (
-    InstanceProperties& instanceProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), &(instanceProperties.operator XrInstanceProperties&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getInstanceProperties");
+OPENXR_HPP_INLINE typename ResultValueType<InstanceProperties>::type Instance::getInstanceProperties (
+    Dispatch&& d) const {
+    InstanceProperties structResult;
+    Result result = static_cast<Result>( d.xrGetInstanceProperties(this->get(), &(structResult.operator XrInstanceProperties&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getInstanceProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13258,21 +13234,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::structureTypeToString (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystem (
     const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo&()), systemId) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystem (
-    const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo&()), systemId) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystem");
+OPENXR_HPP_INLINE typename ResultValueType<SystemId>::type Instance::getSystem (
+    const SystemGetInfo& getInfo, Dispatch&& d) const {
+    SystemId structResult;
+    Result result = static_cast<Result>( d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo&()), &structResult) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystem");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13284,21 +13260,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystem (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystemProperties (
     XrSystemId systemId, SystemProperties& properties, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, &(properties.operator XrSystemProperties&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getSystemProperties (
-    XrSystemId systemId, SystemProperties& properties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, &(properties.operator XrSystemProperties&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystemProperties");
+OPENXR_HPP_INLINE typename ResultValueType<SystemProperties>::type Instance::getSystemProperties (
+    XrSystemId systemId, Dispatch&& d) const {
+    SystemProperties structResult;
+    Result result = static_cast<Result>( d.xrGetSystemProperties(this->get(), systemId, &(structResult.operator XrSystemProperties&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystemProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13620,21 +13596,21 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefCo
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Space::locateSpace (
     Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, &(location.operator XrSpaceLocation&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Space::locateSpace (
-    Space baseSpace, XrTime time, SpaceLocation& location, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, &(location.operator XrSpaceLocation&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
+OPENXR_HPP_INLINE typename ResultValueType<SpaceLocation>::type Space::locateSpace (
+    Space baseSpace, XrTime time, Dispatch&& d) const {
+    SpaceLocation structResult;
+    Result result = static_cast<Result>( d.xrLocateSpace(this->get(), baseSpace.get(), time, &(structResult.operator XrSpaceLocation&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -13744,21 +13720,21 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ViewConfigurationType, 
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getViewConfigurationProperties (
     XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), &(configurationProperties.operator XrViewConfigurationProperties&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getViewConfigurationProperties (
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), &(configurationProperties.operator XrViewConfigurationProperties&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getViewConfigurationProperties");
+OPENXR_HPP_INLINE typename ResultValueType<ViewConfigurationProperties>::type Instance::getViewConfigurationProperties (
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d) const {
+    ViewConfigurationProperties structResult;
+    Result result = static_cast<Result>( d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), &(structResult.operator XrViewConfigurationProperties&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getViewConfigurationProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14050,21 +14026,21 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocat
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::acquireSwapchainImage (
     const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), &(acquireInfo.operator const XrSwapchainImageAcquireInfo&()), index) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::acquireSwapchainImage (
-    const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), &(acquireInfo.operator const XrSwapchainImageAcquireInfo&()), index) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::acquireSwapchainImage");
+OPENXR_HPP_INLINE typename ResultValueType<uint32_t>::type Swapchain::acquireSwapchainImage (
+    const SwapchainImageAcquireInfo& acquireInfo, Dispatch&& d) const {
+    uint32_t structResult;
+    Result result = static_cast<Result>( d.xrAcquireSwapchainImage(this->get(), &(acquireInfo.operator const XrSwapchainImageAcquireInfo&()), &(structResult.operator uint32_t&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::acquireSwapchainImage");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14206,21 +14182,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::requestExitSession (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::waitFrame (
     const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrWaitFrame(this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo&()), &(frameState.operator XrFrameState&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::waitFrame (
-    const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo&()), &(frameState.operator XrFrameState&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
+OPENXR_HPP_INLINE typename ResultValueType<FrameState>::type Session::waitFrame (
+    const FrameWaitInfo& frameWaitInfo, Dispatch&& d) const {
+    FrameState structResult;
+    Result result = static_cast<Result>( d.xrWaitFrame(this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo&()), &(structResult.operator XrFrameState&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14356,21 +14332,21 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::stringToPath (
     const char* pathString, XrPath* path, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrStringToPath(this->get(), pathString, path) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::stringToPath (
-    const char* pathString, XrPath* path, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrStringToPath(this->get(), pathString, path) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::stringToPath");
+OPENXR_HPP_INLINE typename ResultValueType<Path>::type Instance::stringToPath (
+    const char* pathString, Dispatch&& d) const {
+    Path structResult;
+    Result result = static_cast<Result>( d.xrStringToPath(this->get(), pathString, &structResult) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::stringToPath");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14638,21 +14614,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::attachSessionActionSets (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getCurrentInteractionProfile (
     XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, &(interactionProfile.operator XrInteractionProfileState&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getCurrentInteractionProfile (
-    XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, &(interactionProfile.operator XrInteractionProfileState&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getCurrentInteractionProfile");
+OPENXR_HPP_INLINE typename ResultValueType<InteractionProfileState>::type Session::getCurrentInteractionProfile (
+    XrPath topLevelUserPath, Dispatch&& d) const {
+    InteractionProfileState structResult;
+    Result result = static_cast<Result>( d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, &(structResult.operator XrInteractionProfileState&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getCurrentInteractionProfile");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14664,21 +14640,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getCurrentInteractionProf
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateBoolean (
     const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateBoolean&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateBoolean (
-    const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateBoolean&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateBoolean");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateBoolean>::type Session::getActionStateBoolean (
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const {
+    ActionStateBoolean structResult;
+    Result result = static_cast<Result>( d.xrGetActionStateBoolean(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(structResult.operator XrActionStateBoolean&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateBoolean");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14690,21 +14666,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateBoolean (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateFloat (
     const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateFloat&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateFloat (
-    const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateFloat&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateFloat");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateFloat>::type Session::getActionStateFloat (
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const {
+    ActionStateFloat structResult;
+    Result result = static_cast<Result>( d.xrGetActionStateFloat(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(structResult.operator XrActionStateFloat&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateFloat");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14716,21 +14692,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateFloat (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateVector2f (
     const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateVector2f&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateVector2f (
-    const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStateVector2f&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateVector2f");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateVector2f>::type Session::getActionStateVector2f (
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const {
+    ActionStateVector2f structResult;
+    Result result = static_cast<Result>( d.xrGetActionStateVector2f(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(structResult.operator XrActionStateVector2f&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateVector2f");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -14742,21 +14718,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStateVector2f (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStatePose (
     const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStatePose&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getActionStatePose (
-    const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(state.operator XrActionStatePose&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStatePose");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStatePose>::type Session::getActionStatePose (
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const {
+    ActionStatePose structResult;
+    Result result = static_cast<Result>( d.xrGetActionStatePose(this->get(), &(getInfo.operator const XrActionStateGetInfo&()), &(structResult.operator XrActionStatePose&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStatePose");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15058,21 +15034,21 @@ OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<jobject, impl::RemoveRef
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLKHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLGraphicsRequirementsKHR (
-    XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLKHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type Instance::getOpenGLGraphicsRequirementsKHR (
+    XrSystemId systemId, Dispatch&& d) const {
+    GraphicsRequirementsOpenGLKHR structResult;
+    Result result = static_cast<Result>( d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, &(structResult.operator XrGraphicsRequirementsOpenGLKHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15084,21 +15060,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLGraphicsRequire
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLESGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLESKHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getOpenGLESGraphicsRequirementsKHR (
-    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLESKHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLESGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type Instance::getOpenGLESGraphicsRequirementsKHR (
+    XrSystemId systemId, Dispatch&& d) const {
+    GraphicsRequirementsOpenGLESKHR structResult;
+    Result result = static_cast<Result>( d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, &(structResult.operator XrGraphicsRequirementsOpenGLESKHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLESGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15262,21 +15238,21 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsDeviceKHR (
     XrSystemId systemId, VkInstance vkInstance, VkPhysicalDevice* vkPhysicalDevice, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetVulkanGraphicsDeviceKHR(this->get(), systemId, vkInstance, vkPhysicalDevice) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsDeviceKHR (
-    XrSystemId systemId, VkInstance vkInstance, VkPhysicalDevice* vkPhysicalDevice, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVulkanGraphicsDeviceKHR(this->get(), systemId, vkInstance, vkPhysicalDevice) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsDeviceKHR");
+OPENXR_HPP_INLINE typename ResultValueType<VkPhysicalDevice>::type Instance::getVulkanGraphicsDeviceKHR (
+    XrSystemId systemId, VkInstance vkInstance, Dispatch&& d) const {
+    VkPhysicalDevice structResult;
+    Result result = static_cast<Result>( d.xrGetVulkanGraphicsDeviceKHR(this->get(), systemId, vkInstance, &(structResult.operator VkPhysicalDevice&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsDeviceKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15288,21 +15264,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsDeviceK
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsVulkanKHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsRequirementsKHR (
-    XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsVulkanKHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsVulkanKHR>::type Instance::getVulkanGraphicsRequirementsKHR (
+    XrSystemId systemId, Dispatch&& d) const {
+    GraphicsRequirementsVulkanKHR structResult;
+    Result result = static_cast<Result>( d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, &(structResult.operator XrGraphicsRequirementsVulkanKHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15314,21 +15290,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getVulkanGraphicsRequire
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D11GraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D11KHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D11GraphicsRequirementsKHR (
-    XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D11KHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D11GraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D11KHR>::type Instance::getD3D11GraphicsRequirementsKHR (
+    XrSystemId systemId, Dispatch&& d) const {
+    GraphicsRequirementsD3D11KHR structResult;
+    Result result = static_cast<Result>( d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, &(structResult.operator XrGraphicsRequirementsD3D11KHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D11GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15340,21 +15316,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D11GraphicsRequirem
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D12GraphicsRequirementsKHR (
     XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D12KHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D12GraphicsRequirementsKHR (
-    XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, &(graphicsRequirements.operator XrGraphicsRequirementsD3D12KHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D12GraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D12KHR>::type Instance::getD3D12GraphicsRequirementsKHR (
+    XrSystemId systemId, Dispatch&& d) const {
+    GraphicsRequirementsD3D12KHR structResult;
+    Result result = static_cast<Result>( d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, &(structResult.operator XrGraphicsRequirementsD3D12KHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D12GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15366,21 +15342,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::getD3D12GraphicsRequirem
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getVisibilityMaskKHR (
     ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), &(visibilityMask.operator XrVisibilityMaskKHR&())) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Session::getVisibilityMaskKHR (
-    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), &(visibilityMask.operator XrVisibilityMaskKHR&())) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getVisibilityMaskKHR");
+OPENXR_HPP_INLINE typename ResultValueType<VisibilityMaskKHR>::type Session::getVisibilityMaskKHR (
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, Dispatch&& d) const {
+    VisibilityMaskKHR structResult;
+    Result result = static_cast<Result>( d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), &(structResult.operator XrVisibilityMaskKHR&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getVisibilityMaskKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15392,21 +15368,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::getVisibilityMaskKHR (
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertWin32PerformanceCounterToTimeKHR (
     const LARGE_INTEGER* performanceCounter, XrTime* time, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, time) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertWin32PerformanceCounterToTimeKHR (
-    const LARGE_INTEGER* performanceCounter, XrTime* time, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, time) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertWin32PerformanceCounterToTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<Time>::type Instance::convertWin32PerformanceCounterToTimeKHR (
+    const LARGE_INTEGER* performanceCounter, Dispatch&& d) const {
+    Time structResult;
+    Result result = static_cast<Result>( d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, &structResult) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertWin32PerformanceCounterToTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15418,21 +15394,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertWin32PerformanceC
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimeToWin32PerformanceCounterKHR (
     XrTime time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), time, performanceCounter) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertTimeToWin32PerformanceCounterKHR (
-    XrTime time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), time, performanceCounter) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToWin32PerformanceCounterKHR");
+OPENXR_HPP_INLINE typename ResultValueType<LARGE_INTEGER>::type Instance::convertTimeToWin32PerformanceCounterKHR (
+    XrTime time, Dispatch&& d) const {
+    LARGE_INTEGER structResult;
+    Result result = static_cast<Result>( d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), time, &(structResult.operator LARGE_INTEGER&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToWin32PerformanceCounterKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15444,21 +15420,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertTimeToWin32Perfor
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimespecTimeToTimeKHR (
     const struct timespec* timespecTime, XrTime* time, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, time) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertTimespecTimeToTimeKHR (
-    const struct timespec* timespecTime, XrTime* time, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, time) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimespecTimeToTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<Time>::type Instance::convertTimespecTimeToTimeKHR (
+    const struct timespec* timespecTime, Dispatch&& d) const {
+    Time structResult;
+    Result result = static_cast<Result>( d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, &structResult) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimespecTimeToTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -15470,21 +15446,21 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertTimespecTimeToTim
 
 
 
-#ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimeToTimespecTimeKHR (
     XrTime time, struct timespec* timespecTime, Dispatch&& d) const {
     Result result = static_cast<Result>( d.xrConvertTimeToTimespecTimeKHR(this->get(), time, timespecTime) );
     return result;
 }
-#else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
+#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type Instance::convertTimeToTimespecTimeKHR (
-    XrTime time, struct timespec* timespecTime, Dispatch&& d) const {
-    Result result = static_cast<Result>( d.xrConvertTimeToTimespecTimeKHR(this->get(), time, timespecTime) );
-    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToTimespecTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<timespec>::type Instance::convertTimeToTimespecTimeKHR (
+    XrTime time, Dispatch&& d) const {
+    timespec structResult;
+    Result result = static_cast<Result>( d.xrConvertTimeToTimespecTimeKHR(this->get(), time, &(structResult.operator timespec&())) );
+    return impl::createResultValue(result,structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToTimespecTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 

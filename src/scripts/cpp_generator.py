@@ -333,13 +333,9 @@ class CppGenerator(AutomaticSourceOutputGenerator):
                     method.post_statements.append(
                         "{name} = static_cast<{t}>({name}_tmp);".format(name=name.strip(), t=cpp_type))
 
-        if "xrCreateInstance" == method.name:
-            print("Foo")
         # Convert structs
         for param in method.decl_params:
             if param.type in self.dict_structs:
-                if not param.pointer_count > 0:
-                    print("Huh?")
                 name = param.name
                 cpp_type = _project_type_name(param.type)
                 if param.is_const:

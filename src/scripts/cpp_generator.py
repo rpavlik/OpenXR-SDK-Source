@@ -54,8 +54,8 @@ INHERITANCE = {
 
 TWO_CALL_STRING_NAME = "buffer"
 
-CAPACITY_INPUT_RE = re.compile(r'(?P<itemname>[a-z]*)CapacityInput')
-COUNT_OUTPUT_RE = re.compile(r'(?P<itemname>[a-z]*)CountOutput')
+CAPACITY_INPUT_RE = re.compile(r'(?P<itemname>[a-zA-Z]*)CapacityInput')
+COUNT_OUTPUT_RE = re.compile(r'(?P<itemname>[a-zA-Z]*)CountOutput')
 
 
 def _discouraged_begin(cmd):
@@ -288,6 +288,9 @@ class CppGenerator(AutomaticSourceOutputGenerator):
 
     def _basic_method_projection(self, method):
         """Perform the basic manipulation of a MethodProjection to convert it from C to C++."""
+
+        is_two_call = self._enhanced_method_detect_twocall(method)
+
         # Free function to method
         if method.handle:
             handle = method.params[0]
@@ -324,7 +327,7 @@ class CppGenerator(AutomaticSourceOutputGenerator):
                     method.decl_dict[name] = "{} {}".format(
                         cpp_type, name)
                     method.access_dict[name] = "OPENXR_HPP_NAMESPACE::get({})".format(name.strip())
-                elif param.pointer_count == 1:
+                elif param.pointer_count == 1 and not is_two_call:
                     # Output enum
                     method.decl_dict[name] = "{}& {}".format(
                         cpp_type, name)
@@ -333,6 +336,20 @@ class CppGenerator(AutomaticSourceOutputGenerator):
                     method.access_dict[name] = "{}_tmp".format(name.strip())
                     method.post_statements.append(
                         "{name} = static_cast<{t}>({name}_tmp);".format(name=name.strip(), t=cpp_type))
+
+        # Convert structs
+        for param in method.decl_params:
+            if param.type in self.dict_structs:
+                name = param.name
+                cpp_type = _project_type_name(param.type)
+                if param.is_const:
+                    # Input struct
+                    method.decl_dict[name] = "const {}& {}".format(cpp_type, name)
+                    method.access_dict[name] = "&({}.operator const {}&())".format(name.strip(), param.type)
+                elif param.pointer_count == 1 and not is_two_call:
+                    # Output struct
+                    method.decl_dict[name] = "{}& {}".format(cpp_type, name)
+                    method.access_dict[name] = "&({}.operator {}&())".format(name.strip(), param.type)
 
     def _update_enhanced_return_type(self, method):
         """Set the return type based on the bare return type.
@@ -373,6 +390,31 @@ class CppGenerator(AutomaticSourceOutputGenerator):
         if not raw_tag:
             return None
         return "StructureType::" + self.createEnumValue(raw_tag, "XrStructureType")
+
+    def _enhanced_method_detect_twocall(self, method):
+        # Find the three important parameters
+        capacity_input_param_name = None
+        count_output_param_name = None
+        array_param_name = None
+        for i, p in enumerate(method.decl_params):
+            if p.no_auto_validity:
+                continue
+            param_name = p.name
+            match = CAPACITY_INPUT_RE.match(param_name)
+            if match:
+                capacity_input_param_name = param_name
+                continue
+            match = COUNT_OUTPUT_RE.match(param_name)
+            if match:
+                count_output_param_name = param_name
+                continue
+
+            # Try detecting the output array using its length field
+            if capacity_input_param_name is not None \
+                    and p.pointer_count_var == capacity_input_param_name:
+                array_param_name = param_name
+
+        return capacity_input_param_name and count_output_param_name and array_param_name
 
     def _enhanced_method_projection_twocall(self, method):
         # Find the three important parameters
@@ -525,10 +567,10 @@ class CppGenerator(AutomaticSourceOutputGenerator):
         generated_warning = '// *********** THIS FILE IS GENERATED - DO NOT EDIT ***********\n'
         generated_warning += '//     See cpp_generator.py for modifications\n'
         generated_warning += '// ************************************************************\n'
-        assert(self.createEnumValue("XR_TYPE_SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT", "XrStructureType") ==
-               "SpatialAnchorSpaceCreateInfoMSFT")
-        assert(self.createEnumValue("XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT", "XrPerfSettingsSubDomainEXT") ==
-               "Compositing")
+        assert(self.createEnumValue("XR_TYPE_SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT", "XrStructureType")
+               == "SpatialAnchorSpaceCreateInfoMSFT")
+        assert(self.createEnumValue("XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT", "XrPerfSettingsSubDomainEXT")
+               == "Compositing")
         write(generated_warning, file=self.outFile)
 
     # Call the base class to properly begin the file, and then add
@@ -566,7 +608,7 @@ class CppGenerator(AutomaticSourceOutputGenerator):
     def _bitmask_for_flags(self, flags):
         return self.dict_bitmasks[flags.valid_flags]
 
-    def _project_cppdecl(self, member, defaulted=False, suffix="", input=False):
+    def _project_cppdecl(self, struct, member, defaulted=False, suffix="", input=False):
         result = member.cdecl.strip() + suffix
         if (member.type.startswith("Xr")):
             result = re.sub(r'\bXr(\w+)', '\\1', result)
@@ -583,6 +625,12 @@ class CppGenerator(AutomaticSourceOutputGenerator):
                 defaultValue = "nullptr"
             elif member.type.startswith("uint") or member.type.startswith("int"):
                 defaultValue = "0"
+            elif member.type.startswith("float"):
+                # special case XrQuaternionf::w so a default constructor xr::Quaternionf is an identity
+                if struct.name == 'XrQuaternionf' and member.name == 'w':
+                    defaultValue = '1.0f'
+                else:
+                    defaultValue = '0.0f'
             elif member.type == "XrBool32":
                 defaultValue = "XR_FALSE"
             result = result + " = " + defaultValue

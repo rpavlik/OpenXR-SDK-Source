@@ -10117,7 +10117,7 @@ public:
   FrameEndInfo(const Time &displayTime_ = {},
                const EnvironmentBlendMode &environmentBlendMode_ = {},
                uint32_t layerCount_ = 0,
-               const CompositionLayerBaseHeader *const *layers_ = nullptr)
+               const XrCompositionLayerBaseHeader *const *layers_ = nullptr)
       :
 
         Parent(StructureType::FrameEndInfo),
@@ -10135,7 +10135,7 @@ public:
   Time displayTime;
   EnvironmentBlendMode environmentBlendMode;
   uint32_t layerCount;
-  const CompositionLayerBaseHeader *const *layers;
+  const XrCompositionLayerBaseHeader *const *layers;
 };
 static_assert(sizeof(FrameEndInfo) == sizeof(XrFrameEndInfo),
               "struct and wrapper have different size!");
@@ -10363,7 +10363,7 @@ public:
   ActionCreateInfo(const char *actionName_ = nullptr,
                    const ActionType &actionType_ = {},
                    uint32_t countSubactionPaths_ = 0,
-                   const Path *subactionPaths_ = nullptr,
+                   const XrPath *subactionPaths_ = nullptr,
                    const char *localizedActionName_ = nullptr)
       :
 
@@ -10392,7 +10392,7 @@ public:
   char actionName[XR_MAX_ACTION_NAME_SIZE];
   ActionType actionType;
   uint32_t countSubactionPaths;
-  const Path *subactionPaths;
+  const XrPath *subactionPaths;
   char localizedActionName[XR_MAX_LOCALIZED_ACTION_NAME_SIZE];
 };
 static_assert(sizeof(ActionCreateInfo) == sizeof(XrActionCreateInfo),
@@ -10458,7 +10458,7 @@ public:
   InteractionProfileSuggestedBinding(
       const Path &interactionProfile_ = {},
       uint32_t countSuggestedBindings_ = 0,
-      const ActionSuggestedBinding *suggestedBindings_ = nullptr)
+      const XrActionSuggestedBinding *suggestedBindings_ = nullptr)
       :
 
         Parent(StructureType::InteractionProfileSuggestedBinding),
@@ -10477,7 +10477,7 @@ public:
   // member decl
   Path interactionProfile;
   uint32_t countSuggestedBindings;
-  const ActionSuggestedBinding *suggestedBindings;
+  const XrActionSuggestedBinding *suggestedBindings;
 };
 static_assert(sizeof(InteractionProfileSuggestedBinding) ==
                   sizeof(XrInteractionProfileSuggestedBinding),
@@ -10507,7 +10507,7 @@ private:
 public:
   // ctor
   SessionActionSetsAttachInfo(uint32_t countActionSets_ = 0,
-                              const ActionSet *actionSets_ = nullptr)
+                              const XrActionSet *actionSets_ = nullptr)
       :
 
         Parent(StructureType::SessionActionSetsAttachInfo),
@@ -10522,7 +10522,7 @@ public:
 
   // member decl
   uint32_t countActionSets;
-  const ActionSet *actionSets;
+  const XrActionSet *actionSets;
 };
 static_assert(sizeof(SessionActionSetsAttachInfo) ==
                   sizeof(XrSessionActionSetsAttachInfo),
@@ -10882,7 +10882,7 @@ private:
 public:
   // ctor
   ActionsSyncInfo(uint32_t countActiveActionSets_ = 0,
-                  const ActiveActionSet *activeActionSets_ = nullptr)
+                  const XrActiveActionSet *activeActionSets_ = nullptr)
       :
 
         Parent(StructureType::ActionsSyncInfo),
@@ -10898,7 +10898,7 @@ public:
 
   // member decl
   uint32_t countActiveActionSets;
-  const ActiveActionSet *activeActionSets;
+  const XrActiveActionSet *activeActionSets;
 };
 static_assert(sizeof(ActionsSyncInfo) == sizeof(XrActionsSyncInfo),
               "struct and wrapper have different size!");
@@ -11233,7 +11233,7 @@ public:
   CompositionLayerProjection(
       const CompositionLayerFlags &layerFlags_ = {}, const Space &space_ = {},
       uint32_t viewCount_ = 0,
-      const CompositionLayerProjectionView *views_ = nullptr)
+      const XrCompositionLayerProjectionView *views_ = nullptr)
       :
 
         Parent(StructureType::CompositionLayerProjection),
@@ -11251,7 +11251,7 @@ public:
   CompositionLayerFlags layerFlags;
   Space space;
   uint32_t viewCount;
-  const CompositionLayerProjectionView *views;
+  const XrCompositionLayerProjectionView *views;
 };
 static_assert(sizeof(CompositionLayerProjection) ==
                   sizeof(XrCompositionLayerProjection),

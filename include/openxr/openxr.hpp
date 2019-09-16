@@ -34,11 +34,13 @@
 #include <array>
 #include <cstddef>
 #include <cstring>
+#include <functional>
 #include <initializer_list>
 #include <string>
 #include <system_error>
 #include <tuple>
 #include <type_traits>
+
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 #include <memory>
 #include <vector>
@@ -113,6 +115,46 @@ using Path = XrPath;
 using SystemId = XrSystemId;
 using Time = XrTime;
 using Version = XrVersion;
+
+enum Side : uint32_t {
+  Left = 0,
+  Right = 1,
+};
+
+constexpr uint32_t SIDE_COUNT = 2;
+
+using BilateralPaths = std::array<Path, SIDE_COUNT>;
+
+using SideHandler = std::function<void(Side)>;
+using IndexHandler = std::function<void(uint32_t)>;
+
+constexpr char *const reserved_paths[] = {
+    "/user/hand/left", "/user/hand/right", "/user/head",
+    "/user/gamepad",   "/user/treadmill",
+};
+
+constexpr char *const interaction_profiles[] = {
+    "/interaction_profiles/khr/simple_controller",
+    "/interaction_profiles/google/daydream_controller",
+    "/interaction_profiles/htc/vive_controller",
+    "/interaction_profiles/htc/vive_pro",
+    "/interaction_profiles/microsoft/motion_controller",
+    "/interaction_profiles/microsoft/xbox_controller",
+    "/interaction_profiles/oculus/go_controller",
+    "/interaction_profiles/oculus/touch_controller",
+    "/interaction_profiles/valve/index_controller",
+};
+
+void for_each_side(const SideHandler &handler) {
+  handler(Left);
+  handler(Right);
+}
+
+void for_each_side_index(const IndexHandler &handler) {
+  for (uint32_t i = 0; i < SIDE_COUNT; ++i) {
+    handler(i);
+  }
+}
 
 } // namespace OPENXR_HPP_NAMESPACE
 
@@ -2266,7 +2308,7 @@ namespace OPENXR_HPP_NAMESPACE {
 //!
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInstanceCreateFlags>
-enum class InstanceCreateFlagBits : XrFlags64 {};
+enum class InstanceCreateFlagBits : XrFlags64 { None = 0, AllBits = 0 };
 
 using InstanceCreateFlags =
     Flags<InstanceCreateFlagBits, XrInstanceCreateFlags>;
@@ -2275,7 +2317,7 @@ using InstanceCreateFlags =
 //!
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSessionCreateFlags>
-enum class SessionCreateFlagBits : XrFlags64 {};
+enum class SessionCreateFlagBits : XrFlags64 { None = 0, AllBits = 0 };
 
 using SessionCreateFlags = Flags<SessionCreateFlagBits, XrSessionCreateFlags>;
 
@@ -2284,8 +2326,11 @@ using SessionCreateFlags = Flags<SessionCreateFlagBits, XrSessionCreateFlags>;
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlags>
 enum class SpaceVelocityFlagBits : XrFlags64 {
-  LinearValidBit = XR_SPACE_VELOCITY_LINEAR_VALID_BIT,
-  AngularValidBit = XR_SPACE_VELOCITY_ANGULAR_VALID_BIT
+  None = 0,
+  LinearValid = XR_SPACE_VELOCITY_LINEAR_VALID_BIT,
+  AngularValid = XR_SPACE_VELOCITY_ANGULAR_VALID_BIT,
+  AllBits = 0 | XR_SPACE_VELOCITY_LINEAR_VALID_BIT |
+            XR_SPACE_VELOCITY_ANGULAR_VALID_BIT
 };
 
 using SpaceVelocityFlags = Flags<SpaceVelocityFlagBits, XrSpaceVelocityFlags>;
@@ -2295,10 +2340,15 @@ using SpaceVelocityFlags = Flags<SpaceVelocityFlagBits, XrSpaceVelocityFlags>;
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlags>
 enum class SpaceLocationFlagBits : XrFlags64 {
-  OrientationValidBit = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
-  PositionValidBit = XR_SPACE_LOCATION_POSITION_VALID_BIT,
-  OrientationTrackedBit = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT,
-  PositionTrackedBit = XR_SPACE_LOCATION_POSITION_TRACKED_BIT
+  None = 0,
+  OrientationValid = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
+  PositionValid = XR_SPACE_LOCATION_POSITION_VALID_BIT,
+  OrientationTracked = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT,
+  PositionTracked = XR_SPACE_LOCATION_POSITION_TRACKED_BIT,
+  AllBits = 0 | XR_SPACE_LOCATION_ORIENTATION_VALID_BIT |
+            XR_SPACE_LOCATION_POSITION_VALID_BIT |
+            XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT |
+            XR_SPACE_LOCATION_POSITION_TRACKED_BIT
 };
 
 using SpaceLocationFlags = Flags<SpaceLocationFlagBits, XrSpaceLocationFlags>;
@@ -2308,8 +2358,11 @@ using SpaceLocationFlags = Flags<SpaceLocationFlagBits, XrSpaceLocationFlags>;
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlags>
 enum class SwapchainCreateFlagBits : XrFlags64 {
-  ProtectedContentBit = XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT,
-  StaticImageBit = XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
+  None = 0,
+  ProtectedContent = XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT,
+  StaticImage = XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT,
+  AllBits = 0 | XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT |
+            XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
 };
 
 using SwapchainCreateFlags =
@@ -2320,13 +2373,21 @@ using SwapchainCreateFlags =
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainUsageFlags>
 enum class SwapchainUsageFlagBits : XrFlags64 {
-  ColorAttachmentBit = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT,
-  DepthStencilAttachmentBit = XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-  UnorderedAccessBit = XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT,
-  TransferSrcBit = XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT,
-  TransferDstBit = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,
-  SampledBit = XR_SWAPCHAIN_USAGE_SAMPLED_BIT,
-  MutableFormatBit = XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+  None = 0,
+  ColorAttachment = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT,
+  DepthStencilAttachment = XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+  UnorderedAccess = XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT,
+  TransferSrc = XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT,
+  TransferDst = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,
+  Sampled = XR_SWAPCHAIN_USAGE_SAMPLED_BIT,
+  MutableFormat = XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT,
+  AllBits = 0 | XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT |
+            XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
+            XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT |
+            XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT |
+            XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT |
+            XR_SWAPCHAIN_USAGE_SAMPLED_BIT |
+            XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
 };
 
 using SwapchainUsageFlags =
@@ -2337,11 +2398,14 @@ using SwapchainUsageFlags =
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlags>
 enum class CompositionLayerFlagBits : XrFlags64 {
-  CorrectChromaticAberrationBit =
+  None = 0,
+  CorrectChromaticAberration =
       XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT,
-  BlendTextureSourceAlphaBit =
-      XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT,
-  UnpremultipliedAlphaBit = XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
+  BlendTextureSourceAlpha = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT,
+  UnpremultipliedAlpha = XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT,
+  AllBits = 0 | XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT |
+            XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
+            XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
 };
 
 using CompositionLayerFlags =
@@ -2352,10 +2416,15 @@ using CompositionLayerFlags =
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlags>
 enum class ViewStateFlagBits : XrFlags64 {
-  OrientationValidBit = XR_VIEW_STATE_ORIENTATION_VALID_BIT,
-  PositionValidBit = XR_VIEW_STATE_POSITION_VALID_BIT,
-  OrientationTrackedBit = XR_VIEW_STATE_ORIENTATION_TRACKED_BIT,
-  PositionTrackedBit = XR_VIEW_STATE_POSITION_TRACKED_BIT
+  None = 0,
+  OrientationValid = XR_VIEW_STATE_ORIENTATION_VALID_BIT,
+  PositionValid = XR_VIEW_STATE_POSITION_VALID_BIT,
+  OrientationTracked = XR_VIEW_STATE_ORIENTATION_TRACKED_BIT,
+  PositionTracked = XR_VIEW_STATE_POSITION_TRACKED_BIT,
+  AllBits = 0 | XR_VIEW_STATE_ORIENTATION_VALID_BIT |
+            XR_VIEW_STATE_POSITION_VALID_BIT |
+            XR_VIEW_STATE_ORIENTATION_TRACKED_BIT |
+            XR_VIEW_STATE_POSITION_TRACKED_BIT
 };
 
 using ViewStateFlags = Flags<ViewStateFlagBits, XrViewStateFlags>;
@@ -2365,10 +2434,13 @@ using ViewStateFlags = Flags<ViewStateFlagBits, XrViewStateFlags>;
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlags>
 enum class InputSourceLocalizedNameFlagBits : XrFlags64 {
-  UserPathBit = XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT,
-  InteractionProfileBit =
-      XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT,
-  ComponentBit = XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
+  None = 0,
+  UserPath = XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT,
+  InteractionProfile = XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT,
+  Component = XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT,
+  AllBits = 0 | XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT |
+            XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT |
+            XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
 };
 
 using InputSourceLocalizedNameFlags =
@@ -2379,14 +2451,15 @@ using InputSourceLocalizedNameFlags =
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagsEXT>
 enum class DebugUtilsMessageSeverityFlagBitsEXT : XrFlags64 {
-  XrDebugUtilsMessageSeverityVerboseBit =
-      XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
-  XrDebugUtilsMessageSeverityInfoBit =
-      XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
-  XrDebugUtilsMessageSeverityWarningBit =
-      XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
-  XrDebugUtilsMessageSeverityErrorBit =
-      XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+  None = 0,
+  Verbose = XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
+  Info = XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
+  Warning = XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+  Error = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+  AllBits = 0 | XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
 };
 
 using DebugUtilsMessageSeverityFlagsEXT =
@@ -2398,14 +2471,15 @@ using DebugUtilsMessageSeverityFlagsEXT =
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagsEXT>
 enum class DebugUtilsMessageTypeFlagBitsEXT : XrFlags64 {
-  XrDebugUtilsMessageTypeGeneralBit =
-      XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT,
-  XrDebugUtilsMessageTypeValidationBit =
-      XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-  XrDebugUtilsMessageTypePerformanceBit =
-      XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-  XrDebugUtilsMessageTypeConformanceBit =
-      XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+  None = 0,
+  General = XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT,
+  Validation = XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+  Performance = XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+  Conformance = XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT,
+  AllBits = 0 | XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
+            XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
 };
 
 using DebugUtilsMessageTypeFlagsEXT =
@@ -8910,12 +8984,22 @@ public:
 
 } // namespace traits
 
+struct HapticBaseHeader {
+  StructureType type;
+  const void *next;
+};
+static_assert(sizeof(HapticBaseHeader) == sizeof(XrHapticBaseHeader),
+              "struct and wrapper have different size!");
+
 struct CompositionLayerBaseHeader {
   StructureType type;
   const void *next;
   CompositionLayerFlags layerFlags;
   Space space;
 };
+static_assert(sizeof(CompositionLayerBaseHeader) ==
+                  sizeof(XrCompositionLayerBaseHeader),
+              "struct and wrapper have different size!");
 
 struct ApiLayerProperties
     : public traits::TypedStructTraits<ApiLayerProperties> {

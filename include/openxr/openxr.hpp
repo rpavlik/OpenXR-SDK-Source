@@ -6045,7 +6045,7 @@ public:
 
   template <typename Dispatch = DispatchLoaderStatic>
   Result applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                             const HapticBaseHeader &hapticFeedback,
+                             const XrHapticBaseHeader *hapticFeedback,
                              Dispatch &&d = Dispatch{}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -6058,7 +6058,7 @@ public:
   template <typename Dispatch = DispatchLoaderStatic>
   ResultValueType<void>::type
   applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                      const HapticBaseHeader &hapticFeedback,
+                      const XrHapticBaseHeader *hapticFeedback,
                       Dispatch &&d = Dispatch{}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -16447,10 +16447,10 @@ Session::getInputSourceLocalizedName(
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::applyHapticFeedback(
     const HapticActionInfo &hapticActionInfo,
-    const HapticBaseHeader &hapticFeedback, Dispatch &&d) const {
+    const XrHapticBaseHeader *hapticFeedback, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrApplyHapticFeedback(
       this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &()),
-      &(hapticFeedback.operator const XrHapticBaseHeader &())));
+      hapticFeedback));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -16458,11 +16458,11 @@ OPENXR_HPP_INLINE Result Session::applyHapticFeedback(
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                             const HapticBaseHeader &hapticFeedback,
+                             const XrHapticBaseHeader *hapticFeedback,
                              Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrApplyHapticFeedback(
       this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &()),
-      &(hapticFeedback.operator const XrHapticBaseHeader &())));
+      hapticFeedback));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::applyHapticFeedback");
 }

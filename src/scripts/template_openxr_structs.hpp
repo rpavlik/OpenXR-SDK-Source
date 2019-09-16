@@ -61,11 +61,11 @@ struct /*{projected_type }*/ : public traits::TypedStructTraits</*{projected_typ
               /*{- "," if  member_count > 2 }*/
               //#  endif
 
-              //# for member in struct.members if not cpp_hidden_member(member) and not (member.type == "char" and member.is_array and member.pointer_count == 0)
+              //# for member in struct.members if not cpp_hidden_member(member) and not is_static_length_string(member)
               /*{ member.name }*/ {/*{ member.name + "_"}*/} /*{ "," if not loop.last }*/
         //# endfor
         {
-            //# for member in struct.members if not cpp_hidden_member(member) and (member.type == "char" and member.is_array and member.pointer_count == 0)
+            //# for member in struct.members if not cpp_hidden_member(member) and is_static_length_string(member)
             if (nullptr != /*{ member.name + "_" }*/) {
                 // FIXME what is the safe way to do this?
                 strncpy(/*{ member.name }*/, /*{ member.name + "_" }*/, /*{member.array_count_var}*/);

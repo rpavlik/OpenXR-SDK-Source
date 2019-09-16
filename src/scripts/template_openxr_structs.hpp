@@ -15,12 +15,19 @@ public:
 
 }  // namespace traits
 
+struct HapticBaseHeader {
+    StructureType type;
+    const void* next;
+};
+static_assert(sizeof(HapticBaseHeader) == sizeof(XrHapticBaseHeader), "struct and wrapper have different size!");
+
 struct CompositionLayerBaseHeader {
     StructureType type;
     const void* next;
-    CompositionLayerFlags     layerFlags;
-    Space                     space;
+    CompositionLayerFlags layerFlags;
+    Space space;
 };
+static_assert(sizeof(CompositionLayerBaseHeader) == sizeof(XrCompositionLayerBaseHeader), "struct and wrapper have different size!");
 
 
 //# for struct in gen.api_structures if not struct.name.startswith("XrBase") and not struct.name.endswith("BaseHeader")

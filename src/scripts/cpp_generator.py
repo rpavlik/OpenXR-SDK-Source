@@ -124,6 +124,37 @@ RULE_BREAKING_ENUMS = {
     'XrStructureType': 'XR_TYPE',
 }
 
+SINGLE_LINE_COMMENT_STARTS = ('///', '//!', '//')
+
+
+def _block_comment(s, doxygen=False):
+    def clean_line(line):
+        line = line.rstrip()
+        ls = line.lstrip()
+        for prefix in SINGLE_LINE_COMMENT_STARTS:
+
+            if ls.startswith(prefix):
+                line = ls[len(prefix):]
+                if line.startswith(' '):
+                    line = line[1:]
+                break
+        return line
+
+    lines = [clean_line(line) for line in s.split('\n') if line]
+    # Remove leading and trailing empty lines
+    while lines and not lines[-1]:
+        lines.pop()
+    while lines and not lines[0]:
+        lines.pop(0)
+    lines = [(' * ' + line).rstrip() for line in lines]
+    lines.insert(0, "/*!" if doxygen else "/*")
+    lines.append(' */')
+    return '\n'.join(lines)
+
+
+def _block_doxygen_comment(s):
+    return _block_comment(s, doxygen=True)
+
 
 # def _make_dummy_param(name, typename, cdecl):
 #     return MemberOrParam(typename, False, True, False, False, False, 0, False, [], None, None, 0, None, False, True, name, None, cdecl)
@@ -187,6 +218,12 @@ class MethodProjection:
         return params
 
     @property
+    def prose_bare_return(self):
+        if 'string' in self.bare_return_type:
+            return "the output string"
+        return "the output of type %s" % self.bare_return_type
+
+    @property
     def template_decls(self):
         return ", ".join(self.template_decl_list)
 
@@ -245,6 +282,7 @@ class CppGenerator(AutomaticSourceOutputGenerator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.env = make_jinja_environment(file_with_templates_as_sibs=__file__)
+        self.env.filters['block_doxygen_comment'] = _block_doxygen_comment
 
     def outputGeneratedAuthorNote(self):
         # Disabled
@@ -548,7 +586,7 @@ class CppGenerator(AutomaticSourceOutputGenerator):
         method.access_dict[count_output_param_name] = "&" + count_output_param_name
 
         if item_type == "char":
-            method.bare_return_type = "::std::basic_string<char, ::std::char_traits<char>, Allocator>"
+            method.bare_return_type = "string_with_allocator<Allocator>"
             method.return_constructor = method.bare_return_type + "{%s.begin(), %s.end(), vectorAllocator}" % (array_param_name, array_param_name)
             method.returns.append("str")
         else:

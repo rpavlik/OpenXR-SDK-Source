@@ -5435,12 +5435,6 @@ public:
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-
-
-
-
-
-
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
   //! @brief xrGetReferenceSpaceBoundsRect wrapper.
   //!
@@ -5571,12 +5565,6 @@ public:
                         Dispatch &&d = Dispatch{}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
-
-
-
-
-
-
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
   //! @brief xrBeginSession wrapper.
@@ -6150,12 +6138,6 @@ public:
       VisibilityMaskTypeKHR visibilityMaskType, Dispatch &&d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
-
-
-
-
-
-
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
   //! @brief xrPerfSettingsSetPerformanceLevelEXT wrapper.
@@ -15541,7 +15523,7 @@ Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
   Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
       this->get(),
       &(acquireInfo.operator const XrSwapchainImageAcquireInfo &()),
-      &(structResult.operator uint32_t &())));
+      &structResult));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Swapchain::acquireSwapchainImage");
@@ -16780,8 +16762,7 @@ Instance::getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
                                      Dispatch &&d) const {
   VkPhysicalDevice structResult;
   Result result = static_cast<Result>(d.xrGetVulkanGraphicsDeviceKHR(
-      this->get(), systemId, vkInstance,
-      &(structResult.operator VkPhysicalDevice &())));
+      this->get(), systemId, vkInstance, &structResult));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getVulkanGraphicsDeviceKHR");
@@ -16956,7 +16937,7 @@ Instance::convertTimeToWin32PerformanceCounterKHR(XrTime time,
   LARGE_INTEGER structResult;
   Result result =
       static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(
-          this->get(), time, &(structResult.operator LARGE_INTEGER &())));
+          this->get(), time, &structResult));
   return impl::createResultValue(
       result, structResult,
       OPENXR_HPP_NAMESPACE_STRING
@@ -17007,8 +16988,8 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<timespec>::type
 Instance::convertTimeToTimespecTimeKHR(XrTime time, Dispatch &&d) const {
   timespec structResult;
-  Result result = static_cast<Result>(d.xrConvertTimeToTimespecTimeKHR(
-      this->get(), time, &(structResult.operator timespec &())));
+  Result result = static_cast<Result>(
+      d.xrConvertTimeToTimespecTimeKHR(this->get(), time, &structResult));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::convertTimeToTimespecTimeKHR");

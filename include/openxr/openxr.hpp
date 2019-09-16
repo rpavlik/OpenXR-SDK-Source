@@ -8942,6 +8942,20 @@ public:
 static_assert(sizeof(ApiLayerProperties) == sizeof(XrApiLayerProperties),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ApiLayerProperties as a raw
+//! XrApiLayerProperties
+//! @relates ApiLayerProperties
+OPENXR_HPP_INLINE XrApiLayerProperties const *get(ApiLayerProperties const &h) {
+  return &(h.operator XrApiLayerProperties const &());
+}
+
+//! @brief Free function accessor for passing ApiLayerProperties as the address
+//! of a raw XrApiLayerProperties
+//! @relates ApiLayerProperties
+OPENXR_HPP_INLINE XrApiLayerProperties *put(ApiLayerProperties &h) {
+  return &(h.operator XrApiLayerProperties &());
+}
+
 struct ExtensionProperties
     : public traits::TypedStructTraits<ExtensionProperties> {
 private:
@@ -8964,6 +8978,21 @@ public:
 };
 static_assert(sizeof(ExtensionProperties) == sizeof(XrExtensionProperties),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ExtensionProperties as a raw
+//! XrExtensionProperties
+//! @relates ExtensionProperties
+OPENXR_HPP_INLINE XrExtensionProperties const *
+get(ExtensionProperties const &h) {
+  return &(h.operator XrExtensionProperties const &());
+}
+
+//! @brief Free function accessor for passing ExtensionProperties as the address
+//! of a raw XrExtensionProperties
+//! @relates ExtensionProperties
+OPENXR_HPP_INLINE XrExtensionProperties *put(ExtensionProperties &h) {
+  return &(h.operator XrExtensionProperties &());
+}
 
 struct ApplicationInfo {
   // ctor
@@ -9000,6 +9029,19 @@ struct ApplicationInfo {
 };
 static_assert(sizeof(ApplicationInfo) == sizeof(XrApplicationInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ApplicationInfo as a raw XrApplicationInfo
+//! @relates ApplicationInfo
+OPENXR_HPP_INLINE XrApplicationInfo const *get(ApplicationInfo const &h) {
+  return &(h.operator XrApplicationInfo const &());
+}
+
+//! @brief Free function accessor for passing ApplicationInfo as the address of
+//! a raw XrApplicationInfo
+//! @relates ApplicationInfo
+OPENXR_HPP_INLINE XrApplicationInfo *put(ApplicationInfo &h) {
+  return &(h.operator XrApplicationInfo &());
+}
 
 struct InstanceCreateInfo
     : public traits::TypedStructTraits<InstanceCreateInfo> {
@@ -9041,6 +9083,20 @@ public:
 static_assert(sizeof(InstanceCreateInfo) == sizeof(XrInstanceCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for InstanceCreateInfo as a raw
+//! XrInstanceCreateInfo
+//! @relates InstanceCreateInfo
+OPENXR_HPP_INLINE XrInstanceCreateInfo const *get(InstanceCreateInfo const &h) {
+  return &(h.operator XrInstanceCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing InstanceCreateInfo as the address
+//! of a raw XrInstanceCreateInfo
+//! @relates InstanceCreateInfo
+OPENXR_HPP_INLINE XrInstanceCreateInfo *put(InstanceCreateInfo &h) {
+  return &(h.operator XrInstanceCreateInfo &());
+}
+
 struct InstanceProperties
     : public traits::TypedStructTraits<InstanceProperties> {
 private:
@@ -9064,6 +9120,20 @@ public:
 static_assert(sizeof(InstanceProperties) == sizeof(XrInstanceProperties),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for InstanceProperties as a raw
+//! XrInstanceProperties
+//! @relates InstanceProperties
+OPENXR_HPP_INLINE XrInstanceProperties const *get(InstanceProperties const &h) {
+  return &(h.operator XrInstanceProperties const &());
+}
+
+//! @brief Free function accessor for passing InstanceProperties as the address
+//! of a raw XrInstanceProperties
+//! @relates InstanceProperties
+OPENXR_HPP_INLINE XrInstanceProperties *put(InstanceProperties &h) {
+  return &(h.operator XrInstanceProperties &());
+}
+
 struct EventDataBuffer : public traits::TypedStructTraits<EventDataBuffer> {
 private:
   using Parent = traits::TypedStructTraits<EventDataBuffer>;
@@ -9084,6 +9154,19 @@ public:
 };
 static_assert(sizeof(EventDataBuffer) == sizeof(XrEventDataBuffer),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataBuffer as a raw XrEventDataBuffer
+//! @relates EventDataBuffer
+OPENXR_HPP_INLINE XrEventDataBuffer const *get(EventDataBuffer const &h) {
+  return &(h.operator XrEventDataBuffer const &());
+}
+
+//! @brief Free function accessor for passing EventDataBuffer as the address of
+//! a raw XrEventDataBuffer
+//! @relates EventDataBuffer
+OPENXR_HPP_INLINE XrEventDataBuffer *put(EventDataBuffer &h) {
+  return &(h.operator XrEventDataBuffer &());
+}
 
 struct SystemGetInfo : public traits::TypedStructTraits<SystemGetInfo> {
 private:
@@ -9109,6 +9192,19 @@ public:
 };
 static_assert(sizeof(SystemGetInfo) == sizeof(XrSystemGetInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SystemGetInfo as a raw XrSystemGetInfo
+//! @relates SystemGetInfo
+OPENXR_HPP_INLINE XrSystemGetInfo const *get(SystemGetInfo const &h) {
+  return &(h.operator XrSystemGetInfo const &());
+}
+
+//! @brief Free function accessor for passing SystemGetInfo as the address of a
+//! raw XrSystemGetInfo
+//! @relates SystemGetInfo
+OPENXR_HPP_INLINE XrSystemGetInfo *put(SystemGetInfo &h) {
+  return &(h.operator XrSystemGetInfo &());
+}
 
 struct SystemGraphicsProperties {
   // ctor
@@ -9136,6 +9232,21 @@ static_assert(sizeof(SystemGraphicsProperties) ==
                   sizeof(XrSystemGraphicsProperties),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SystemGraphicsProperties as a raw
+//! XrSystemGraphicsProperties
+//! @relates SystemGraphicsProperties
+OPENXR_HPP_INLINE XrSystemGraphicsProperties const *
+get(SystemGraphicsProperties const &h) {
+  return &(h.operator XrSystemGraphicsProperties const &());
+}
+
+//! @brief Free function accessor for passing SystemGraphicsProperties as the
+//! address of a raw XrSystemGraphicsProperties
+//! @relates SystemGraphicsProperties
+OPENXR_HPP_INLINE XrSystemGraphicsProperties *put(SystemGraphicsProperties &h) {
+  return &(h.operator XrSystemGraphicsProperties &());
+}
+
 struct SystemTrackingProperties {
   // ctor
   SystemTrackingProperties(const Bool32 &orientationTracking_ = XR_FALSE,
@@ -9158,6 +9269,21 @@ struct SystemTrackingProperties {
 static_assert(sizeof(SystemTrackingProperties) ==
                   sizeof(XrSystemTrackingProperties),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SystemTrackingProperties as a raw
+//! XrSystemTrackingProperties
+//! @relates SystemTrackingProperties
+OPENXR_HPP_INLINE XrSystemTrackingProperties const *
+get(SystemTrackingProperties const &h) {
+  return &(h.operator XrSystemTrackingProperties const &());
+}
+
+//! @brief Free function accessor for passing SystemTrackingProperties as the
+//! address of a raw XrSystemTrackingProperties
+//! @relates SystemTrackingProperties
+OPENXR_HPP_INLINE XrSystemTrackingProperties *put(SystemTrackingProperties &h) {
+  return &(h.operator XrSystemTrackingProperties &());
+}
 
 struct SystemProperties : public traits::TypedStructTraits<SystemProperties> {
 private:
@@ -9183,6 +9309,20 @@ public:
 };
 static_assert(sizeof(SystemProperties) == sizeof(XrSystemProperties),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SystemProperties as a raw
+//! XrSystemProperties
+//! @relates SystemProperties
+OPENXR_HPP_INLINE XrSystemProperties const *get(SystemProperties const &h) {
+  return &(h.operator XrSystemProperties const &());
+}
+
+//! @brief Free function accessor for passing SystemProperties as the address of
+//! a raw XrSystemProperties
+//! @relates SystemProperties
+OPENXR_HPP_INLINE XrSystemProperties *put(SystemProperties &h) {
+  return &(h.operator XrSystemProperties &());
+}
 
 struct SessionCreateInfo : public traits::TypedStructTraits<SessionCreateInfo> {
 private:
@@ -9211,6 +9351,20 @@ public:
 static_assert(sizeof(SessionCreateInfo) == sizeof(XrSessionCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SessionCreateInfo as a raw
+//! XrSessionCreateInfo
+//! @relates SessionCreateInfo
+OPENXR_HPP_INLINE XrSessionCreateInfo const *get(SessionCreateInfo const &h) {
+  return &(h.operator XrSessionCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing SessionCreateInfo as the address
+//! of a raw XrSessionCreateInfo
+//! @relates SessionCreateInfo
+OPENXR_HPP_INLINE XrSessionCreateInfo *put(SessionCreateInfo &h) {
+  return &(h.operator XrSessionCreateInfo &());
+}
+
 struct Vector3f {
   // ctor
   Vector3f(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f)
@@ -9229,6 +9383,19 @@ struct Vector3f {
 };
 static_assert(sizeof(Vector3f) == sizeof(XrVector3f),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Vector3f as a raw XrVector3f
+//! @relates Vector3f
+OPENXR_HPP_INLINE XrVector3f const *get(Vector3f const &h) {
+  return &(h.operator XrVector3f const &());
+}
+
+//! @brief Free function accessor for passing Vector3f as the address of a raw
+//! XrVector3f
+//! @relates Vector3f
+OPENXR_HPP_INLINE XrVector3f *put(Vector3f &h) {
+  return &(h.operator XrVector3f &());
+}
 
 struct SpaceVelocity : public traits::TypedStructTraits<SpaceVelocity> {
 private:
@@ -9260,6 +9427,19 @@ public:
 static_assert(sizeof(SpaceVelocity) == sizeof(XrSpaceVelocity),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SpaceVelocity as a raw XrSpaceVelocity
+//! @relates SpaceVelocity
+OPENXR_HPP_INLINE XrSpaceVelocity const *get(SpaceVelocity const &h) {
+  return &(h.operator XrSpaceVelocity const &());
+}
+
+//! @brief Free function accessor for passing SpaceVelocity as the address of a
+//! raw XrSpaceVelocity
+//! @relates SpaceVelocity
+OPENXR_HPP_INLINE XrSpaceVelocity *put(SpaceVelocity &h) {
+  return &(h.operator XrSpaceVelocity &());
+}
+
 struct Quaternionf {
   // ctor
   Quaternionf(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f,
@@ -9283,6 +9463,19 @@ struct Quaternionf {
 static_assert(sizeof(Quaternionf) == sizeof(XrQuaternionf),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Quaternionf as a raw XrQuaternionf
+//! @relates Quaternionf
+OPENXR_HPP_INLINE XrQuaternionf const *get(Quaternionf const &h) {
+  return &(h.operator XrQuaternionf const &());
+}
+
+//! @brief Free function accessor for passing Quaternionf as the address of a
+//! raw XrQuaternionf
+//! @relates Quaternionf
+OPENXR_HPP_INLINE XrQuaternionf *put(Quaternionf &h) {
+  return &(h.operator XrQuaternionf &());
+}
+
 struct Posef {
   // ctor
   Posef(const Quaternionf &orientation_ = {}, const Vector3f &position_ = {})
@@ -9300,6 +9493,17 @@ struct Posef {
 };
 static_assert(sizeof(Posef) == sizeof(XrPosef),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Posef as a raw XrPosef
+//! @relates Posef
+OPENXR_HPP_INLINE XrPosef const *get(Posef const &h) {
+  return &(h.operator XrPosef const &());
+}
+
+//! @brief Free function accessor for passing Posef as the address of a raw
+//! XrPosef
+//! @relates Posef
+OPENXR_HPP_INLINE XrPosef *put(Posef &h) { return &(h.operator XrPosef &()); }
 
 struct ReferenceSpaceCreateInfo
     : public traits::TypedStructTraits<ReferenceSpaceCreateInfo> {
@@ -9331,6 +9535,21 @@ static_assert(sizeof(ReferenceSpaceCreateInfo) ==
                   sizeof(XrReferenceSpaceCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ReferenceSpaceCreateInfo as a raw
+//! XrReferenceSpaceCreateInfo
+//! @relates ReferenceSpaceCreateInfo
+OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo const *
+get(ReferenceSpaceCreateInfo const &h) {
+  return &(h.operator XrReferenceSpaceCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing ReferenceSpaceCreateInfo as the
+//! address of a raw XrReferenceSpaceCreateInfo
+//! @relates ReferenceSpaceCreateInfo
+OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo *put(ReferenceSpaceCreateInfo &h) {
+  return &(h.operator XrReferenceSpaceCreateInfo &());
+}
+
 struct Extent2Df {
   // ctor
   Extent2Df(float width_ = 0.0f, float height_ = 0.0f)
@@ -9348,6 +9567,19 @@ struct Extent2Df {
 };
 static_assert(sizeof(Extent2Df) == sizeof(XrExtent2Df),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Extent2Df as a raw XrExtent2Df
+//! @relates Extent2Df
+OPENXR_HPP_INLINE XrExtent2Df const *get(Extent2Df const &h) {
+  return &(h.operator XrExtent2Df const &());
+}
+
+//! @brief Free function accessor for passing Extent2Df as the address of a raw
+//! XrExtent2Df
+//! @relates Extent2Df
+OPENXR_HPP_INLINE XrExtent2Df *put(Extent2Df &h) {
+  return &(h.operator XrExtent2Df &());
+}
 
 struct ActionSpaceCreateInfo
     : public traits::TypedStructTraits<ActionSpaceCreateInfo> {
@@ -9380,6 +9612,21 @@ public:
 static_assert(sizeof(ActionSpaceCreateInfo) == sizeof(XrActionSpaceCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionSpaceCreateInfo as a raw
+//! XrActionSpaceCreateInfo
+//! @relates ActionSpaceCreateInfo
+OPENXR_HPP_INLINE XrActionSpaceCreateInfo const *
+get(ActionSpaceCreateInfo const &h) {
+  return &(h.operator XrActionSpaceCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing ActionSpaceCreateInfo as the
+//! address of a raw XrActionSpaceCreateInfo
+//! @relates ActionSpaceCreateInfo
+OPENXR_HPP_INLINE XrActionSpaceCreateInfo *put(ActionSpaceCreateInfo &h) {
+  return &(h.operator XrActionSpaceCreateInfo &());
+}
+
 struct SpaceLocation : public traits::TypedStructTraits<SpaceLocation> {
 private:
   using Parent = traits::TypedStructTraits<SpaceLocation>;
@@ -9406,6 +9653,19 @@ public:
 };
 static_assert(sizeof(SpaceLocation) == sizeof(XrSpaceLocation),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SpaceLocation as a raw XrSpaceLocation
+//! @relates SpaceLocation
+OPENXR_HPP_INLINE XrSpaceLocation const *get(SpaceLocation const &h) {
+  return &(h.operator XrSpaceLocation const &());
+}
+
+//! @brief Free function accessor for passing SpaceLocation as the address of a
+//! raw XrSpaceLocation
+//! @relates SpaceLocation
+OPENXR_HPP_INLINE XrSpaceLocation *put(SpaceLocation &h) {
+  return &(h.operator XrSpaceLocation &());
+}
 
 struct ViewConfigurationProperties
     : public traits::TypedStructTraits<ViewConfigurationProperties> {
@@ -9437,6 +9697,22 @@ public:
 static_assert(sizeof(ViewConfigurationProperties) ==
                   sizeof(XrViewConfigurationProperties),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ViewConfigurationProperties as a raw
+//! XrViewConfigurationProperties
+//! @relates ViewConfigurationProperties
+OPENXR_HPP_INLINE XrViewConfigurationProperties const *
+get(ViewConfigurationProperties const &h) {
+  return &(h.operator XrViewConfigurationProperties const &());
+}
+
+//! @brief Free function accessor for passing ViewConfigurationProperties as the
+//! address of a raw XrViewConfigurationProperties
+//! @relates ViewConfigurationProperties
+OPENXR_HPP_INLINE XrViewConfigurationProperties *
+put(ViewConfigurationProperties &h) {
+  return &(h.operator XrViewConfigurationProperties &());
+}
 
 struct ViewConfigurationView
     : public traits::TypedStructTraits<ViewConfigurationView> {
@@ -9479,6 +9755,21 @@ public:
 static_assert(sizeof(ViewConfigurationView) == sizeof(XrViewConfigurationView),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ViewConfigurationView as a raw
+//! XrViewConfigurationView
+//! @relates ViewConfigurationView
+OPENXR_HPP_INLINE XrViewConfigurationView const *
+get(ViewConfigurationView const &h) {
+  return &(h.operator XrViewConfigurationView const &());
+}
+
+//! @brief Free function accessor for passing ViewConfigurationView as the
+//! address of a raw XrViewConfigurationView
+//! @relates ViewConfigurationView
+OPENXR_HPP_INLINE XrViewConfigurationView *put(ViewConfigurationView &h) {
+  return &(h.operator XrViewConfigurationView &());
+}
+
 struct SwapchainCreateInfo
     : public traits::TypedStructTraits<SwapchainCreateInfo> {
 private:
@@ -9520,6 +9811,21 @@ public:
 static_assert(sizeof(SwapchainCreateInfo) == sizeof(XrSwapchainCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SwapchainCreateInfo as a raw
+//! XrSwapchainCreateInfo
+//! @relates SwapchainCreateInfo
+OPENXR_HPP_INLINE XrSwapchainCreateInfo const *
+get(SwapchainCreateInfo const &h) {
+  return &(h.operator XrSwapchainCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing SwapchainCreateInfo as the address
+//! of a raw XrSwapchainCreateInfo
+//! @relates SwapchainCreateInfo
+OPENXR_HPP_INLINE XrSwapchainCreateInfo *put(SwapchainCreateInfo &h) {
+  return &(h.operator XrSwapchainCreateInfo &());
+}
+
 struct SwapchainImageAcquireInfo
     : public traits::TypedStructTraits<SwapchainImageAcquireInfo> {
 private:
@@ -9545,6 +9851,22 @@ public:
 static_assert(sizeof(SwapchainImageAcquireInfo) ==
                   sizeof(XrSwapchainImageAcquireInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageAcquireInfo as a raw
+//! XrSwapchainImageAcquireInfo
+//! @relates SwapchainImageAcquireInfo
+OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo const *
+get(SwapchainImageAcquireInfo const &h) {
+  return &(h.operator XrSwapchainImageAcquireInfo const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageAcquireInfo as the
+//! address of a raw XrSwapchainImageAcquireInfo
+//! @relates SwapchainImageAcquireInfo
+OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo *
+put(SwapchainImageAcquireInfo &h) {
+  return &(h.operator XrSwapchainImageAcquireInfo &());
+}
 
 struct SwapchainImageWaitInfo
     : public traits::TypedStructTraits<SwapchainImageWaitInfo> {
@@ -9573,6 +9895,21 @@ static_assert(sizeof(SwapchainImageWaitInfo) ==
                   sizeof(XrSwapchainImageWaitInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SwapchainImageWaitInfo as a raw
+//! XrSwapchainImageWaitInfo
+//! @relates SwapchainImageWaitInfo
+OPENXR_HPP_INLINE XrSwapchainImageWaitInfo const *
+get(SwapchainImageWaitInfo const &h) {
+  return &(h.operator XrSwapchainImageWaitInfo const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageWaitInfo as the
+//! address of a raw XrSwapchainImageWaitInfo
+//! @relates SwapchainImageWaitInfo
+OPENXR_HPP_INLINE XrSwapchainImageWaitInfo *put(SwapchainImageWaitInfo &h) {
+  return &(h.operator XrSwapchainImageWaitInfo &());
+}
+
 struct SwapchainImageReleaseInfo
     : public traits::TypedStructTraits<SwapchainImageReleaseInfo> {
 private:
@@ -9598,6 +9935,22 @@ public:
 static_assert(sizeof(SwapchainImageReleaseInfo) ==
                   sizeof(XrSwapchainImageReleaseInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageReleaseInfo as a raw
+//! XrSwapchainImageReleaseInfo
+//! @relates SwapchainImageReleaseInfo
+OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo const *
+get(SwapchainImageReleaseInfo const &h) {
+  return &(h.operator XrSwapchainImageReleaseInfo const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageReleaseInfo as the
+//! address of a raw XrSwapchainImageReleaseInfo
+//! @relates SwapchainImageReleaseInfo
+OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo *
+put(SwapchainImageReleaseInfo &h) {
+  return &(h.operator XrSwapchainImageReleaseInfo &());
+}
 
 struct SessionBeginInfo : public traits::TypedStructTraits<SessionBeginInfo> {
 private:
@@ -9625,6 +9978,20 @@ public:
 static_assert(sizeof(SessionBeginInfo) == sizeof(XrSessionBeginInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SessionBeginInfo as a raw
+//! XrSessionBeginInfo
+//! @relates SessionBeginInfo
+OPENXR_HPP_INLINE XrSessionBeginInfo const *get(SessionBeginInfo const &h) {
+  return &(h.operator XrSessionBeginInfo const &());
+}
+
+//! @brief Free function accessor for passing SessionBeginInfo as the address of
+//! a raw XrSessionBeginInfo
+//! @relates SessionBeginInfo
+OPENXR_HPP_INLINE XrSessionBeginInfo *put(SessionBeginInfo &h) {
+  return &(h.operator XrSessionBeginInfo &());
+}
+
 struct FrameWaitInfo : public traits::TypedStructTraits<FrameWaitInfo> {
 private:
   using Parent = traits::TypedStructTraits<FrameWaitInfo>;
@@ -9648,6 +10015,19 @@ public:
 };
 static_assert(sizeof(FrameWaitInfo) == sizeof(XrFrameWaitInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for FrameWaitInfo as a raw XrFrameWaitInfo
+//! @relates FrameWaitInfo
+OPENXR_HPP_INLINE XrFrameWaitInfo const *get(FrameWaitInfo const &h) {
+  return &(h.operator XrFrameWaitInfo const &());
+}
+
+//! @brief Free function accessor for passing FrameWaitInfo as the address of a
+//! raw XrFrameWaitInfo
+//! @relates FrameWaitInfo
+OPENXR_HPP_INLINE XrFrameWaitInfo *put(FrameWaitInfo &h) {
+  return &(h.operator XrFrameWaitInfo &());
+}
 
 struct FrameState : public traits::TypedStructTraits<FrameState> {
 private:
@@ -9678,6 +10058,19 @@ public:
 static_assert(sizeof(FrameState) == sizeof(XrFrameState),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for FrameState as a raw XrFrameState
+//! @relates FrameState
+OPENXR_HPP_INLINE XrFrameState const *get(FrameState const &h) {
+  return &(h.operator XrFrameState const &());
+}
+
+//! @brief Free function accessor for passing FrameState as the address of a raw
+//! XrFrameState
+//! @relates FrameState
+OPENXR_HPP_INLINE XrFrameState *put(FrameState &h) {
+  return &(h.operator XrFrameState &());
+}
+
 struct FrameBeginInfo : public traits::TypedStructTraits<FrameBeginInfo> {
 private:
   using Parent = traits::TypedStructTraits<FrameBeginInfo>;
@@ -9701,6 +10094,19 @@ public:
 };
 static_assert(sizeof(FrameBeginInfo) == sizeof(XrFrameBeginInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for FrameBeginInfo as a raw XrFrameBeginInfo
+//! @relates FrameBeginInfo
+OPENXR_HPP_INLINE XrFrameBeginInfo const *get(FrameBeginInfo const &h) {
+  return &(h.operator XrFrameBeginInfo const &());
+}
+
+//! @brief Free function accessor for passing FrameBeginInfo as the address of a
+//! raw XrFrameBeginInfo
+//! @relates FrameBeginInfo
+OPENXR_HPP_INLINE XrFrameBeginInfo *put(FrameBeginInfo &h) {
+  return &(h.operator XrFrameBeginInfo &());
+}
 
 struct FrameEndInfo : public traits::TypedStructTraits<FrameEndInfo> {
 private:
@@ -9734,6 +10140,19 @@ public:
 static_assert(sizeof(FrameEndInfo) == sizeof(XrFrameEndInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for FrameEndInfo as a raw XrFrameEndInfo
+//! @relates FrameEndInfo
+OPENXR_HPP_INLINE XrFrameEndInfo const *get(FrameEndInfo const &h) {
+  return &(h.operator XrFrameEndInfo const &());
+}
+
+//! @brief Free function accessor for passing FrameEndInfo as the address of a
+//! raw XrFrameEndInfo
+//! @relates FrameEndInfo
+OPENXR_HPP_INLINE XrFrameEndInfo *put(FrameEndInfo &h) {
+  return &(h.operator XrFrameEndInfo &());
+}
+
 struct ViewLocateInfo : public traits::TypedStructTraits<ViewLocateInfo> {
 private:
   using Parent = traits::TypedStructTraits<ViewLocateInfo>;
@@ -9763,6 +10182,19 @@ public:
 static_assert(sizeof(ViewLocateInfo) == sizeof(XrViewLocateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ViewLocateInfo as a raw XrViewLocateInfo
+//! @relates ViewLocateInfo
+OPENXR_HPP_INLINE XrViewLocateInfo const *get(ViewLocateInfo const &h) {
+  return &(h.operator XrViewLocateInfo const &());
+}
+
+//! @brief Free function accessor for passing ViewLocateInfo as the address of a
+//! raw XrViewLocateInfo
+//! @relates ViewLocateInfo
+OPENXR_HPP_INLINE XrViewLocateInfo *put(ViewLocateInfo &h) {
+  return &(h.operator XrViewLocateInfo &());
+}
+
 struct ViewState : public traits::TypedStructTraits<ViewState> {
 private:
   using Parent = traits::TypedStructTraits<ViewState>;
@@ -9786,6 +10218,19 @@ public:
 static_assert(sizeof(ViewState) == sizeof(XrViewState),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ViewState as a raw XrViewState
+//! @relates ViewState
+OPENXR_HPP_INLINE XrViewState const *get(ViewState const &h) {
+  return &(h.operator XrViewState const &());
+}
+
+//! @brief Free function accessor for passing ViewState as the address of a raw
+//! XrViewState
+//! @relates ViewState
+OPENXR_HPP_INLINE XrViewState *put(ViewState &h) {
+  return &(h.operator XrViewState &());
+}
+
 struct Fovf {
   // ctor
   Fovf(float angleLeft_ = 0.0f, float angleRight_ = 0.0f, float angleUp_ = 0.0f,
@@ -9807,6 +10252,17 @@ struct Fovf {
 };
 static_assert(sizeof(Fovf) == sizeof(XrFovf),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Fovf as a raw XrFovf
+//! @relates Fovf
+OPENXR_HPP_INLINE XrFovf const *get(Fovf const &h) {
+  return &(h.operator XrFovf const &());
+}
+
+//! @brief Free function accessor for passing Fovf as the address of a raw
+//! XrFovf
+//! @relates Fovf
+OPENXR_HPP_INLINE XrFovf *put(Fovf &h) { return &(h.operator XrFovf &()); }
 
 struct View : public traits::TypedStructTraits<View> {
 private:
@@ -9831,6 +10287,17 @@ public:
 };
 static_assert(sizeof(View) == sizeof(XrView),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for View as a raw XrView
+//! @relates View
+OPENXR_HPP_INLINE XrView const *get(View const &h) {
+  return &(h.operator XrView const &());
+}
+
+//! @brief Free function accessor for passing View as the address of a raw
+//! XrView
+//! @relates View
+OPENXR_HPP_INLINE XrView *put(View &h) { return &(h.operator XrView &()); }
 
 struct ActionSetCreateInfo
     : public traits::TypedStructTraits<ActionSetCreateInfo> {
@@ -9871,6 +10338,21 @@ public:
 };
 static_assert(sizeof(ActionSetCreateInfo) == sizeof(XrActionSetCreateInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionSetCreateInfo as a raw
+//! XrActionSetCreateInfo
+//! @relates ActionSetCreateInfo
+OPENXR_HPP_INLINE XrActionSetCreateInfo const *
+get(ActionSetCreateInfo const &h) {
+  return &(h.operator XrActionSetCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing ActionSetCreateInfo as the address
+//! of a raw XrActionSetCreateInfo
+//! @relates ActionSetCreateInfo
+OPENXR_HPP_INLINE XrActionSetCreateInfo *put(ActionSetCreateInfo &h) {
+  return &(h.operator XrActionSetCreateInfo &());
+}
 
 struct ActionCreateInfo : public traits::TypedStructTraits<ActionCreateInfo> {
 private:
@@ -9916,6 +10398,20 @@ public:
 static_assert(sizeof(ActionCreateInfo) == sizeof(XrActionCreateInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionCreateInfo as a raw
+//! XrActionCreateInfo
+//! @relates ActionCreateInfo
+OPENXR_HPP_INLINE XrActionCreateInfo const *get(ActionCreateInfo const &h) {
+  return &(h.operator XrActionCreateInfo const &());
+}
+
+//! @brief Free function accessor for passing ActionCreateInfo as the address of
+//! a raw XrActionCreateInfo
+//! @relates ActionCreateInfo
+OPENXR_HPP_INLINE XrActionCreateInfo *put(ActionCreateInfo &h) {
+  return &(h.operator XrActionCreateInfo &());
+}
+
 struct ActionSuggestedBinding {
   // ctor
   ActionSuggestedBinding(const Action &action_ = {}, const Path &binding_ = {})
@@ -9936,6 +10432,21 @@ struct ActionSuggestedBinding {
 static_assert(sizeof(ActionSuggestedBinding) ==
                   sizeof(XrActionSuggestedBinding),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionSuggestedBinding as a raw
+//! XrActionSuggestedBinding
+//! @relates ActionSuggestedBinding
+OPENXR_HPP_INLINE XrActionSuggestedBinding const *
+get(ActionSuggestedBinding const &h) {
+  return &(h.operator XrActionSuggestedBinding const &());
+}
+
+//! @brief Free function accessor for passing ActionSuggestedBinding as the
+//! address of a raw XrActionSuggestedBinding
+//! @relates ActionSuggestedBinding
+OPENXR_HPP_INLINE XrActionSuggestedBinding *put(ActionSuggestedBinding &h) {
+  return &(h.operator XrActionSuggestedBinding &());
+}
 
 struct InteractionProfileSuggestedBinding
     : public traits::TypedStructTraits<InteractionProfileSuggestedBinding> {
@@ -9972,6 +10483,22 @@ static_assert(sizeof(InteractionProfileSuggestedBinding) ==
                   sizeof(XrInteractionProfileSuggestedBinding),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for InteractionProfileSuggestedBinding as a
+//! raw XrInteractionProfileSuggestedBinding
+//! @relates InteractionProfileSuggestedBinding
+OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding const *
+get(InteractionProfileSuggestedBinding const &h) {
+  return &(h.operator XrInteractionProfileSuggestedBinding const &());
+}
+
+//! @brief Free function accessor for passing InteractionProfileSuggestedBinding
+//! as the address of a raw XrInteractionProfileSuggestedBinding
+//! @relates InteractionProfileSuggestedBinding
+OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding *
+put(InteractionProfileSuggestedBinding &h) {
+  return &(h.operator XrInteractionProfileSuggestedBinding &());
+}
+
 struct SessionActionSetsAttachInfo
     : public traits::TypedStructTraits<SessionActionSetsAttachInfo> {
 private:
@@ -10001,6 +10528,22 @@ static_assert(sizeof(SessionActionSetsAttachInfo) ==
                   sizeof(XrSessionActionSetsAttachInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SessionActionSetsAttachInfo as a raw
+//! XrSessionActionSetsAttachInfo
+//! @relates SessionActionSetsAttachInfo
+OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo const *
+get(SessionActionSetsAttachInfo const &h) {
+  return &(h.operator XrSessionActionSetsAttachInfo const &());
+}
+
+//! @brief Free function accessor for passing SessionActionSetsAttachInfo as the
+//! address of a raw XrSessionActionSetsAttachInfo
+//! @relates SessionActionSetsAttachInfo
+OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo *
+put(SessionActionSetsAttachInfo &h) {
+  return &(h.operator XrSessionActionSetsAttachInfo &());
+}
+
 struct InteractionProfileState
     : public traits::TypedStructTraits<InteractionProfileState> {
 private:
@@ -10027,6 +10570,21 @@ public:
 static_assert(sizeof(InteractionProfileState) ==
                   sizeof(XrInteractionProfileState),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InteractionProfileState as a raw
+//! XrInteractionProfileState
+//! @relates InteractionProfileState
+OPENXR_HPP_INLINE XrInteractionProfileState const *
+get(InteractionProfileState const &h) {
+  return &(h.operator XrInteractionProfileState const &());
+}
+
+//! @brief Free function accessor for passing InteractionProfileState as the
+//! address of a raw XrInteractionProfileState
+//! @relates InteractionProfileState
+OPENXR_HPP_INLINE XrInteractionProfileState *put(InteractionProfileState &h) {
+  return &(h.operator XrInteractionProfileState &());
+}
 
 struct ActionStateGetInfo
     : public traits::TypedStructTraits<ActionStateGetInfo> {
@@ -10055,6 +10613,20 @@ public:
 };
 static_assert(sizeof(ActionStateGetInfo) == sizeof(XrActionStateGetInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionStateGetInfo as a raw
+//! XrActionStateGetInfo
+//! @relates ActionStateGetInfo
+OPENXR_HPP_INLINE XrActionStateGetInfo const *get(ActionStateGetInfo const &h) {
+  return &(h.operator XrActionStateGetInfo const &());
+}
+
+//! @brief Free function accessor for passing ActionStateGetInfo as the address
+//! of a raw XrActionStateGetInfo
+//! @relates ActionStateGetInfo
+OPENXR_HPP_INLINE XrActionStateGetInfo *put(ActionStateGetInfo &h) {
+  return &(h.operator XrActionStateGetInfo &());
+}
 
 struct ActionStateBoolean
     : public traits::TypedStructTraits<ActionStateBoolean> {
@@ -10090,6 +10662,20 @@ public:
 static_assert(sizeof(ActionStateBoolean) == sizeof(XrActionStateBoolean),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStateBoolean as a raw
+//! XrActionStateBoolean
+//! @relates ActionStateBoolean
+OPENXR_HPP_INLINE XrActionStateBoolean const *get(ActionStateBoolean const &h) {
+  return &(h.operator XrActionStateBoolean const &());
+}
+
+//! @brief Free function accessor for passing ActionStateBoolean as the address
+//! of a raw XrActionStateBoolean
+//! @relates ActionStateBoolean
+OPENXR_HPP_INLINE XrActionStateBoolean *put(ActionStateBoolean &h) {
+  return &(h.operator XrActionStateBoolean &());
+}
+
 struct ActionStateFloat : public traits::TypedStructTraits<ActionStateFloat> {
 private:
   using Parent = traits::TypedStructTraits<ActionStateFloat>;
@@ -10123,6 +10709,20 @@ public:
 static_assert(sizeof(ActionStateFloat) == sizeof(XrActionStateFloat),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStateFloat as a raw
+//! XrActionStateFloat
+//! @relates ActionStateFloat
+OPENXR_HPP_INLINE XrActionStateFloat const *get(ActionStateFloat const &h) {
+  return &(h.operator XrActionStateFloat const &());
+}
+
+//! @brief Free function accessor for passing ActionStateFloat as the address of
+//! a raw XrActionStateFloat
+//! @relates ActionStateFloat
+OPENXR_HPP_INLINE XrActionStateFloat *put(ActionStateFloat &h) {
+  return &(h.operator XrActionStateFloat &());
+}
+
 struct Vector2f {
   // ctor
   Vector2f(float x_ = 0.0f, float y_ = 0.0f)
@@ -10140,6 +10740,19 @@ struct Vector2f {
 };
 static_assert(sizeof(Vector2f) == sizeof(XrVector2f),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Vector2f as a raw XrVector2f
+//! @relates Vector2f
+OPENXR_HPP_INLINE XrVector2f const *get(Vector2f const &h) {
+  return &(h.operator XrVector2f const &());
+}
+
+//! @brief Free function accessor for passing Vector2f as the address of a raw
+//! XrVector2f
+//! @relates Vector2f
+OPENXR_HPP_INLINE XrVector2f *put(Vector2f &h) {
+  return &(h.operator XrVector2f &());
+}
 
 struct ActionStateVector2f
     : public traits::TypedStructTraits<ActionStateVector2f> {
@@ -10175,6 +10788,21 @@ public:
 static_assert(sizeof(ActionStateVector2f) == sizeof(XrActionStateVector2f),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStateVector2f as a raw
+//! XrActionStateVector2f
+//! @relates ActionStateVector2f
+OPENXR_HPP_INLINE XrActionStateVector2f const *
+get(ActionStateVector2f const &h) {
+  return &(h.operator XrActionStateVector2f const &());
+}
+
+//! @brief Free function accessor for passing ActionStateVector2f as the address
+//! of a raw XrActionStateVector2f
+//! @relates ActionStateVector2f
+OPENXR_HPP_INLINE XrActionStateVector2f *put(ActionStateVector2f &h) {
+  return &(h.operator XrActionStateVector2f &());
+}
+
 struct ActionStatePose : public traits::TypedStructTraits<ActionStatePose> {
 private:
   using Parent = traits::TypedStructTraits<ActionStatePose>;
@@ -10200,6 +10828,19 @@ public:
 static_assert(sizeof(ActionStatePose) == sizeof(XrActionStatePose),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStatePose as a raw XrActionStatePose
+//! @relates ActionStatePose
+OPENXR_HPP_INLINE XrActionStatePose const *get(ActionStatePose const &h) {
+  return &(h.operator XrActionStatePose const &());
+}
+
+//! @brief Free function accessor for passing ActionStatePose as the address of
+//! a raw XrActionStatePose
+//! @relates ActionStatePose
+OPENXR_HPP_INLINE XrActionStatePose *put(ActionStatePose &h) {
+  return &(h.operator XrActionStatePose &());
+}
+
 struct ActiveActionSet {
   // ctor
   ActiveActionSet(const ActionSet &actionSet_ = {},
@@ -10220,6 +10861,19 @@ struct ActiveActionSet {
 };
 static_assert(sizeof(ActiveActionSet) == sizeof(XrActiveActionSet),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActiveActionSet as a raw XrActiveActionSet
+//! @relates ActiveActionSet
+OPENXR_HPP_INLINE XrActiveActionSet const *get(ActiveActionSet const &h) {
+  return &(h.operator XrActiveActionSet const &());
+}
+
+//! @brief Free function accessor for passing ActiveActionSet as the address of
+//! a raw XrActiveActionSet
+//! @relates ActiveActionSet
+OPENXR_HPP_INLINE XrActiveActionSet *put(ActiveActionSet &h) {
+  return &(h.operator XrActiveActionSet &());
+}
 
 struct ActionsSyncInfo : public traits::TypedStructTraits<ActionsSyncInfo> {
 private:
@@ -10249,6 +10903,19 @@ public:
 static_assert(sizeof(ActionsSyncInfo) == sizeof(XrActionsSyncInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionsSyncInfo as a raw XrActionsSyncInfo
+//! @relates ActionsSyncInfo
+OPENXR_HPP_INLINE XrActionsSyncInfo const *get(ActionsSyncInfo const &h) {
+  return &(h.operator XrActionsSyncInfo const &());
+}
+
+//! @brief Free function accessor for passing ActionsSyncInfo as the address of
+//! a raw XrActionsSyncInfo
+//! @relates ActionsSyncInfo
+OPENXR_HPP_INLINE XrActionsSyncInfo *put(ActionsSyncInfo &h) {
+  return &(h.operator XrActionsSyncInfo &());
+}
+
 struct BoundSourcesForActionEnumerateInfo
     : public traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo> {
 private:
@@ -10276,6 +10943,22 @@ public:
 static_assert(sizeof(BoundSourcesForActionEnumerateInfo) ==
                   sizeof(XrBoundSourcesForActionEnumerateInfo),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for BoundSourcesForActionEnumerateInfo as a
+//! raw XrBoundSourcesForActionEnumerateInfo
+//! @relates BoundSourcesForActionEnumerateInfo
+OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo const *
+get(BoundSourcesForActionEnumerateInfo const &h) {
+  return &(h.operator XrBoundSourcesForActionEnumerateInfo const &());
+}
+
+//! @brief Free function accessor for passing BoundSourcesForActionEnumerateInfo
+//! as the address of a raw XrBoundSourcesForActionEnumerateInfo
+//! @relates BoundSourcesForActionEnumerateInfo
+OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo *
+put(BoundSourcesForActionEnumerateInfo &h) {
+  return &(h.operator XrBoundSourcesForActionEnumerateInfo &());
+}
 
 struct InputSourceLocalizedNameGetInfo
     : public traits::TypedStructTraits<InputSourceLocalizedNameGetInfo> {
@@ -10307,6 +10990,22 @@ static_assert(sizeof(InputSourceLocalizedNameGetInfo) ==
                   sizeof(XrInputSourceLocalizedNameGetInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for InputSourceLocalizedNameGetInfo as a raw
+//! XrInputSourceLocalizedNameGetInfo
+//! @relates InputSourceLocalizedNameGetInfo
+OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo const *
+get(InputSourceLocalizedNameGetInfo const &h) {
+  return &(h.operator XrInputSourceLocalizedNameGetInfo const &());
+}
+
+//! @brief Free function accessor for passing InputSourceLocalizedNameGetInfo as
+//! the address of a raw XrInputSourceLocalizedNameGetInfo
+//! @relates InputSourceLocalizedNameGetInfo
+OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo *
+put(InputSourceLocalizedNameGetInfo &h) {
+  return &(h.operator XrInputSourceLocalizedNameGetInfo &());
+}
+
 struct HapticActionInfo : public traits::TypedStructTraits<HapticActionInfo> {
 private:
   using Parent = traits::TypedStructTraits<HapticActionInfo>;
@@ -10333,6 +11032,20 @@ public:
 static_assert(sizeof(HapticActionInfo) == sizeof(XrHapticActionInfo),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for HapticActionInfo as a raw
+//! XrHapticActionInfo
+//! @relates HapticActionInfo
+OPENXR_HPP_INLINE XrHapticActionInfo const *get(HapticActionInfo const &h) {
+  return &(h.operator XrHapticActionInfo const &());
+}
+
+//! @brief Free function accessor for passing HapticActionInfo as the address of
+//! a raw XrHapticActionInfo
+//! @relates HapticActionInfo
+OPENXR_HPP_INLINE XrHapticActionInfo *put(HapticActionInfo &h) {
+  return &(h.operator XrHapticActionInfo &());
+}
+
 struct Offset2Di {
   // ctor
   Offset2Di(int32_t x_ = 0, int32_t y_ = 0)
@@ -10350,6 +11063,19 @@ struct Offset2Di {
 };
 static_assert(sizeof(Offset2Di) == sizeof(XrOffset2Di),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Offset2Di as a raw XrOffset2Di
+//! @relates Offset2Di
+OPENXR_HPP_INLINE XrOffset2Di const *get(Offset2Di const &h) {
+  return &(h.operator XrOffset2Di const &());
+}
+
+//! @brief Free function accessor for passing Offset2Di as the address of a raw
+//! XrOffset2Di
+//! @relates Offset2Di
+OPENXR_HPP_INLINE XrOffset2Di *put(Offset2Di &h) {
+  return &(h.operator XrOffset2Di &());
+}
 
 struct Extent2Di {
   // ctor
@@ -10369,6 +11095,19 @@ struct Extent2Di {
 static_assert(sizeof(Extent2Di) == sizeof(XrExtent2Di),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Extent2Di as a raw XrExtent2Di
+//! @relates Extent2Di
+OPENXR_HPP_INLINE XrExtent2Di const *get(Extent2Di const &h) {
+  return &(h.operator XrExtent2Di const &());
+}
+
+//! @brief Free function accessor for passing Extent2Di as the address of a raw
+//! XrExtent2Di
+//! @relates Extent2Di
+OPENXR_HPP_INLINE XrExtent2Di *put(Extent2Di &h) {
+  return &(h.operator XrExtent2Di &());
+}
+
 struct Rect2Di {
   // ctor
   Rect2Di(const Offset2Di &offset_ = {}, const Extent2Di &extent_ = {})
@@ -10386,6 +11125,19 @@ struct Rect2Di {
 };
 static_assert(sizeof(Rect2Di) == sizeof(XrRect2Di),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Rect2Di as a raw XrRect2Di
+//! @relates Rect2Di
+OPENXR_HPP_INLINE XrRect2Di const *get(Rect2Di const &h) {
+  return &(h.operator XrRect2Di const &());
+}
+
+//! @brief Free function accessor for passing Rect2Di as the address of a raw
+//! XrRect2Di
+//! @relates Rect2Di
+OPENXR_HPP_INLINE XrRect2Di *put(Rect2Di &h) {
+  return &(h.operator XrRect2Di &());
+}
 
 struct SwapchainSubImage {
   // ctor
@@ -10410,6 +11162,20 @@ struct SwapchainSubImage {
 };
 static_assert(sizeof(SwapchainSubImage) == sizeof(XrSwapchainSubImage),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainSubImage as a raw
+//! XrSwapchainSubImage
+//! @relates SwapchainSubImage
+OPENXR_HPP_INLINE XrSwapchainSubImage const *get(SwapchainSubImage const &h) {
+  return &(h.operator XrSwapchainSubImage const &());
+}
+
+//! @brief Free function accessor for passing SwapchainSubImage as the address
+//! of a raw XrSwapchainSubImage
+//! @relates SwapchainSubImage
+OPENXR_HPP_INLINE XrSwapchainSubImage *put(SwapchainSubImage &h) {
+  return &(h.operator XrSwapchainSubImage &());
+}
 
 struct CompositionLayerProjectionView
     : public traits::TypedStructTraits<CompositionLayerProjectionView> {
@@ -10440,6 +11206,22 @@ public:
 static_assert(sizeof(CompositionLayerProjectionView) ==
                   sizeof(XrCompositionLayerProjectionView),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerProjectionView as a raw
+//! XrCompositionLayerProjectionView
+//! @relates CompositionLayerProjectionView
+OPENXR_HPP_INLINE XrCompositionLayerProjectionView const *
+get(CompositionLayerProjectionView const &h) {
+  return &(h.operator XrCompositionLayerProjectionView const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerProjectionView as
+//! the address of a raw XrCompositionLayerProjectionView
+//! @relates CompositionLayerProjectionView
+OPENXR_HPP_INLINE XrCompositionLayerProjectionView *
+put(CompositionLayerProjectionView &h) {
+  return &(h.operator XrCompositionLayerProjectionView &());
+}
 
 struct CompositionLayerProjection
     : public traits::TypedStructTraits<CompositionLayerProjection> {
@@ -10474,6 +11256,22 @@ public:
 static_assert(sizeof(CompositionLayerProjection) ==
                   sizeof(XrCompositionLayerProjection),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerProjection as a raw
+//! XrCompositionLayerProjection
+//! @relates CompositionLayerProjection
+OPENXR_HPP_INLINE XrCompositionLayerProjection const *
+get(CompositionLayerProjection const &h) {
+  return &(h.operator XrCompositionLayerProjection const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerProjection as the
+//! address of a raw XrCompositionLayerProjection
+//! @relates CompositionLayerProjection
+OPENXR_HPP_INLINE XrCompositionLayerProjection *
+put(CompositionLayerProjection &h) {
+  return &(h.operator XrCompositionLayerProjection &());
+}
 
 struct CompositionLayerQuad
     : public traits::TypedStructTraits<CompositionLayerQuad> {
@@ -10511,6 +11309,21 @@ public:
 static_assert(sizeof(CompositionLayerQuad) == sizeof(XrCompositionLayerQuad),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerQuad as a raw
+//! XrCompositionLayerQuad
+//! @relates CompositionLayerQuad
+OPENXR_HPP_INLINE XrCompositionLayerQuad const *
+get(CompositionLayerQuad const &h) {
+  return &(h.operator XrCompositionLayerQuad const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerQuad as the
+//! address of a raw XrCompositionLayerQuad
+//! @relates CompositionLayerQuad
+OPENXR_HPP_INLINE XrCompositionLayerQuad *put(CompositionLayerQuad &h) {
+  return &(h.operator XrCompositionLayerQuad &());
+}
+
 struct EventDataEventsLost
     : public traits::TypedStructTraits<EventDataEventsLost> {
 private:
@@ -10536,6 +11349,21 @@ public:
 };
 static_assert(sizeof(EventDataEventsLost) == sizeof(XrEventDataEventsLost),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataEventsLost as a raw
+//! XrEventDataEventsLost
+//! @relates EventDataEventsLost
+OPENXR_HPP_INLINE XrEventDataEventsLost const *
+get(EventDataEventsLost const &h) {
+  return &(h.operator XrEventDataEventsLost const &());
+}
+
+//! @brief Free function accessor for passing EventDataEventsLost as the address
+//! of a raw XrEventDataEventsLost
+//! @relates EventDataEventsLost
+OPENXR_HPP_INLINE XrEventDataEventsLost *put(EventDataEventsLost &h) {
+  return &(h.operator XrEventDataEventsLost &());
+}
 
 struct EventDataInstanceLossPending
     : public traits::TypedStructTraits<EventDataInstanceLossPending> {
@@ -10563,6 +11391,22 @@ public:
 static_assert(sizeof(EventDataInstanceLossPending) ==
                   sizeof(XrEventDataInstanceLossPending),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataInstanceLossPending as a raw
+//! XrEventDataInstanceLossPending
+//! @relates EventDataInstanceLossPending
+OPENXR_HPP_INLINE XrEventDataInstanceLossPending const *
+get(EventDataInstanceLossPending const &h) {
+  return &(h.operator XrEventDataInstanceLossPending const &());
+}
+
+//! @brief Free function accessor for passing EventDataInstanceLossPending as
+//! the address of a raw XrEventDataInstanceLossPending
+//! @relates EventDataInstanceLossPending
+OPENXR_HPP_INLINE XrEventDataInstanceLossPending *
+put(EventDataInstanceLossPending &h) {
+  return &(h.operator XrEventDataInstanceLossPending &());
+}
 
 struct EventDataSessionStateChanged
     : public traits::TypedStructTraits<EventDataSessionStateChanged> {
@@ -10594,6 +11438,22 @@ public:
 static_assert(sizeof(EventDataSessionStateChanged) ==
                   sizeof(XrEventDataSessionStateChanged),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataSessionStateChanged as a raw
+//! XrEventDataSessionStateChanged
+//! @relates EventDataSessionStateChanged
+OPENXR_HPP_INLINE XrEventDataSessionStateChanged const *
+get(EventDataSessionStateChanged const &h) {
+  return &(h.operator XrEventDataSessionStateChanged const &());
+}
+
+//! @brief Free function accessor for passing EventDataSessionStateChanged as
+//! the address of a raw XrEventDataSessionStateChanged
+//! @relates EventDataSessionStateChanged
+OPENXR_HPP_INLINE XrEventDataSessionStateChanged *
+put(EventDataSessionStateChanged &h) {
+  return &(h.operator XrEventDataSessionStateChanged &());
+}
 
 struct EventDataReferenceSpaceChangePending
     : public traits::TypedStructTraits<EventDataReferenceSpaceChangePending> {
@@ -10634,6 +11494,23 @@ static_assert(sizeof(EventDataReferenceSpaceChangePending) ==
                   sizeof(XrEventDataReferenceSpaceChangePending),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for EventDataReferenceSpaceChangePending as a
+//! raw XrEventDataReferenceSpaceChangePending
+//! @relates EventDataReferenceSpaceChangePending
+OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending const *
+get(EventDataReferenceSpaceChangePending const &h) {
+  return &(h.operator XrEventDataReferenceSpaceChangePending const &());
+}
+
+//! @brief Free function accessor for passing
+//! EventDataReferenceSpaceChangePending as the address of a raw
+//! XrEventDataReferenceSpaceChangePending
+//! @relates EventDataReferenceSpaceChangePending
+OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending *
+put(EventDataReferenceSpaceChangePending &h) {
+  return &(h.operator XrEventDataReferenceSpaceChangePending &());
+}
+
 struct EventDataInteractionProfileChanged
     : public traits::TypedStructTraits<EventDataInteractionProfileChanged> {
 private:
@@ -10661,6 +11538,22 @@ public:
 static_assert(sizeof(EventDataInteractionProfileChanged) ==
                   sizeof(XrEventDataInteractionProfileChanged),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataInteractionProfileChanged as a
+//! raw XrEventDataInteractionProfileChanged
+//! @relates EventDataInteractionProfileChanged
+OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged const *
+get(EventDataInteractionProfileChanged const &h) {
+  return &(h.operator XrEventDataInteractionProfileChanged const &());
+}
+
+//! @brief Free function accessor for passing EventDataInteractionProfileChanged
+//! as the address of a raw XrEventDataInteractionProfileChanged
+//! @relates EventDataInteractionProfileChanged
+OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged *
+put(EventDataInteractionProfileChanged &h) {
+  return &(h.operator XrEventDataInteractionProfileChanged &());
+}
 
 struct HapticVibration : public traits::TypedStructTraits<HapticVibration> {
 private:
@@ -10690,6 +11583,19 @@ public:
 static_assert(sizeof(HapticVibration) == sizeof(XrHapticVibration),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for HapticVibration as a raw XrHapticVibration
+//! @relates HapticVibration
+OPENXR_HPP_INLINE XrHapticVibration const *get(HapticVibration const &h) {
+  return &(h.operator XrHapticVibration const &());
+}
+
+//! @brief Free function accessor for passing HapticVibration as the address of
+//! a raw XrHapticVibration
+//! @relates HapticVibration
+OPENXR_HPP_INLINE XrHapticVibration *put(HapticVibration &h) {
+  return &(h.operator XrHapticVibration &());
+}
+
 struct Offset2Df {
   // ctor
   Offset2Df(float x_ = 0.0f, float y_ = 0.0f)
@@ -10708,6 +11614,19 @@ struct Offset2Df {
 static_assert(sizeof(Offset2Df) == sizeof(XrOffset2Df),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Offset2Df as a raw XrOffset2Df
+//! @relates Offset2Df
+OPENXR_HPP_INLINE XrOffset2Df const *get(Offset2Df const &h) {
+  return &(h.operator XrOffset2Df const &());
+}
+
+//! @brief Free function accessor for passing Offset2Df as the address of a raw
+//! XrOffset2Df
+//! @relates Offset2Df
+OPENXR_HPP_INLINE XrOffset2Df *put(Offset2Df &h) {
+  return &(h.operator XrOffset2Df &());
+}
+
 struct Rect2Df {
   // ctor
   Rect2Df(const Offset2Df &offset_ = {}, const Extent2Df &extent_ = {})
@@ -10725,6 +11644,19 @@ struct Rect2Df {
 };
 static_assert(sizeof(Rect2Df) == sizeof(XrRect2Df),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Rect2Df as a raw XrRect2Df
+//! @relates Rect2Df
+OPENXR_HPP_INLINE XrRect2Df const *get(Rect2Df const &h) {
+  return &(h.operator XrRect2Df const &());
+}
+
+//! @brief Free function accessor for passing Rect2Df as the address of a raw
+//! XrRect2Df
+//! @relates Rect2Df
+OPENXR_HPP_INLINE XrRect2Df *put(Rect2Df &h) {
+  return &(h.operator XrRect2Df &());
+}
 
 struct Vector4f {
   // ctor
@@ -10746,6 +11678,19 @@ struct Vector4f {
 static_assert(sizeof(Vector4f) == sizeof(XrVector4f),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Vector4f as a raw XrVector4f
+//! @relates Vector4f
+OPENXR_HPP_INLINE XrVector4f const *get(Vector4f const &h) {
+  return &(h.operator XrVector4f const &());
+}
+
+//! @brief Free function accessor for passing Vector4f as the address of a raw
+//! XrVector4f
+//! @relates Vector4f
+OPENXR_HPP_INLINE XrVector4f *put(Vector4f &h) {
+  return &(h.operator XrVector4f &());
+}
+
 struct Color4f {
   // ctor
   Color4f(float r_ = 0.0f, float g_ = 0.0f, float b_ = 0.0f, float a_ = 0.0f)
@@ -10765,6 +11710,19 @@ struct Color4f {
 };
 static_assert(sizeof(Color4f) == sizeof(XrColor4f),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Color4f as a raw XrColor4f
+//! @relates Color4f
+OPENXR_HPP_INLINE XrColor4f const *get(Color4f const &h) {
+  return &(h.operator XrColor4f const &());
+}
+
+//! @brief Free function accessor for passing Color4f as the address of a raw
+//! XrColor4f
+//! @relates Color4f
+OPENXR_HPP_INLINE XrColor4f *put(Color4f &h) {
+  return &(h.operator XrColor4f &());
+}
 
 struct CompositionLayerCubeKHR
     : public traits::TypedStructTraits<CompositionLayerCubeKHR> {
@@ -10805,6 +11763,21 @@ static_assert(sizeof(CompositionLayerCubeKHR) ==
                   sizeof(XrCompositionLayerCubeKHR),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerCubeKHR as a raw
+//! XrCompositionLayerCubeKHR
+//! @relates CompositionLayerCubeKHR
+OPENXR_HPP_INLINE XrCompositionLayerCubeKHR const *
+get(CompositionLayerCubeKHR const &h) {
+  return &(h.operator XrCompositionLayerCubeKHR const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerCubeKHR as the
+//! address of a raw XrCompositionLayerCubeKHR
+//! @relates CompositionLayerCubeKHR
+OPENXR_HPP_INLINE XrCompositionLayerCubeKHR *put(CompositionLayerCubeKHR &h) {
+  return &(h.operator XrCompositionLayerCubeKHR &());
+}
+
 #if defined(XR_USE_PLATFORM_ANDROID)
 struct InstanceCreateInfoAndroidKHR
     : public traits::TypedStructTraits<InstanceCreateInfoAndroidKHR> {
@@ -10836,6 +11809,22 @@ public:
 static_assert(sizeof(InstanceCreateInfoAndroidKHR) ==
                   sizeof(XrInstanceCreateInfoAndroidKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InstanceCreateInfoAndroidKHR as a raw
+//! XrInstanceCreateInfoAndroidKHR
+//! @relates InstanceCreateInfoAndroidKHR
+OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR const *
+get(InstanceCreateInfoAndroidKHR const &h) {
+  return &(h.operator XrInstanceCreateInfoAndroidKHR const &());
+}
+
+//! @brief Free function accessor for passing InstanceCreateInfoAndroidKHR as
+//! the address of a raw XrInstanceCreateInfoAndroidKHR
+//! @relates InstanceCreateInfoAndroidKHR
+OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR *
+put(InstanceCreateInfoAndroidKHR &h) {
+  return &(h.operator XrInstanceCreateInfoAndroidKHR &());
+}
 #endif // defined(XR_USE_PLATFORM_ANDROID)
 
     struct CompositionLayerDepthInfoKHR : public traits::TypedStructTraits <
@@ -10872,6 +11861,22 @@ static_assert(sizeof(CompositionLayerDepthInfoKHR) ==
                   sizeof(XrCompositionLayerDepthInfoKHR),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerDepthInfoKHR as a raw
+//! XrCompositionLayerDepthInfoKHR
+//! @relates CompositionLayerDepthInfoKHR
+OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR const *
+get(CompositionLayerDepthInfoKHR const &h) {
+  return &(h.operator XrCompositionLayerDepthInfoKHR const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerDepthInfoKHR as
+//! the address of a raw XrCompositionLayerDepthInfoKHR
+//! @relates CompositionLayerDepthInfoKHR
+OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR *
+put(CompositionLayerDepthInfoKHR &h) {
+  return &(h.operator XrCompositionLayerDepthInfoKHR &());
+}
+
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 struct VulkanSwapchainFormatListCreateInfoKHR
     : public traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR> {
@@ -10903,6 +11908,23 @@ public:
 static_assert(sizeof(VulkanSwapchainFormatListCreateInfoKHR) ==
                   sizeof(XrVulkanSwapchainFormatListCreateInfoKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for VulkanSwapchainFormatListCreateInfoKHR as
+//! a raw XrVulkanSwapchainFormatListCreateInfoKHR
+//! @relates VulkanSwapchainFormatListCreateInfoKHR
+OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR const *
+get(VulkanSwapchainFormatListCreateInfoKHR const &h) {
+  return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR const &());
+}
+
+//! @brief Free function accessor for passing
+//! VulkanSwapchainFormatListCreateInfoKHR as the address of a raw
+//! XrVulkanSwapchainFormatListCreateInfoKHR
+//! @relates VulkanSwapchainFormatListCreateInfoKHR
+OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR *
+put(VulkanSwapchainFormatListCreateInfoKHR &h) {
+  return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
     struct CompositionLayerCylinderKHR : public traits::TypedStructTraits <
@@ -10947,6 +11969,22 @@ static_assert(sizeof(CompositionLayerCylinderKHR) ==
                   sizeof(XrCompositionLayerCylinderKHR),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerCylinderKHR as a raw
+//! XrCompositionLayerCylinderKHR
+//! @relates CompositionLayerCylinderKHR
+OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR const *
+get(CompositionLayerCylinderKHR const &h) {
+  return &(h.operator XrCompositionLayerCylinderKHR const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerCylinderKHR as the
+//! address of a raw XrCompositionLayerCylinderKHR
+//! @relates CompositionLayerCylinderKHR
+OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR *
+put(CompositionLayerCylinderKHR &h) {
+  return &(h.operator XrCompositionLayerCylinderKHR &());
+}
+
 struct CompositionLayerEquirectKHR
     : public traits::TypedStructTraits<CompositionLayerEquirectKHR> {
 private:
@@ -10989,6 +12027,22 @@ static_assert(sizeof(CompositionLayerEquirectKHR) ==
                   sizeof(XrCompositionLayerEquirectKHR),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerEquirectKHR as a raw
+//! XrCompositionLayerEquirectKHR
+//! @relates CompositionLayerEquirectKHR
+OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR const *
+get(CompositionLayerEquirectKHR const &h) {
+  return &(h.operator XrCompositionLayerEquirectKHR const &());
+}
+
+//! @brief Free function accessor for passing CompositionLayerEquirectKHR as the
+//! address of a raw XrCompositionLayerEquirectKHR
+//! @relates CompositionLayerEquirectKHR
+OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR *
+put(CompositionLayerEquirectKHR &h) {
+  return &(h.operator XrCompositionLayerEquirectKHR &());
+}
+
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
 struct GraphicsBindingOpenGLWin32KHR
     : public traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR> {
@@ -11017,6 +12071,22 @@ public:
 static_assert(sizeof(GraphicsBindingOpenGLWin32KHR) ==
                   sizeof(XrGraphicsBindingOpenGLWin32KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLWin32KHR as a raw
+//! XrGraphicsBindingOpenGLWin32KHR
+//! @relates GraphicsBindingOpenGLWin32KHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR const *
+get(GraphicsBindingOpenGLWin32KHR const &h) {
+  return &(h.operator XrGraphicsBindingOpenGLWin32KHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLWin32KHR as
+//! the address of a raw XrGraphicsBindingOpenGLWin32KHR
+//! @relates GraphicsBindingOpenGLWin32KHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR *
+put(GraphicsBindingOpenGLWin32KHR &h) {
+  return &(h.operator XrGraphicsBindingOpenGLWin32KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
@@ -11055,6 +12125,22 @@ public:
 static_assert(sizeof(GraphicsBindingOpenGLXlibKHR) ==
                   sizeof(XrGraphicsBindingOpenGLXlibKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLXlibKHR as a raw
+//! XrGraphicsBindingOpenGLXlibKHR
+//! @relates GraphicsBindingOpenGLXlibKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR const *
+get(GraphicsBindingOpenGLXlibKHR const &h) {
+  return &(h.operator XrGraphicsBindingOpenGLXlibKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLXlibKHR as
+//! the address of a raw XrGraphicsBindingOpenGLXlibKHR
+//! @relates GraphicsBindingOpenGLXlibKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR *
+put(GraphicsBindingOpenGLXlibKHR &h) {
+  return &(h.operator XrGraphicsBindingOpenGLXlibKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
@@ -11096,6 +12182,22 @@ public:
 static_assert(sizeof(GraphicsBindingOpenGLXcbKHR) ==
                   sizeof(XrGraphicsBindingOpenGLXcbKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLXcbKHR as a raw
+//! XrGraphicsBindingOpenGLXcbKHR
+//! @relates GraphicsBindingOpenGLXcbKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR const *
+get(GraphicsBindingOpenGLXcbKHR const &h) {
+  return &(h.operator XrGraphicsBindingOpenGLXcbKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLXcbKHR as the
+//! address of a raw XrGraphicsBindingOpenGLXcbKHR
+//! @relates GraphicsBindingOpenGLXcbKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR *
+put(GraphicsBindingOpenGLXcbKHR &h) {
+  return &(h.operator XrGraphicsBindingOpenGLXcbKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WAYLAND)
@@ -11125,6 +12227,22 @@ public:
 static_assert(sizeof(GraphicsBindingOpenGLWaylandKHR) ==
                   sizeof(XrGraphicsBindingOpenGLWaylandKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLWaylandKHR as a raw
+//! XrGraphicsBindingOpenGLWaylandKHR
+//! @relates GraphicsBindingOpenGLWaylandKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR const *
+get(GraphicsBindingOpenGLWaylandKHR const &h) {
+  return &(h.operator XrGraphicsBindingOpenGLWaylandKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLWaylandKHR as
+//! the address of a raw XrGraphicsBindingOpenGLWaylandKHR
+//! @relates GraphicsBindingOpenGLWaylandKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR *
+put(GraphicsBindingOpenGLWaylandKHR &h) {
+  return &(h.operator XrGraphicsBindingOpenGLWaylandKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) &&
        // defined(XR_USE_PLATFORM_WAYLAND)
 
@@ -11155,6 +12273,21 @@ public:
 static_assert(sizeof(SwapchainImageOpenGLKHR) ==
                   sizeof(XrSwapchainImageOpenGLKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageOpenGLKHR as a raw
+//! XrSwapchainImageOpenGLKHR
+//! @relates SwapchainImageOpenGLKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR const *
+get(SwapchainImageOpenGLKHR const &h) {
+  return &(h.operator XrSwapchainImageOpenGLKHR const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageOpenGLKHR as the
+//! address of a raw XrSwapchainImageOpenGLKHR
+//! @relates SwapchainImageOpenGLKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR *put(SwapchainImageOpenGLKHR &h) {
+  return &(h.operator XrSwapchainImageOpenGLKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL)
@@ -11187,6 +12320,22 @@ public:
 static_assert(sizeof(GraphicsRequirementsOpenGLKHR) ==
                   sizeof(XrGraphicsRequirementsOpenGLKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsOpenGLKHR as a raw
+//! XrGraphicsRequirementsOpenGLKHR
+//! @relates GraphicsRequirementsOpenGLKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR const *
+get(GraphicsRequirementsOpenGLKHR const &h) {
+  return &(h.operator XrGraphicsRequirementsOpenGLKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsOpenGLKHR as
+//! the address of a raw XrGraphicsRequirementsOpenGLKHR
+//! @relates GraphicsRequirementsOpenGLKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR *
+put(GraphicsRequirementsOpenGLKHR &h) {
+  return &(h.operator XrGraphicsRequirementsOpenGLKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES) && defined(XR_USE_PLATFORM_ANDROID)
@@ -11220,6 +12369,22 @@ public:
 static_assert(sizeof(GraphicsBindingOpenGLESAndroidKHR) ==
                   sizeof(XrGraphicsBindingOpenGLESAndroidKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLESAndroidKHR as a raw
+//! XrGraphicsBindingOpenGLESAndroidKHR
+//! @relates GraphicsBindingOpenGLESAndroidKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR const *
+get(GraphicsBindingOpenGLESAndroidKHR const &h) {
+  return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLESAndroidKHR
+//! as the address of a raw XrGraphicsBindingOpenGLESAndroidKHR
+//! @relates GraphicsBindingOpenGLESAndroidKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR *
+put(GraphicsBindingOpenGLESAndroidKHR &h) {
+  return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES) &&
        // defined(XR_USE_PLATFORM_ANDROID)
 
@@ -11250,6 +12415,22 @@ public:
 static_assert(sizeof(SwapchainImageOpenGLESKHR) ==
                   sizeof(XrSwapchainImageOpenGLESKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageOpenGLESKHR as a raw
+//! XrSwapchainImageOpenGLESKHR
+//! @relates SwapchainImageOpenGLESKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR const *
+get(SwapchainImageOpenGLESKHR const &h) {
+  return &(h.operator XrSwapchainImageOpenGLESKHR const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageOpenGLESKHR as the
+//! address of a raw XrSwapchainImageOpenGLESKHR
+//! @relates SwapchainImageOpenGLESKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR *
+put(SwapchainImageOpenGLESKHR &h) {
+  return &(h.operator XrSwapchainImageOpenGLESKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
@@ -11282,6 +12463,22 @@ public:
 static_assert(sizeof(GraphicsRequirementsOpenGLESKHR) ==
                   sizeof(XrGraphicsRequirementsOpenGLESKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsOpenGLESKHR as a raw
+//! XrGraphicsRequirementsOpenGLESKHR
+//! @relates GraphicsRequirementsOpenGLESKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR const *
+get(GraphicsRequirementsOpenGLESKHR const &h) {
+  return &(h.operator XrGraphicsRequirementsOpenGLESKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsOpenGLESKHR as
+//! the address of a raw XrGraphicsRequirementsOpenGLESKHR
+//! @relates GraphicsRequirementsOpenGLESKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR *
+put(GraphicsRequirementsOpenGLESKHR &h) {
+  return &(h.operator XrGraphicsRequirementsOpenGLESKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -11320,6 +12517,21 @@ public:
 static_assert(sizeof(GraphicsBindingVulkanKHR) ==
                   sizeof(XrGraphicsBindingVulkanKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingVulkanKHR as a raw
+//! XrGraphicsBindingVulkanKHR
+//! @relates GraphicsBindingVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR const *
+get(GraphicsBindingVulkanKHR const &h) {
+  return &(h.operator XrGraphicsBindingVulkanKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingVulkanKHR as the
+//! address of a raw XrGraphicsBindingVulkanKHR
+//! @relates GraphicsBindingVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR *put(GraphicsBindingVulkanKHR &h) {
+  return &(h.operator XrGraphicsBindingVulkanKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -11349,6 +12561,21 @@ public:
 static_assert(sizeof(SwapchainImageVulkanKHR) ==
                   sizeof(XrSwapchainImageVulkanKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageVulkanKHR as a raw
+//! XrSwapchainImageVulkanKHR
+//! @relates SwapchainImageVulkanKHR
+OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR const *
+get(SwapchainImageVulkanKHR const &h) {
+  return &(h.operator XrSwapchainImageVulkanKHR const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageVulkanKHR as the
+//! address of a raw XrSwapchainImageVulkanKHR
+//! @relates SwapchainImageVulkanKHR
+OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR *put(SwapchainImageVulkanKHR &h) {
+  return &(h.operator XrSwapchainImageVulkanKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -11381,6 +12608,22 @@ public:
 static_assert(sizeof(GraphicsRequirementsVulkanKHR) ==
                   sizeof(XrGraphicsRequirementsVulkanKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsVulkanKHR as a raw
+//! XrGraphicsRequirementsVulkanKHR
+//! @relates GraphicsRequirementsVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR const *
+get(GraphicsRequirementsVulkanKHR const &h) {
+  return &(h.operator XrGraphicsRequirementsVulkanKHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsVulkanKHR as
+//! the address of a raw XrGraphicsRequirementsVulkanKHR
+//! @relates GraphicsRequirementsVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR *
+put(GraphicsRequirementsVulkanKHR &h) {
+  return &(h.operator XrGraphicsRequirementsVulkanKHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -11410,6 +12653,21 @@ public:
 static_assert(sizeof(GraphicsBindingD3D11KHR) ==
                   sizeof(XrGraphicsBindingD3D11KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingD3D11KHR as a raw
+//! XrGraphicsBindingD3D11KHR
+//! @relates GraphicsBindingD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR const *
+get(GraphicsBindingD3D11KHR const &h) {
+  return &(h.operator XrGraphicsBindingD3D11KHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingD3D11KHR as the
+//! address of a raw XrGraphicsBindingD3D11KHR
+//! @relates GraphicsBindingD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR *put(GraphicsBindingD3D11KHR &h) {
+  return &(h.operator XrGraphicsBindingD3D11KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -11439,6 +12697,21 @@ public:
 static_assert(sizeof(SwapchainImageD3D11KHR) ==
                   sizeof(XrSwapchainImageD3D11KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageD3D11KHR as a raw
+//! XrSwapchainImageD3D11KHR
+//! @relates SwapchainImageD3D11KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR const *
+get(SwapchainImageD3D11KHR const &h) {
+  return &(h.operator XrSwapchainImageD3D11KHR const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageD3D11KHR as the
+//! address of a raw XrSwapchainImageD3D11KHR
+//! @relates SwapchainImageD3D11KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR *put(SwapchainImageD3D11KHR &h) {
+  return &(h.operator XrSwapchainImageD3D11KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -11470,6 +12743,22 @@ public:
 static_assert(sizeof(GraphicsRequirementsD3D11KHR) ==
                   sizeof(XrGraphicsRequirementsD3D11KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsD3D11KHR as a raw
+//! XrGraphicsRequirementsD3D11KHR
+//! @relates GraphicsRequirementsD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR const *
+get(GraphicsRequirementsD3D11KHR const &h) {
+  return &(h.operator XrGraphicsRequirementsD3D11KHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsD3D11KHR as
+//! the address of a raw XrGraphicsRequirementsD3D11KHR
+//! @relates GraphicsRequirementsD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR *
+put(GraphicsRequirementsD3D11KHR &h) {
+  return &(h.operator XrGraphicsRequirementsD3D11KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -11501,6 +12790,21 @@ public:
 static_assert(sizeof(GraphicsBindingD3D12KHR) ==
                   sizeof(XrGraphicsBindingD3D12KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingD3D12KHR as a raw
+//! XrGraphicsBindingD3D12KHR
+//! @relates GraphicsBindingD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR const *
+get(GraphicsBindingD3D12KHR const &h) {
+  return &(h.operator XrGraphicsBindingD3D12KHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingD3D12KHR as the
+//! address of a raw XrGraphicsBindingD3D12KHR
+//! @relates GraphicsBindingD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR *put(GraphicsBindingD3D12KHR &h) {
+  return &(h.operator XrGraphicsBindingD3D12KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -11530,6 +12834,21 @@ public:
 static_assert(sizeof(SwapchainImageD3D12KHR) ==
                   sizeof(XrSwapchainImageD3D12KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageD3D12KHR as a raw
+//! XrSwapchainImageD3D12KHR
+//! @relates SwapchainImageD3D12KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR const *
+get(SwapchainImageD3D12KHR const &h) {
+  return &(h.operator XrSwapchainImageD3D12KHR const &());
+}
+
+//! @brief Free function accessor for passing SwapchainImageD3D12KHR as the
+//! address of a raw XrSwapchainImageD3D12KHR
+//! @relates SwapchainImageD3D12KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR *put(SwapchainImageD3D12KHR &h) {
+  return &(h.operator XrSwapchainImageD3D12KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -11561,6 +12880,22 @@ public:
 static_assert(sizeof(GraphicsRequirementsD3D12KHR) ==
                   sizeof(XrGraphicsRequirementsD3D12KHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsD3D12KHR as a raw
+//! XrGraphicsRequirementsD3D12KHR
+//! @relates GraphicsRequirementsD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR const *
+get(GraphicsRequirementsD3D12KHR const &h) {
+  return &(h.operator XrGraphicsRequirementsD3D12KHR const &());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsD3D12KHR as
+//! the address of a raw XrGraphicsRequirementsD3D12KHR
+//! @relates GraphicsRequirementsD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR *
+put(GraphicsRequirementsD3D12KHR &h) {
+  return &(h.operator XrGraphicsRequirementsD3D12KHR &());
+}
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
     struct VisibilityMaskKHR : public traits::TypedStructTraits <
@@ -11602,6 +12937,20 @@ public:
 static_assert(sizeof(VisibilityMaskKHR) == sizeof(XrVisibilityMaskKHR),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for VisibilityMaskKHR as a raw
+//! XrVisibilityMaskKHR
+//! @relates VisibilityMaskKHR
+OPENXR_HPP_INLINE XrVisibilityMaskKHR const *get(VisibilityMaskKHR const &h) {
+  return &(h.operator XrVisibilityMaskKHR const &());
+}
+
+//! @brief Free function accessor for passing VisibilityMaskKHR as the address
+//! of a raw XrVisibilityMaskKHR
+//! @relates VisibilityMaskKHR
+OPENXR_HPP_INLINE XrVisibilityMaskKHR *put(VisibilityMaskKHR &h) {
+  return &(h.operator XrVisibilityMaskKHR &());
+}
+
 struct EventDataVisibilityMaskChangedKHR
     : public traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR> {
 private:
@@ -11634,6 +12983,22 @@ public:
 static_assert(sizeof(EventDataVisibilityMaskChangedKHR) ==
                   sizeof(XrEventDataVisibilityMaskChangedKHR),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataVisibilityMaskChangedKHR as a raw
+//! XrEventDataVisibilityMaskChangedKHR
+//! @relates EventDataVisibilityMaskChangedKHR
+OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR const *
+get(EventDataVisibilityMaskChangedKHR const &h) {
+  return &(h.operator XrEventDataVisibilityMaskChangedKHR const &());
+}
+
+//! @brief Free function accessor for passing EventDataVisibilityMaskChangedKHR
+//! as the address of a raw XrEventDataVisibilityMaskChangedKHR
+//! @relates EventDataVisibilityMaskChangedKHR
+OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR *
+put(EventDataVisibilityMaskChangedKHR &h) {
+  return &(h.operator XrEventDataVisibilityMaskChangedKHR &());
+}
 
 struct EventDataPerfSettingsEXT
     : public traits::TypedStructTraits<EventDataPerfSettingsEXT> {
@@ -11670,6 +13035,21 @@ static_assert(sizeof(EventDataPerfSettingsEXT) ==
                   sizeof(XrEventDataPerfSettingsEXT),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for EventDataPerfSettingsEXT as a raw
+//! XrEventDataPerfSettingsEXT
+//! @relates EventDataPerfSettingsEXT
+OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT const *
+get(EventDataPerfSettingsEXT const &h) {
+  return &(h.operator XrEventDataPerfSettingsEXT const &());
+}
+
+//! @brief Free function accessor for passing EventDataPerfSettingsEXT as the
+//! address of a raw XrEventDataPerfSettingsEXT
+//! @relates EventDataPerfSettingsEXT
+OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT *put(EventDataPerfSettingsEXT &h) {
+  return &(h.operator XrEventDataPerfSettingsEXT &());
+}
+
 struct DebugUtilsObjectNameInfoEXT
     : public traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT> {
 private:
@@ -11702,6 +13082,22 @@ static_assert(sizeof(DebugUtilsObjectNameInfoEXT) ==
                   sizeof(XrDebugUtilsObjectNameInfoEXT),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for DebugUtilsObjectNameInfoEXT as a raw
+//! XrDebugUtilsObjectNameInfoEXT
+//! @relates DebugUtilsObjectNameInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT const *
+get(DebugUtilsObjectNameInfoEXT const &h) {
+  return &(h.operator XrDebugUtilsObjectNameInfoEXT const &());
+}
+
+//! @brief Free function accessor for passing DebugUtilsObjectNameInfoEXT as the
+//! address of a raw XrDebugUtilsObjectNameInfoEXT
+//! @relates DebugUtilsObjectNameInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT *
+put(DebugUtilsObjectNameInfoEXT &h) {
+  return &(h.operator XrDebugUtilsObjectNameInfoEXT &());
+}
+
 struct DebugUtilsLabelEXT
     : public traits::TypedStructTraits<DebugUtilsLabelEXT> {
 private:
@@ -11727,6 +13123,20 @@ public:
 };
 static_assert(sizeof(DebugUtilsLabelEXT) == sizeof(XrDebugUtilsLabelEXT),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for DebugUtilsLabelEXT as a raw
+//! XrDebugUtilsLabelEXT
+//! @relates DebugUtilsLabelEXT
+OPENXR_HPP_INLINE XrDebugUtilsLabelEXT const *get(DebugUtilsLabelEXT const &h) {
+  return &(h.operator XrDebugUtilsLabelEXT const &());
+}
+
+//! @brief Free function accessor for passing DebugUtilsLabelEXT as the address
+//! of a raw XrDebugUtilsLabelEXT
+//! @relates DebugUtilsLabelEXT
+OPENXR_HPP_INLINE XrDebugUtilsLabelEXT *put(DebugUtilsLabelEXT &h) {
+  return &(h.operator XrDebugUtilsLabelEXT &());
+}
 
 struct DebugUtilsMessengerCallbackDataEXT
     : public traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT> {
@@ -11769,6 +13179,22 @@ static_assert(sizeof(DebugUtilsMessengerCallbackDataEXT) ==
                   sizeof(XrDebugUtilsMessengerCallbackDataEXT),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for DebugUtilsMessengerCallbackDataEXT as a
+//! raw XrDebugUtilsMessengerCallbackDataEXT
+//! @relates DebugUtilsMessengerCallbackDataEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT const *
+get(DebugUtilsMessengerCallbackDataEXT const &h) {
+  return &(h.operator XrDebugUtilsMessengerCallbackDataEXT const &());
+}
+
+//! @brief Free function accessor for passing DebugUtilsMessengerCallbackDataEXT
+//! as the address of a raw XrDebugUtilsMessengerCallbackDataEXT
+//! @relates DebugUtilsMessengerCallbackDataEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT *
+put(DebugUtilsMessengerCallbackDataEXT &h) {
+  return &(h.operator XrDebugUtilsMessengerCallbackDataEXT &());
+}
+
 struct DebugUtilsMessengerCreateInfoEXT
     : public traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT> {
 private:
@@ -11804,6 +13230,22 @@ static_assert(sizeof(DebugUtilsMessengerCreateInfoEXT) ==
                   sizeof(XrDebugUtilsMessengerCreateInfoEXT),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for DebugUtilsMessengerCreateInfoEXT as a raw
+//! XrDebugUtilsMessengerCreateInfoEXT
+//! @relates DebugUtilsMessengerCreateInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT const *
+get(DebugUtilsMessengerCreateInfoEXT const &h) {
+  return &(h.operator XrDebugUtilsMessengerCreateInfoEXT const &());
+}
+
+//! @brief Free function accessor for passing DebugUtilsMessengerCreateInfoEXT
+//! as the address of a raw XrDebugUtilsMessengerCreateInfoEXT
+//! @relates DebugUtilsMessengerCreateInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT *
+put(DebugUtilsMessengerCreateInfoEXT &h) {
+  return &(h.operator XrDebugUtilsMessengerCreateInfoEXT &());
+}
+
 struct SpatialAnchorCreateInfoMSFT
     : public traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT> {
 private:
@@ -11834,6 +13276,22 @@ static_assert(sizeof(SpatialAnchorCreateInfoMSFT) ==
                   sizeof(XrSpatialAnchorCreateInfoMSFT),
               "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SpatialAnchorCreateInfoMSFT as a raw
+//! XrSpatialAnchorCreateInfoMSFT
+//! @relates SpatialAnchorCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT const *
+get(SpatialAnchorCreateInfoMSFT const &h) {
+  return &(h.operator XrSpatialAnchorCreateInfoMSFT const &());
+}
+
+//! @brief Free function accessor for passing SpatialAnchorCreateInfoMSFT as the
+//! address of a raw XrSpatialAnchorCreateInfoMSFT
+//! @relates SpatialAnchorCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT *
+put(SpatialAnchorCreateInfoMSFT &h) {
+  return &(h.operator XrSpatialAnchorCreateInfoMSFT &());
+}
+
 struct SpatialAnchorSpaceCreateInfoMSFT
     : public traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT> {
 private:
@@ -11862,6 +13320,22 @@ public:
 static_assert(sizeof(SpatialAnchorSpaceCreateInfoMSFT) ==
                   sizeof(XrSpatialAnchorSpaceCreateInfoMSFT),
               "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SpatialAnchorSpaceCreateInfoMSFT as a raw
+//! XrSpatialAnchorSpaceCreateInfoMSFT
+//! @relates SpatialAnchorSpaceCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT const *
+get(SpatialAnchorSpaceCreateInfoMSFT const &h) {
+  return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT const &());
+}
+
+//! @brief Free function accessor for passing SpatialAnchorSpaceCreateInfoMSFT
+//! as the address of a raw XrSpatialAnchorSpaceCreateInfoMSFT
+//! @relates SpatialAnchorSpaceCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT *
+put(SpatialAnchorSpaceCreateInfoMSFT &h) {
+  return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT &());
+}
 
 } // namespace OPENXR_HPP_NAMESPACE
 
@@ -14502,7 +15976,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result createInstance(const InstanceCreateInfo &createInfo,
                                         Instance &instance, Dispatch &&d) {
   Result result = static_cast<Result>(d.xrCreateInstance(
-      &(createInfo.operator const XrInstanceCreateInfo &()), instance.put()));
+      OPENXR_HPP_NAMESPACE::get(createInfo), instance.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14511,8 +15985,8 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Instance>::type
 createInstance(const InstanceCreateInfo &createInfo, Dispatch &&d) {
   Instance handle;
-  Result result = static_cast<Result>(d.xrCreateInstance(
-      &(createInfo.operator const XrInstanceCreateInfo &()), handle.put()));
+  Result result = static_cast<Result>(
+      d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(
       result, handle, OPENXR_HPP_NAMESPACE_STRING "::createInstance");
 }
@@ -14523,8 +15997,8 @@ OPENXR_HPP_INLINE typename ResultValueType<
     UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type
 createInstanceUnique(const InstanceCreateInfo &createInfo, Dispatch &&d) {
   Instance handle;
-  Result result = static_cast<Result>(d.xrCreateInstance(
-      &(createInfo.operator const XrInstanceCreateInfo &()), handle.put()));
+  Result result = static_cast<Result>(
+      d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Instance, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -14555,7 +16029,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getInstanceProperties(
     InstanceProperties &instanceProperties, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetInstanceProperties(
-      this->get(), &(instanceProperties.operator XrInstanceProperties &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(instanceProperties)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14565,7 +16039,7 @@ OPENXR_HPP_INLINE typename ResultValueType<InstanceProperties>::type
 Instance::getInstanceProperties(Dispatch &&d) const {
   InstanceProperties structResult;
   Result result = static_cast<Result>(d.xrGetInstanceProperties(
-      this->get(), &(structResult.operator XrInstanceProperties &())));
+      this->get(), OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getInstanceProperties");
@@ -14577,7 +16051,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::pollEvent(EventDataBuffer &eventData,
                                              Dispatch &&d) const {
   Result result = static_cast<Result>(
-      d.xrPollEvent(this->get(), &(eventData.operator XrEventDataBuffer &())));
+      d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::get(eventData)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14586,7 +16060,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::pollEvent(EventDataBuffer &eventData,
                                              Dispatch &&d) const {
   Result result = static_cast<Result>(
-      d.xrPollEvent(this->get(), &(eventData.operator XrEventDataBuffer &())));
+      d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::get(eventData)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING "::Instance::pollEvent",
       {Result::Success, Result::EventUnavailable});
@@ -14649,8 +16123,8 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystem(const SystemGetInfo &getInfo,
                                              XrSystemId *systemId,
                                              Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetSystem(
-      this->get(), &(getInfo.operator const XrSystemGetInfo &()), systemId));
+  Result result = static_cast<Result>(
+      d.xrGetSystem(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), systemId));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14659,9 +16133,8 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<SystemId>::type
 Instance::getSystem(const SystemGetInfo &getInfo, Dispatch &&d) const {
   SystemId structResult;
-  Result result = static_cast<Result>(
-      d.xrGetSystem(this->get(), &(getInfo.operator const XrSystemGetInfo &()),
-                    &structResult));
+  Result result = static_cast<Result>(d.xrGetSystem(
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), &structResult));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getSystem");
@@ -14672,7 +16145,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystemProperties(
     XrSystemId systemId, SystemProperties &properties, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetSystemProperties(
-      this->get(), systemId, &(properties.operator XrSystemProperties &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(properties)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14682,7 +16155,7 @@ OPENXR_HPP_INLINE typename ResultValueType<SystemProperties>::type
 Instance::getSystemProperties(XrSystemId systemId, Dispatch &&d) const {
   SystemProperties structResult;
   Result result = static_cast<Result>(d.xrGetSystemProperties(
-      this->get(), systemId, &(structResult.operator XrSystemProperties &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getSystemProperties");
@@ -14794,8 +16267,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createSession(
     const SessionCreateInfo &createInfo, Session &session, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), &(createInfo.operator const XrSessionCreateInfo &()),
-      session.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), session.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14806,8 +16278,7 @@ Instance::createSession(const SessionCreateInfo &createInfo,
                         Dispatch &&d) const {
   Session handle;
   Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), &(createInfo.operator const XrSessionCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(
       result, handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSession");
 }
@@ -14820,8 +16291,7 @@ Instance::createSessionUnique(const SessionCreateInfo &createInfo,
                               Dispatch &&d) const {
   Session handle;
   Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), &(createInfo.operator const XrSessionCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Session, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -14932,8 +16402,7 @@ OPENXR_HPP_INLINE Result
 Session::createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
                               Space &space, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo &()),
-      space.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -14944,8 +16413,7 @@ Session::createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
                               Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::createReferenceSpace");
@@ -14959,8 +16427,7 @@ Session::createReferenceSpaceUnique(const ReferenceSpaceCreateInfo &createInfo,
                                     Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), &(createInfo.operator const XrReferenceSpaceCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -14977,7 +16444,7 @@ Session::getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
                                      Extent2Df &bounds, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(
       this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType),
-      &(bounds.operator XrExtent2Df &())));
+      OPENXR_HPP_NAMESPACE::get(bounds)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -14988,7 +16455,7 @@ Session::getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
                                      Extent2Df &bounds, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(
       this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType),
-      &(bounds.operator XrExtent2Df &())));
+      OPENXR_HPP_NAMESPACE::get(bounds)));
   return impl::createResultValue(
       result,
       OPENXR_HPP_NAMESPACE_STRING "::Session::getReferenceSpaceBoundsRect",
@@ -15000,8 +16467,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createActionSpace(
     const ActionSpaceCreateInfo &createInfo, Space &space, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), &(createInfo.operator const XrActionSpaceCreateInfo &()),
-      space.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15012,8 +16478,7 @@ Session::createActionSpace(const ActionSpaceCreateInfo &createInfo,
                            Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), &(createInfo.operator const XrActionSpaceCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::createActionSpace");
@@ -15027,8 +16492,7 @@ Session::createActionSpaceUnique(const ActionSpaceCreateInfo &createInfo,
                                  Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), &(createInfo.operator const XrActionSpaceCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -15042,9 +16506,8 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Space::locateSpace(Space baseSpace, XrTime time,
                                             SpaceLocation &location,
                                             Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrLocateSpace(this->get(), baseSpace.get(), time,
-                      &(location.operator XrSpaceLocation &())));
+  Result result = static_cast<Result>(d.xrLocateSpace(
+      this->get(), baseSpace.get(), time, OPENXR_HPP_NAMESPACE::get(location)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15055,7 +16518,7 @@ Space::locateSpace(Space baseSpace, XrTime time, Dispatch &&d) const {
   SpaceLocation structResult;
   Result result = static_cast<Result>(
       d.xrLocateSpace(this->get(), baseSpace.get(), time,
-                      &(structResult.operator XrSpaceLocation &())));
+                      OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(
       result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
 }
@@ -15177,7 +16640,7 @@ OPENXR_HPP_INLINE Result Instance::getViewConfigurationProperties(
     ViewConfigurationProperties &configurationProperties, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(
       this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      &(configurationProperties.operator XrViewConfigurationProperties &())));
+      OPENXR_HPP_NAMESPACE::get(configurationProperties)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15190,7 +16653,7 @@ Instance::getViewConfigurationProperties(
   ViewConfigurationProperties structResult;
   Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(
       this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      &(structResult.operator XrViewConfigurationProperties &())));
+      OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getViewConfigurationProperties");
@@ -15371,8 +16834,7 @@ OPENXR_HPP_INLINE Result
 Session::createSwapchain(const SwapchainCreateInfo &createInfo,
                          Swapchain &swapchain, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), &(createInfo.operator const XrSwapchainCreateInfo &()),
-      swapchain.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), swapchain.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15383,8 +16845,7 @@ Session::createSwapchain(const SwapchainCreateInfo &createInfo,
                          Dispatch &&d) const {
   Swapchain handle;
   Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), &(createInfo.operator const XrSwapchainCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(
       result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchain");
 }
@@ -15397,8 +16858,7 @@ Session::createSwapchainUnique(const SwapchainCreateInfo &createInfo,
                                Dispatch &&d) const {
   Swapchain handle;
   Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), &(createInfo.operator const XrSwapchainCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Swapchain, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -15509,8 +16969,7 @@ OPENXR_HPP_INLINE Result
 Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
                                  uint32_t *index, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
-      this->get(),
-      &(acquireInfo.operator const XrSwapchainImageAcquireInfo &()), index));
+      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), index));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15521,9 +16980,7 @@ Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
                                  Dispatch &&d) const {
   uint32_t structResult;
   Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
-      this->get(),
-      &(acquireInfo.operator const XrSwapchainImageAcquireInfo &()),
-      &structResult));
+      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), &structResult));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Swapchain::acquireSwapchainImage");
@@ -15534,8 +16991,8 @@ Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage(
     const SwapchainImageWaitInfo &waitInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrWaitSwapchainImage(
-      this->get(), &(waitInfo.operator const XrSwapchainImageWaitInfo &())));
+  Result result = static_cast<Result>(
+      d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15543,8 +17000,8 @@ OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage(
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage(
     const SwapchainImageWaitInfo &waitInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrWaitSwapchainImage(
-      this->get(), &(waitInfo.operator const XrSwapchainImageWaitInfo &())));
+  Result result = static_cast<Result>(
+      d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::waitSwapchainImage",
       {Result::Success, Result::TimeoutExpired});
@@ -15556,8 +17013,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::releaseSwapchainImage(
     const SwapchainImageReleaseInfo &releaseInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrReleaseSwapchainImage(
-      this->get(),
-      &(releaseInfo.operator const XrSwapchainImageReleaseInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15567,8 +17023,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Swapchain::releaseSwapchainImage(const SwapchainImageReleaseInfo &releaseInfo,
                                  Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrReleaseSwapchainImage(
-      this->get(),
-      &(releaseInfo.operator const XrSwapchainImageReleaseInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Swapchain::releaseSwapchainImage");
 }
@@ -15578,8 +17033,8 @@ Swapchain::releaseSwapchainImage(const SwapchainImageReleaseInfo &releaseInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::beginSession(const SessionBeginInfo &beginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrBeginSession(
-      this->get(), &(beginInfo.operator const XrSessionBeginInfo &())));
+  Result result = static_cast<Result>(
+      d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15587,8 +17042,8 @@ Session::beginSession(const SessionBeginInfo &beginInfo, Dispatch &&d) const {
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::beginSession(const SessionBeginInfo &beginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrBeginSession(
-      this->get(), &(beginInfo.operator const XrSessionBeginInfo &())));
+  Result result = static_cast<Result>(
+      d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::beginSession");
 }
@@ -15632,9 +17087,9 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::waitFrame(const FrameWaitInfo &frameWaitInfo,
                                             FrameState &frameState,
                                             Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrWaitFrame(
-      this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo &()),
-      &(frameState.operator XrFrameState &())));
+  Result result = static_cast<Result>(
+      d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo),
+                    OPENXR_HPP_NAMESPACE::get(frameState)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15643,9 +17098,9 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<FrameState>::type
 Session::waitFrame(const FrameWaitInfo &frameWaitInfo, Dispatch &&d) const {
   FrameState structResult;
-  Result result = static_cast<Result>(d.xrWaitFrame(
-      this->get(), &(frameWaitInfo.operator const XrFrameWaitInfo &()),
-      &(structResult.operator XrFrameState &())));
+  Result result = static_cast<Result>(
+      d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo),
+                    OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(
       result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
 }
@@ -15655,8 +17110,8 @@ Session::waitFrame(const FrameWaitInfo &frameWaitInfo, Dispatch &&d) const {
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrBeginFrame(
-      this->get(), &(frameBeginInfo.operator const XrFrameBeginInfo &())));
+  Result result = static_cast<Result>(
+      d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15664,8 +17119,8 @@ Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrBeginFrame(
-      this->get(), &(frameBeginInfo.operator const XrFrameBeginInfo &())));
+  Result result = static_cast<Result>(
+      d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginFrame",
       {Result::Success, Result::FrameDiscarded});
@@ -15676,8 +17131,8 @@ Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::endFrame(const FrameEndInfo &frameEndInfo,
                                            Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEndFrame(
-      this->get(), &(frameEndInfo.operator const XrFrameEndInfo &())));
+  Result result = static_cast<Result>(
+      d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -15685,8 +17140,8 @@ OPENXR_HPP_INLINE Result Session::endFrame(const FrameEndInfo &frameEndInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::endFrame(const FrameEndInfo &frameEndInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEndFrame(
-      this->get(), &(frameEndInfo.operator const XrFrameEndInfo &())));
+  Result result = static_cast<Result>(
+      d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::endFrame");
 }
@@ -15697,9 +17152,9 @@ OPENXR_HPP_INLINE Result Session::locateViews(
     const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
     uint32_t viewCapacityInput, uint32_t *viewCountOutput, XrView *views,
     Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrLocateViews(
-      this->get(), &(viewLocateInfo.operator const XrViewLocateInfo &()),
-      viewState, viewCapacityInput, viewCountOutput, views));
+  Result result = static_cast<Result>(
+      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
+                      viewState, viewCapacityInput, viewCountOutput, views));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15712,9 +17167,9 @@ Session::locateViews(const ViewLocateInfo &viewLocateInfo,
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrLocateViews(
-      this->get(), &(viewLocateInfo.operator const XrViewLocateInfo &()),
-      viewState, viewCapacityInput, &viewCountOutput, nullptr));
+  Result result = static_cast<Result>(
+      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
+                      viewState, viewCapacityInput, &viewCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
     return impl::createResultValue(
@@ -15723,10 +17178,10 @@ Session::locateViews(const ViewLocateInfo &viewLocateInfo,
   do {
     views.resize(viewCountOutput);
     viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(d.xrLocateViews(
-        this->get(), &(viewLocateInfo.operator const XrViewLocateInfo &()),
-        viewState, viewCapacityInput, &viewCountOutput,
-        reinterpret_cast<XrView *>(views.data())));
+    result = static_cast<Result>(
+        d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
+                        viewState, viewCapacityInput, &viewCountOutput,
+                        reinterpret_cast<XrView *>(views.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
   if (result == xr::Result::Success) {
     OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
@@ -15747,9 +17202,9 @@ Session::locateViews(const ViewLocateInfo &viewLocateInfo,
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrLocateViews(
-      this->get(), &(viewLocateInfo.operator const XrViewLocateInfo &()),
-      viewState, viewCapacityInput, &viewCountOutput, nullptr));
+  Result result = static_cast<Result>(
+      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
+                      viewState, viewCapacityInput, &viewCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
     return impl::createResultValue(
@@ -15758,10 +17213,10 @@ Session::locateViews(const ViewLocateInfo &viewLocateInfo,
   do {
     views.resize(viewCountOutput);
     viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(d.xrLocateViews(
-        this->get(), &(viewLocateInfo.operator const XrViewLocateInfo &()),
-        viewState, viewCapacityInput, &viewCountOutput,
-        reinterpret_cast<XrView *>(views.data())));
+    result = static_cast<Result>(
+        d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
+                        viewState, viewCapacityInput, &viewCountOutput,
+                        reinterpret_cast<XrView *>(views.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
   if (result == xr::Result::Success) {
     OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
@@ -15882,8 +17337,7 @@ OPENXR_HPP_INLINE Result
 Instance::createActionSet(const ActionSetCreateInfo &createInfo,
                           ActionSet &actionSet, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), &(createInfo.operator const XrActionSetCreateInfo &()),
-      actionSet.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), actionSet.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15894,8 +17348,7 @@ Instance::createActionSet(const ActionSetCreateInfo &createInfo,
                           Dispatch &&d) const {
   ActionSet handle;
   Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), &(createInfo.operator const XrActionSetCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::createActionSet");
@@ -15909,8 +17362,7 @@ Instance::createActionSetUnique(const ActionSetCreateInfo &createInfo,
                                 Dispatch &&d) const {
   ActionSet handle;
   Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), &(createInfo.operator const XrActionSetCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<ActionSet, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -15941,8 +17393,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result ActionSet::createAction(
     const ActionCreateInfo &createInfo, Action &action, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), &(createInfo.operator const XrActionCreateInfo &()),
-      action.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), action.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -15953,8 +17404,7 @@ ActionSet::createAction(const ActionCreateInfo &createInfo,
                         Dispatch &&d) const {
   Action handle;
   Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), &(createInfo.operator const XrActionCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(
       result, handle, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createAction");
 }
@@ -15967,8 +17417,7 @@ ActionSet::createActionUnique(const ActionCreateInfo &createInfo,
                               Dispatch &&d) const {
   Action handle;
   Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), &(createInfo.operator const XrActionCreateInfo &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Action, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -16001,8 +17450,7 @@ OPENXR_HPP_INLINE Result Instance::suggestInteractionProfileBindings(
     const InteractionProfileSuggestedBinding &suggestedBindings,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(
-      this->get(), &(suggestedBindings.
-                     operator const XrInteractionProfileSuggestedBinding &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -16013,8 +17461,7 @@ Instance::suggestInteractionProfileBindings(
     const InteractionProfileSuggestedBinding &suggestedBindings,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(
-      this->get(), &(suggestedBindings.
-                     operator const XrInteractionProfileSuggestedBinding &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING
       "::Instance::suggestInteractionProfileBindings");
@@ -16026,8 +17473,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::attachSessionActionSets(
     const SessionActionSetsAttachInfo &attachInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrAttachSessionActionSets(
-      this->get(),
-      &(attachInfo.operator const XrSessionActionSetsAttachInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -16037,8 +17483,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::attachSessionActionSets(const SessionActionSetsAttachInfo &attachInfo,
                                  Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrAttachSessionActionSets(
-      this->get(),
-      &(attachInfo.operator const XrSessionActionSetsAttachInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::attachSessionActionSets");
 }
@@ -16050,7 +17495,7 @@ OPENXR_HPP_INLINE Result Session::getCurrentInteractionProfile(
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(
       this->get(), topLevelUserPath,
-      &(interactionProfile.operator XrInteractionProfileState &())));
+      OPENXR_HPP_NAMESPACE::get(interactionProfile)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16061,8 +17506,7 @@ Session::getCurrentInteractionProfile(XrPath topLevelUserPath,
                                       Dispatch &&d) const {
   InteractionProfileState structResult;
   Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(
-      this->get(), topLevelUserPath,
-      &(structResult.operator XrInteractionProfileState &())));
+      this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getCurrentInteractionProfile");
@@ -16073,9 +17517,9 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::getActionStateBoolean(const ActionStateGetInfo &getInfo,
                                ActionStateBoolean &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetActionStateBoolean(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(state.operator XrActionStateBoolean &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                                OPENXR_HPP_NAMESPACE::get(state)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16085,9 +17529,9 @@ OPENXR_HPP_INLINE typename ResultValueType<ActionStateBoolean>::type
 Session::getActionStateBoolean(const ActionStateGetInfo &getInfo,
                                Dispatch &&d) const {
   ActionStateBoolean structResult;
-  Result result = static_cast<Result>(d.xrGetActionStateBoolean(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(structResult.operator XrActionStateBoolean &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                                OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateBoolean");
@@ -16098,9 +17542,9 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::getActionStateFloat(const ActionStateGetInfo &getInfo,
                              ActionStateFloat &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetActionStateFloat(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(state.operator XrActionStateFloat &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                              OPENXR_HPP_NAMESPACE::get(state)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16110,9 +17554,9 @@ OPENXR_HPP_INLINE typename ResultValueType<ActionStateFloat>::type
 Session::getActionStateFloat(const ActionStateGetInfo &getInfo,
                              Dispatch &&d) const {
   ActionStateFloat structResult;
-  Result result = static_cast<Result>(d.xrGetActionStateFloat(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(structResult.operator XrActionStateFloat &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                              OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateFloat");
@@ -16124,8 +17568,8 @@ OPENXR_HPP_INLINE Result Session::getActionStateVector2f(
     const ActionStateGetInfo &getInfo, ActionStateVector2f &state,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetActionStateVector2f(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(state.operator XrActionStateVector2f &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+      OPENXR_HPP_NAMESPACE::get(state)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16136,8 +17580,8 @@ Session::getActionStateVector2f(const ActionStateGetInfo &getInfo,
                                 Dispatch &&d) const {
   ActionStateVector2f structResult;
   Result result = static_cast<Result>(d.xrGetActionStateVector2f(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(structResult.operator XrActionStateVector2f &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+      OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateVector2f");
@@ -16148,9 +17592,9 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result
 Session::getActionStatePose(const ActionStateGetInfo &getInfo,
                             ActionStatePose &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetActionStatePose(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(state.operator XrActionStatePose &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                             OPENXR_HPP_NAMESPACE::get(state)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16160,9 +17604,9 @@ OPENXR_HPP_INLINE typename ResultValueType<ActionStatePose>::type
 Session::getActionStatePose(const ActionStateGetInfo &getInfo,
                             Dispatch &&d) const {
   ActionStatePose structResult;
-  Result result = static_cast<Result>(d.xrGetActionStatePose(
-      this->get(), &(getInfo.operator const XrActionStateGetInfo &()),
-      &(structResult.operator XrActionStatePose &())));
+  Result result = static_cast<Result>(
+      d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
+                             OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStatePose");
@@ -16173,8 +17617,8 @@ Session::getActionStatePose(const ActionStateGetInfo &getInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::syncActions(const ActionsSyncInfo &syncInfo,
                                               Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSyncActions(
-      this->get(), &(syncInfo.operator const XrActionsSyncInfo &())));
+  Result result = static_cast<Result>(
+      d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -16182,8 +17626,8 @@ OPENXR_HPP_INLINE Result Session::syncActions(const ActionsSyncInfo &syncInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::syncActions(const ActionsSyncInfo &syncInfo,
                                               Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSyncActions(
-      this->get(), &(syncInfo.operator const XrActionsSyncInfo &())));
+  Result result = static_cast<Result>(
+      d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING "::Session::syncActions",
       {Result::Success, Result::SessionNotFocused});
@@ -16196,8 +17640,7 @@ OPENXR_HPP_INLINE Result Session::enumerateBoundSourcesForAction(
     uint32_t sourceCapacityInput, uint32_t *sourceCountOutput, XrPath *sources,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(),
-      &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo &()),
+      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
       sourceCapacityInput, sourceCountOutput, sources));
   return result;
 }
@@ -16213,8 +17656,7 @@ Session::enumerateBoundSourcesForAction(
   uint32_t sourceCapacityInput = 0;
 
   Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(),
-      &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo &()),
+      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
       sourceCapacityInput, &sourceCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
 
@@ -16226,9 +17668,7 @@ Session::enumerateBoundSourcesForAction(
     sources.resize(sourceCountOutput);
     sourceCapacityInput = static_cast<uint32_t>(sources.size());
     result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-        this->get(),
-        &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo
-              &()),
+        this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
         sourceCapacityInput, &sourceCountOutput,
         reinterpret_cast<XrPath *>(sources.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
@@ -16253,8 +17693,7 @@ Session::enumerateBoundSourcesForAction(
   uint32_t sourceCapacityInput = 0;
 
   Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(),
-      &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo &()),
+      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
       sourceCapacityInput, &sourceCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
 
@@ -16266,9 +17705,7 @@ Session::enumerateBoundSourcesForAction(
     sources.resize(sourceCountOutput);
     sourceCapacityInput = static_cast<uint32_t>(sources.size());
     result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-        this->get(),
-        &(enumerateInfo.operator const XrBoundSourcesForActionEnumerateInfo
-              &()),
+        this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
         sourceCapacityInput, &sourceCountOutput,
         reinterpret_cast<XrPath *>(sources.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
@@ -16289,9 +17726,8 @@ OPENXR_HPP_INLINE Result Session::getInputSourceLocalizedName(
     uint32_t bufferCapacityInput, uint32_t *bufferCountOutput, char *buffer,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(),
-      &(getInfo.operator const XrInputSourceLocalizedNameGetInfo &()),
-      bufferCapacityInput, bufferCountOutput, buffer));
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
+      bufferCountOutput, buffer));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16307,9 +17743,8 @@ Session::getInputSourceLocalizedName(
 
   std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
   Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(),
-      &(getInfo.operator const XrInputSourceLocalizedNameGetInfo &()),
-      bufferCapacityInput, &bufferCountOutput, nullptr));
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
+      &bufferCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
     return impl::createResultValue(result, str,
@@ -16320,10 +17755,8 @@ Session::getInputSourceLocalizedName(
     buffer.resize(bufferCountOutput);
     bufferCapacityInput = static_cast<uint32_t>(buffer.size());
     result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-        this->get(),
-        &(getInfo.operator const XrInputSourceLocalizedNameGetInfo &()),
-        bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
+        this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
+        &bufferCountOutput, reinterpret_cast<char *>(buffer.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
   if (result == xr::Result::Success) {
     OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
@@ -16350,9 +17783,8 @@ Session::getInputSourceLocalizedName(
   std::basic_string<char, std::char_traits<char>, Allocator> str{
       vectorAllocator};
   Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(),
-      &(getInfo.operator const XrInputSourceLocalizedNameGetInfo &()),
-      bufferCapacityInput, &bufferCountOutput, nullptr));
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
+      &bufferCountOutput, nullptr));
   if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
     return impl::createResultValue(result, str,
@@ -16363,10 +17795,8 @@ Session::getInputSourceLocalizedName(
     buffer.resize(bufferCountOutput);
     bufferCapacityInput = static_cast<uint32_t>(buffer.size());
     result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-        this->get(),
-        &(getInfo.operator const XrInputSourceLocalizedNameGetInfo &()),
-        bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
+        this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
+        &bufferCountOutput, reinterpret_cast<char *>(buffer.data())));
   } while (result == xr::Result::ErrorSizeInsufficient);
   if (result == xr::Result::Success) {
     OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
@@ -16386,7 +17816,7 @@ OPENXR_HPP_INLINE Result Session::applyHapticFeedback(
     const HapticActionInfo &hapticActionInfo,
     const XrHapticBaseHeader *hapticFeedback, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrApplyHapticFeedback(
-      this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &()),
+      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo),
       hapticFeedback));
   return result;
 }
@@ -16398,7 +17828,7 @@ Session::applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
                              const XrHapticBaseHeader *hapticFeedback,
                              Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrApplyHapticFeedback(
-      this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &()),
+      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo),
       hapticFeedback));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::applyHapticFeedback");
@@ -16410,7 +17840,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::stopHapticFeedback(
     const HapticActionInfo &hapticActionInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrStopHapticFeedback(
-      this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -16420,7 +17850,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::stopHapticFeedback(const HapticActionInfo &hapticActionInfo,
                             Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrStopHapticFeedback(
-      this->get(), &(hapticActionInfo.operator const XrHapticActionInfo &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::stopHapticFeedback");
 }
@@ -16458,8 +17888,7 @@ OPENXR_HPP_INLINE Result Session::createSwapchainAndroidSurfaceKHR(
     const SwapchainCreateInfo &info, Swapchain &swapchain, jobject *surface,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), &(info.operator const XrSwapchainCreateInfo &()),
-      swapchain.put(), surface));
+      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(), surface));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16471,8 +17900,8 @@ Session::createSwapchainAndroidSurfaceKHR(const SwapchainCreateInfo &info,
                                           Dispatch &&d) const {
   jobject handle;
   Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), &(info.operator const XrSwapchainCreateInfo &()),
-      swapchain.put(), handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(),
+      handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::createSwapchainAndroidSurfaceKHR");
@@ -16487,8 +17916,8 @@ Session::createSwapchainAndroidSurfaceUniqueKHR(const SwapchainCreateInfo &info,
                                                 Dispatch &&d) const {
   jobject handle;
   Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), &(info.operator const XrSwapchainCreateInfo &()),
-      swapchain.put(), handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(),
+      handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<jobject, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,
@@ -16508,8 +17937,7 @@ OPENXR_HPP_INLINE Result Instance::getOpenGLGraphicsRequirementsKHR(
     XrSystemId systemId, GraphicsRequirementsOpenGLKHR &graphicsRequirements,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16520,8 +17948,7 @@ Instance::getOpenGLGraphicsRequirementsKHR(XrSystemId systemId,
                                            Dispatch &&d) const {
   GraphicsRequirementsOpenGLKHR structResult;
   Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(structResult.operator XrGraphicsRequirementsOpenGLKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(
       result, structResult,
       OPENXR_HPP_NAMESPACE_STRING
@@ -16538,8 +17965,7 @@ OPENXR_HPP_INLINE Result Instance::getOpenGLESGraphicsRequirementsKHR(
     XrSystemId systemId, GraphicsRequirementsOpenGLESKHR &graphicsRequirements,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(graphicsRequirements.operator XrGraphicsRequirementsOpenGLESKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16551,8 +17977,7 @@ OPENXR_HPP_INLINE
                                                  Dispatch &&d) const {
   GraphicsRequirementsOpenGLESKHR structResult;
   Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(structResult.operator XrGraphicsRequirementsOpenGLESKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(
       result, structResult,
       OPENXR_HPP_NAMESPACE_STRING
@@ -16778,8 +18203,7 @@ OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsRequirementsKHR(
     XrSystemId systemId, GraphicsRequirementsVulkanKHR &graphicsRequirements,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(graphicsRequirements.operator XrGraphicsRequirementsVulkanKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16790,8 +18214,7 @@ Instance::getVulkanGraphicsRequirementsKHR(XrSystemId systemId,
                                            Dispatch &&d) const {
   GraphicsRequirementsVulkanKHR structResult;
   Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(structResult.operator XrGraphicsRequirementsVulkanKHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(
       result, structResult,
       OPENXR_HPP_NAMESPACE_STRING
@@ -16808,8 +18231,7 @@ OPENXR_HPP_INLINE Result Instance::getD3D11GraphicsRequirementsKHR(
     XrSystemId systemId, GraphicsRequirementsD3D11KHR &graphicsRequirements,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(graphicsRequirements.operator XrGraphicsRequirementsD3D11KHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16820,8 +18242,7 @@ Instance::getD3D11GraphicsRequirementsKHR(XrSystemId systemId,
                                           Dispatch &&d) const {
   GraphicsRequirementsD3D11KHR structResult;
   Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(structResult.operator XrGraphicsRequirementsD3D11KHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getD3D11GraphicsRequirementsKHR");
@@ -16837,8 +18258,7 @@ OPENXR_HPP_INLINE Result Instance::getD3D12GraphicsRequirementsKHR(
     XrSystemId systemId, GraphicsRequirementsD3D12KHR &graphicsRequirements,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(graphicsRequirements.operator XrGraphicsRequirementsD3D12KHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16849,8 +18269,7 @@ Instance::getD3D12GraphicsRequirementsKHR(XrSystemId systemId,
                                           Dispatch &&d) const {
   GraphicsRequirementsD3D12KHR structResult;
   Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(
-      this->get(), systemId,
-      &(structResult.operator XrGraphicsRequirementsD3D12KHR &())));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getD3D12GraphicsRequirementsKHR");
@@ -16867,7 +18286,7 @@ OPENXR_HPP_INLINE Result Session::getVisibilityMaskKHR(
   Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(
       this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex,
       OPENXR_HPP_NAMESPACE::get(visibilityMaskType),
-      &(visibilityMask.operator XrVisibilityMaskKHR &())));
+      OPENXR_HPP_NAMESPACE::get(visibilityMask)));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -16882,7 +18301,7 @@ Session::getVisibilityMaskKHR(ViewConfigurationType viewConfigurationType,
   Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(
       this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex,
       OPENXR_HPP_NAMESPACE::get(visibilityMaskType),
-      &(structResult.operator XrVisibilityMaskKHR &())));
+      OPENXR_HPP_NAMESPACE::put(structResult)));
   return impl::createResultValue(result, structResult,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getVisibilityMaskKHR");
@@ -17062,8 +18481,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::setDebugUtilsObjectNameEXT(
     const DebugUtilsObjectNameInfoEXT &nameInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(
-      this->get(),
-      &(nameInfo.operator const XrDebugUtilsObjectNameInfoEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -17073,8 +18491,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Instance::setDebugUtilsObjectNameEXT(
     const DebugUtilsObjectNameInfoEXT &nameInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(
-      this->get(),
-      &(nameInfo.operator const XrDebugUtilsObjectNameInfoEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::setDebugUtilsObjectNameEXT");
 }
@@ -17085,9 +18502,7 @@ OPENXR_HPP_INLINE Result Instance::createDebugUtilsMessengerEXT(
     const DebugUtilsMessengerCreateInfoEXT &createInfo,
     DebugUtilsMessengerEXT &messenger, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(),
-      &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT &()),
-      messenger.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), messenger.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -17098,9 +18513,7 @@ Instance::createDebugUtilsMessengerEXT(
     const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const {
   DebugUtilsMessengerEXT handle;
   Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(),
-      &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::createDebugUtilsMessengerEXT");
@@ -17114,9 +18527,7 @@ Instance::createDebugUtilsMessengerUniqueEXT(
     const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const {
   DebugUtilsMessengerEXT handle;
   Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(),
-      &(createInfo.operator const XrDebugUtilsMessengerCreateInfoEXT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<DebugUtilsMessengerEXT,
                                  impl::RemoveRefConst<Dispatch>>(
@@ -17154,9 +18565,9 @@ OPENXR_HPP_INLINE Result Instance::submitDebugUtilsMessageEXT(
     XrDebugUtilsMessageTypeFlagsEXT messageTypes,
     const DebugUtilsMessengerCallbackDataEXT &callbackData,
     Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSubmitDebugUtilsMessageEXT(
-      this->get(), messageSeverity, messageTypes,
-      &(callbackData.operator const XrDebugUtilsMessengerCallbackDataEXT &())));
+  Result result = static_cast<Result>(
+      d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes,
+                                     OPENXR_HPP_NAMESPACE::get(callbackData)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -17168,9 +18579,9 @@ Instance::submitDebugUtilsMessageEXT(
     XrDebugUtilsMessageTypeFlagsEXT messageTypes,
     const DebugUtilsMessengerCallbackDataEXT &callbackData,
     Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSubmitDebugUtilsMessageEXT(
-      this->get(), messageSeverity, messageTypes,
-      &(callbackData.operator const XrDebugUtilsMessengerCallbackDataEXT &())));
+  Result result = static_cast<Result>(
+      d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes,
+                                     OPENXR_HPP_NAMESPACE::get(callbackData)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::submitDebugUtilsMessageEXT");
 }
@@ -17181,7 +18592,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionBeginDebugUtilsLabelRegionEXT(
     const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(
-      this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -17191,7 +18602,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::sessionBeginDebugUtilsLabelRegionEXT(
     const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(
-      this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
   return impl::createResultValue(
       result, OPENXR_HPP_NAMESPACE_STRING
       "::Session::sessionBeginDebugUtilsLabelRegionEXT");
@@ -17224,7 +18635,7 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionInsertDebugUtilsLabelEXT(
     const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(
-      this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
   return result;
 }
 #else  /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
@@ -17234,7 +18645,7 @@ OPENXR_HPP_INLINE ResultValueType<void>::type
 Session::sessionInsertDebugUtilsLabelEXT(const DebugUtilsLabelEXT &labelInfo,
                                          Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(
-      this->get(), &(labelInfo.operator const XrDebugUtilsLabelEXT &())));
+      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
   return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::sessionInsertDebugUtilsLabelEXT");
 }
@@ -17245,9 +18656,7 @@ OPENXR_HPP_INLINE Result Session::createSpatialAnchorMSFT(
     const SpatialAnchorCreateInfoMSFT &createInfo, SpatialAnchorMSFT &anchor,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT &()),
-      anchor.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), anchor.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -17258,9 +18667,7 @@ Session::createSpatialAnchorMSFT(const SpatialAnchorCreateInfoMSFT &createInfo,
                                  Dispatch &&d) const {
   SpatialAnchorMSFT handle;
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::createSpatialAnchorMSFT");
@@ -17274,9 +18681,7 @@ Session::createSpatialAnchorUniqueMSFT(
     const SpatialAnchorCreateInfoMSFT &createInfo, Dispatch &&d) const {
   SpatialAnchorMSFT handle;
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorCreateInfoMSFT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<SpatialAnchorMSFT,
                                  impl::RemoveRefConst<Dispatch>>(
@@ -17292,9 +18697,7 @@ OPENXR_HPP_INLINE Result Session::createSpatialAnchorSpaceMSFT(
     const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Space &space,
     Dispatch &&d) const {
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT &()),
-      space.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
   return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
@@ -17305,9 +18708,7 @@ Session::createSpatialAnchorSpaceMSFT(
     const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   return impl::createResultValue(result, handle,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::createSpatialAnchorSpaceMSFT");
@@ -17321,9 +18722,7 @@ Session::createSpatialAnchorSpaceUniqueMSFT(
     const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const {
   Space handle;
   Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(),
-      &(createInfo.operator const XrSpatialAnchorSpaceCreateInfoMSFT &()),
-      handle.put()));
+      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
   ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
   return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
       result, handle, deleter,

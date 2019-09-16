@@ -289,7 +289,7 @@ class CppGenerator(AutomaticSourceOutputGenerator):
             suffix = 'BIT_' + suffix
         else:
             suffix = 'BIT'
-        
+
         prefix = prefix[:-len('_FLAG_BITS')]
         return prefix, suffix
 
@@ -509,9 +509,9 @@ class CppGenerator(AutomaticSourceOutputGenerator):
         if templated:
             vector_member_type = 'ResultItemType'
 
-        vec_type = "::std::vector<{}, Allocator>".format(vector_member_type)
+        vec_type = "std::vector<{}, Allocator>".format(vector_member_type)
         method.vec_type = vec_type
-        method.template_decl_list.insert(0, "typename Allocator = ::std::allocator<{}>".format(vector_member_type))
+        method.template_decl_list.insert(0, "typename Allocator = std::allocator<{}>".format(vector_member_type))
         method.template_defn_list.insert(0, "typename Allocator")
 
         if templated:

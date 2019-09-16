@@ -50,6 +50,9 @@
 #ifdef Success
 #undef Success
 #endif
+#ifdef None
+#undef None
+#endif
 
 #if !defined(OPENXR_HPP_ASSERT)
 #include <cassert>
@@ -4322,9 +4325,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-  template <typename Allocator = ::std::allocator<EnvironmentBlendMode>,
+  template <typename Allocator = std::allocator<EnvironmentBlendMode>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type
+  typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
   enumerateEnvironmentBlendModes(XrSystemId systemId,
                                  ViewConfigurationType viewConfigurationType,
                                  Dispatch &&d = Dispatch{}) const;
@@ -4335,9 +4338,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-  template <typename Allocator = ::std::allocator<EnvironmentBlendMode>,
+  template <typename Allocator = std::allocator<EnvironmentBlendMode>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<EnvironmentBlendMode, Allocator>>::type
+  typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
   enumerateEnvironmentBlendModes(XrSystemId systemId,
                                  ViewConfigurationType viewConfigurationType,
                                  Allocator const &vectorAllocator,
@@ -4399,10 +4402,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-  template <typename Allocator = ::std::allocator<ViewConfigurationType>,
+  template <typename Allocator = std::allocator<ViewConfigurationType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::vector<ViewConfigurationType, Allocator>>::type
+  typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type
   enumerateViewConfigurations(XrSystemId systemId,
                               Dispatch &&d = Dispatch{}) const;
 
@@ -4412,10 +4414,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-  template <typename Allocator = ::std::allocator<ViewConfigurationType>,
+  template <typename Allocator = std::allocator<ViewConfigurationType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::vector<ViewConfigurationType, Allocator>>::type
+  typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type
   enumerateViewConfigurations(XrSystemId systemId,
                               Allocator const &vectorAllocator,
                               Dispatch &&d) const;
@@ -4464,10 +4465,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
 
-  template <typename Allocator = ::std::allocator<ViewConfigurationView>,
+  template <typename Allocator = std::allocator<ViewConfigurationView>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::vector<ViewConfigurationView, Allocator>>::type
+  typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type
   enumerateViewConfigurationViews(XrSystemId systemId,
                                   ViewConfigurationType viewConfigurationType,
                                   Dispatch &&d = Dispatch{}) const;
@@ -4478,10 +4478,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
 
-  template <typename Allocator = ::std::allocator<ViewConfigurationView>,
+  template <typename Allocator = std::allocator<ViewConfigurationView>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::vector<ViewConfigurationView, Allocator>>::type
+  typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type
   enumerateViewConfigurationViews(XrSystemId systemId,
                                   ViewConfigurationType viewConfigurationType,
                                   Allocator const &vectorAllocator,
@@ -4526,7 +4525,7 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPathToString>
 
-  template <typename Allocator = ::std::allocator<char>,
+  template <typename Allocator = std::allocator<char>,
             typename Dispatch = DispatchLoaderStatic>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
@@ -4538,7 +4537,7 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPathToString>
 
-  template <typename Allocator = ::std::allocator<char>,
+  template <typename Allocator = std::allocator<char>,
             typename Dispatch = DispatchLoaderStatic>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
@@ -4691,7 +4690,7 @@ public:
   //!
   //! @note No default dispatch is provided as this is a non-core function,
   //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = ::std::allocator<char>, typename Dispatch>
+  template <typename Allocator = std::allocator<char>, typename Dispatch>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
   getVulkanInstanceExtensionsKHR(XrSystemId systemId, Dispatch &&d) const;
@@ -4704,7 +4703,7 @@ public:
   //!
   //! @note No default dispatch is provided as this is a non-core function,
   //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = ::std::allocator<char>, typename Dispatch>
+  template <typename Allocator = std::allocator<char>, typename Dispatch>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
   getVulkanInstanceExtensionsKHR(XrSystemId systemId,
@@ -4738,7 +4737,7 @@ public:
   //!
   //! @note No default dispatch is provided as this is a non-core function,
   //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = ::std::allocator<char>, typename Dispatch>
+  template <typename Allocator = std::allocator<char>, typename Dispatch>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
   getVulkanDeviceExtensionsKHR(XrSystemId systemId, Dispatch &&d) const;
@@ -4751,7 +4750,7 @@ public:
   //!
   //! @note No default dispatch is provided as this is a non-core function,
   //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = ::std::allocator<char>, typename Dispatch>
+  template <typename Allocator = std::allocator<char>, typename Dispatch>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
   getVulkanDeviceExtensionsKHR(XrSystemId systemId,
@@ -5455,9 +5454,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateReferenceSpaces>
 
-  template <typename Allocator = ::std::allocator<ReferenceSpaceType>,
+  template <typename Allocator = std::allocator<ReferenceSpaceType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<ReferenceSpaceType, Allocator>>::type
+  typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
   enumerateReferenceSpaces(Dispatch &&d = Dispatch{}) const;
 
   //! @brief xrEnumerateReferenceSpaces wrapper - enhanced mode, stateful
@@ -5466,9 +5465,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateReferenceSpaces>
 
-  template <typename Allocator = ::std::allocator<ReferenceSpaceType>,
+  template <typename Allocator = std::allocator<ReferenceSpaceType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<ReferenceSpaceType, Allocator>>::type
+  typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
   enumerateReferenceSpaces(Allocator const &vectorAllocator,
                            Dispatch &&d) const;
 
@@ -5586,9 +5585,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainFormats>
 
-  template <typename Allocator = ::std::allocator<int64_t>,
+  template <typename Allocator = std::allocator<int64_t>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<int64_t, Allocator>>::type
+  typename ResultValueType<std::vector<int64_t, Allocator>>::type
   enumerateSwapchainFormats(Dispatch &&d = Dispatch{}) const;
 
   //! @brief xrEnumerateSwapchainFormats wrapper - enhanced mode, stateful
@@ -5597,9 +5596,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainFormats>
 
-  template <typename Allocator = ::std::allocator<int64_t>,
+  template <typename Allocator = std::allocator<int64_t>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<int64_t, Allocator>>::type
+  typename ResultValueType<std::vector<int64_t, Allocator>>::type
   enumerateSwapchainFormats(Allocator const &vectorAllocator,
                             Dispatch &&d) const;
 
@@ -5791,9 +5790,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateViews>
 
-  template <typename Allocator = ::std::allocator<View>,
+  template <typename Allocator = std::allocator<View>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<View, Allocator>>::type
+  typename ResultValueType<std::vector<View, Allocator>>::type
   locateViews(const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
               Dispatch &&d = Dispatch{}) const;
 
@@ -5803,9 +5802,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateViews>
 
-  template <typename Allocator = ::std::allocator<View>,
+  template <typename Allocator = std::allocator<View>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<View, Allocator>>::type
+  typename ResultValueType<std::vector<View, Allocator>>::type
   locateViews(const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
               Allocator const &vectorAllocator, Dispatch &&d) const;
 
@@ -5991,9 +5990,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
 
-  template <typename Allocator = ::std::allocator<Path>,
+  template <typename Allocator = std::allocator<Path>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<Path, Allocator>>::type
+  typename ResultValueType<std::vector<Path, Allocator>>::type
   enumerateBoundSourcesForAction(
       const BoundSourcesForActionEnumerateInfo &enumerateInfo,
       Dispatch &&d = Dispatch{}) const;
@@ -6004,9 +6003,9 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
 
-  template <typename Allocator = ::std::allocator<Path>,
+  template <typename Allocator = std::allocator<Path>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<Path, Allocator>>::type
+  typename ResultValueType<std::vector<Path, Allocator>>::type
   enumerateBoundSourcesForAction(
       const BoundSourcesForActionEnumerateInfo &enumerateInfo,
       Allocator const &vectorAllocator, Dispatch &&d) const;
@@ -6031,7 +6030,7 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
 
-  template <typename Allocator = ::std::allocator<char>,
+  template <typename Allocator = std::allocator<char>,
             typename Dispatch = DispatchLoaderStatic>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
@@ -6044,7 +6043,7 @@ public:
   //! See the related specification text at
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
 
-  template <typename Allocator = ::std::allocator<char>,
+  template <typename Allocator = std::allocator<char>,
             typename Dispatch = DispatchLoaderStatic>
   typename ResultValueType<
       ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
@@ -7480,9 +7479,9 @@ public:
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
 
   template <typename ResultItemType,
-            typename Allocator = ::std::allocator<ResultItemType>,
+            typename Allocator = std::allocator<ResultItemType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<ResultItemType, Allocator>>::type
+  typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
   enumerateSwapchainImages(Dispatch &&d = Dispatch{}) const;
 
   //! @brief xrEnumerateSwapchainImages wrapper - enhanced mode, stateful
@@ -7492,9 +7491,9 @@ public:
   //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
 
   template <typename ResultItemType,
-            typename Allocator = ::std::allocator<ResultItemType>,
+            typename Allocator = std::allocator<ResultItemType>,
             typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<::std::vector<ResultItemType, Allocator>>::type
+  typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
   enumerateSwapchainImages(Allocator const &vectorAllocator,
                            Dispatch &&d) const;
 
@@ -8873,9 +8872,9 @@ Result enumerateApiLayerProperties(uint32_t propertyCapacityInput,
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateApiLayerProperties>
 
-template <typename Allocator = ::std::allocator<ApiLayerProperties>,
+template <typename Allocator = std::allocator<ApiLayerProperties>,
           typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<::std::vector<ApiLayerProperties, Allocator>>::type
+typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
 enumerateApiLayerProperties(Dispatch &&d = Dispatch{});
 
 //! @brief xrEnumerateApiLayerProperties wrapper - enhanced mode, stateful
@@ -8884,9 +8883,9 @@ enumerateApiLayerProperties(Dispatch &&d = Dispatch{});
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateApiLayerProperties>
 
-template <typename Allocator = ::std::allocator<ApiLayerProperties>,
+template <typename Allocator = std::allocator<ApiLayerProperties>,
           typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<::std::vector<ApiLayerProperties, Allocator>>::type
+typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
 enumerateApiLayerProperties(Allocator const &vectorAllocator, Dispatch &&d);
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
@@ -8909,9 +8908,9 @@ Result enumerateInstanceExtensionProperties(const char *layerName,
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateInstanceExtensionProperties>
 
-template <typename Allocator = ::std::allocator<ExtensionProperties>,
+template <typename Allocator = std::allocator<ExtensionProperties>,
           typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<::std::vector<ExtensionProperties, Allocator>>::type
+typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
 enumerateInstanceExtensionProperties(const char *layerName,
                                      Dispatch &&d = Dispatch{});
 
@@ -8921,9 +8920,9 @@ enumerateInstanceExtensionProperties(const char *layerName,
 //! See the related specification text at
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateInstanceExtensionProperties>
 
-template <typename Allocator = ::std::allocator<ExtensionProperties>,
+template <typename Allocator = std::allocator<ExtensionProperties>,
           typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<::std::vector<ExtensionProperties, Allocator>>::type
+typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
 enumerateInstanceExtensionProperties(const char *layerName,
                                      Allocator const &vectorAllocator,
                                      Dispatch &&d);
@@ -15907,10 +15906,10 @@ OPENXR_HPP_INLINE Result enumerateApiLayerProperties(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ApiLayerProperties, Allocator>>::type
+    typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
     enumerateApiLayerProperties(Dispatch &&d) {
   // Two-call idiom
-  ::std::vector<ApiLayerProperties, Allocator> properties;
+  std::vector<ApiLayerProperties, Allocator> properties;
   uint32_t propertyCountOutput = 0;
   uint32_t propertyCapacityInput = 0;
 
@@ -15941,11 +15940,11 @@ OPENXR_HPP_INLINE
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ApiLayerProperties, Allocator>>::type
+    typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
     enumerateApiLayerProperties(Allocator const &vectorAllocator,
                                 Dispatch &&d) {
   // Two-call idiom
-  ::std::vector<ApiLayerProperties, Allocator> properties{vectorAllocator};
+  std::vector<ApiLayerProperties, Allocator> properties{vectorAllocator};
   uint32_t propertyCountOutput = 0;
   uint32_t propertyCapacityInput = 0;
 
@@ -15986,11 +15985,11 @@ OPENXR_HPP_INLINE Result enumerateInstanceExtensionProperties(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ExtensionProperties, Allocator>>::type
-enumerateInstanceExtensionProperties(const char *layerName, Dispatch &&d) {
+OPENXR_HPP_INLINE
+    typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
+    enumerateInstanceExtensionProperties(const char *layerName, Dispatch &&d) {
   // Two-call idiom
-  ::std::vector<ExtensionProperties, Allocator> properties;
+  std::vector<ExtensionProperties, Allocator> properties;
   uint32_t propertyCountOutput = 0;
   uint32_t propertyCapacityInput = 0;
 
@@ -16020,13 +16019,13 @@ enumerateInstanceExtensionProperties(const char *layerName, Dispatch &&d) {
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ExtensionProperties, Allocator>>::type
-enumerateInstanceExtensionProperties(const char *layerName,
-                                     Allocator const &vectorAllocator,
-                                     Dispatch &&d) {
+OPENXR_HPP_INLINE
+    typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
+    enumerateInstanceExtensionProperties(const char *layerName,
+                                         Allocator const &vectorAllocator,
+                                         Dispatch &&d) {
   // Two-call idiom
-  ::std::vector<ExtensionProperties, Allocator> properties{vectorAllocator};
+  std::vector<ExtensionProperties, Allocator> properties{vectorAllocator};
   uint32_t propertyCountOutput = 0;
   uint32_t propertyCapacityInput = 0;
 
@@ -16260,13 +16259,13 @@ OPENXR_HPP_INLINE Result Instance::enumerateEnvironmentBlendModes(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<EnvironmentBlendMode, Allocator>>::type
-Instance::enumerateEnvironmentBlendModes(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    Dispatch &&d) const {
+OPENXR_HPP_INLINE
+    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
+    Instance::enumerateEnvironmentBlendModes(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType,
+        Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes;
+  std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes;
   uint32_t environmentBlendModeCountOutput = 0;
   uint32_t environmentBlendModeCapacityInput = 0;
 
@@ -16303,13 +16302,13 @@ Instance::enumerateEnvironmentBlendModes(
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<EnvironmentBlendMode, Allocator>>::type
-Instance::enumerateEnvironmentBlendModes(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    Allocator const &vectorAllocator, Dispatch &&d) const {
+OPENXR_HPP_INLINE
+    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
+    Instance::enumerateEnvironmentBlendModes(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType,
+        Allocator const &vectorAllocator, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes{
+  std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes{
       vectorAllocator};
   uint32_t environmentBlendModeCountOutput = 0;
   uint32_t environmentBlendModeCapacityInput = 0;
@@ -16413,10 +16412,10 @@ OPENXR_HPP_INLINE Result Session::enumerateReferenceSpaces(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ReferenceSpaceType, Allocator>>::type
+    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
     Session::enumerateReferenceSpaces(Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ReferenceSpaceType, Allocator> spaces;
+  std::vector<ReferenceSpaceType, Allocator> spaces;
   uint32_t spaceCountOutput = 0;
   uint32_t spaceCapacityInput = 0;
 
@@ -16447,11 +16446,11 @@ OPENXR_HPP_INLINE
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ReferenceSpaceType, Allocator>>::type
+    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
     Session::enumerateReferenceSpaces(Allocator const &vectorAllocator,
                                       Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ReferenceSpaceType, Allocator> spaces{vectorAllocator};
+  std::vector<ReferenceSpaceType, Allocator> spaces{vectorAllocator};
   uint32_t spaceCountOutput = 0;
   uint32_t spaceCapacityInput = 0;
 
@@ -16638,10 +16637,10 @@ OPENXR_HPP_INLINE Result Instance::enumerateViewConfigurations(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ViewConfigurationType, Allocator>>::type
+    std::vector<ViewConfigurationType, Allocator>>::type
 Instance::enumerateViewConfigurations(XrSystemId systemId, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes;
+  std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes;
   uint32_t viewConfigurationTypeCountOutput = 0;
   uint32_t viewConfigurationTypeCapacityInput = 0;
 
@@ -16677,12 +16676,12 @@ Instance::enumerateViewConfigurations(XrSystemId systemId, Dispatch &&d) const {
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ViewConfigurationType, Allocator>>::type
+    std::vector<ViewConfigurationType, Allocator>>::type
 Instance::enumerateViewConfigurations(XrSystemId systemId,
                                       Allocator const &vectorAllocator,
                                       Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes{
+  std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes{
       vectorAllocator};
   uint32_t viewConfigurationTypeCountOutput = 0;
   uint32_t viewConfigurationTypeCapacityInput = 0;
@@ -16757,12 +16756,12 @@ OPENXR_HPP_INLINE Result Instance::enumerateViewConfigurationViews(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ViewConfigurationView, Allocator>>::type
+    std::vector<ViewConfigurationView, Allocator>>::type
 Instance::enumerateViewConfigurationViews(
     XrSystemId systemId, ViewConfigurationType viewConfigurationType,
     Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ViewConfigurationView, Allocator> views;
+  std::vector<ViewConfigurationView, Allocator> views;
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
@@ -16796,12 +16795,12 @@ Instance::enumerateViewConfigurationViews(
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::vector<ViewConfigurationView, Allocator>>::type
+    std::vector<ViewConfigurationView, Allocator>>::type
 Instance::enumerateViewConfigurationViews(
     XrSystemId systemId, ViewConfigurationType viewConfigurationType,
     Allocator const &vectorAllocator, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ViewConfigurationView, Allocator> views{vectorAllocator};
+  std::vector<ViewConfigurationView, Allocator> views{vectorAllocator};
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
@@ -16845,10 +16844,10 @@ OPENXR_HPP_INLINE Result Session::enumerateSwapchainFormats(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<int64_t, Allocator>>::type
+    typename ResultValueType<std::vector<int64_t, Allocator>>::type
     Session::enumerateSwapchainFormats(Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<int64_t, Allocator> formats;
+  std::vector<int64_t, Allocator> formats;
   uint32_t formatCountOutput = 0;
   uint32_t formatCapacityInput = 0;
 
@@ -16879,11 +16878,11 @@ OPENXR_HPP_INLINE
 
 template <typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<int64_t, Allocator>>::type
+    typename ResultValueType<std::vector<int64_t, Allocator>>::type
     Session::enumerateSwapchainFormats(Allocator const &vectorAllocator,
                                        Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<int64_t, Allocator> formats{vectorAllocator};
+  std::vector<int64_t, Allocator> formats{vectorAllocator};
   uint32_t formatCountOutput = 0;
   uint32_t formatCapacityInput = 0;
 
@@ -16980,10 +16979,10 @@ OPENXR_HPP_INLINE Result Swapchain::enumerateSwapchainImages(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename ResultItemType, typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ResultItemType, Allocator>>::type
+    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
     Swapchain::enumerateSwapchainImages(Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ResultItemType, Allocator> images;
+  std::vector<ResultItemType, Allocator> images;
   uint32_t imageCountOutput = 0;
   uint32_t imageCapacityInput = 0;
 
@@ -17014,11 +17013,11 @@ OPENXR_HPP_INLINE
 
 template <typename ResultItemType, typename Allocator, typename Dispatch>
 OPENXR_HPP_INLINE
-    typename ResultValueType<::std::vector<ResultItemType, Allocator>>::type
+    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
     Swapchain::enumerateSwapchainImages(Allocator const &vectorAllocator,
                                         Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<ResultItemType, Allocator> images{vectorAllocator};
+  std::vector<ResultItemType, Allocator> images{vectorAllocator};
   uint32_t imageCountOutput = 0;
   uint32_t imageCapacityInput = 0;
 
@@ -17243,11 +17242,11 @@ OPENXR_HPP_INLINE Result Session::locateViews(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type
 Session::locateViews(const ViewLocateInfo &viewLocateInfo,
                      XrViewState *viewState, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<View, Allocator> views;
+  std::vector<View, Allocator> views;
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
@@ -17277,12 +17276,12 @@ Session::locateViews(const ViewLocateInfo &viewLocateInfo,
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<::std::vector<View, Allocator>>::type
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type
 Session::locateViews(const ViewLocateInfo &viewLocateInfo,
                      XrViewState *viewState, Allocator const &vectorAllocator,
                      Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<View, Allocator> views{vectorAllocator};
+  std::vector<View, Allocator> views{vectorAllocator};
   uint32_t viewCountOutput = 0;
   uint32_t viewCapacityInput = 0;
 
@@ -17350,7 +17349,7 @@ OPENXR_HPP_INLINE typename ResultValueType<
     ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
 Instance::pathToString(XrPath path, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer;
+  std::vector<char, Allocator> buffer;
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -17385,7 +17384,7 @@ OPENXR_HPP_INLINE typename ResultValueType<
 Instance::pathToString(XrPath path, Allocator const &vectorAllocator,
                        Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer{vectorAllocator};
+  std::vector<char, Allocator> buffer{vectorAllocator};
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -17730,12 +17729,12 @@ OPENXR_HPP_INLINE Result Session::enumerateBoundSourcesForAction(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type
 Session::enumerateBoundSourcesForAction(
     const BoundSourcesForActionEnumerateInfo &enumerateInfo,
     Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<Path, Allocator> sources;
+  std::vector<Path, Allocator> sources;
   uint32_t sourceCountOutput = 0;
   uint32_t sourceCapacityInput = 0;
 
@@ -17767,12 +17766,12 @@ Session::enumerateBoundSourcesForAction(
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<::std::vector<Path, Allocator>>::type
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type
 Session::enumerateBoundSourcesForAction(
     const BoundSourcesForActionEnumerateInfo &enumerateInfo,
     Allocator const &vectorAllocator, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<Path, Allocator> sources{vectorAllocator};
+  std::vector<Path, Allocator> sources{vectorAllocator};
   uint32_t sourceCountOutput = 0;
   uint32_t sourceCapacityInput = 0;
 
@@ -17821,7 +17820,7 @@ OPENXR_HPP_INLINE typename ResultValueType<
 Session::getInputSourceLocalizedName(
     const InputSourceLocalizedNameGetInfo &getInfo, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer;
+  std::vector<char, Allocator> buffer;
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -17860,7 +17859,7 @@ Session::getInputSourceLocalizedName(
     const InputSourceLocalizedNameGetInfo &getInfo,
     Allocator const &vectorAllocator, Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer{vectorAllocator};
+  std::vector<char, Allocator> buffer{vectorAllocator};
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -18088,7 +18087,7 @@ OPENXR_HPP_INLINE typename ResultValueType<
 Instance::getVulkanInstanceExtensionsKHR(XrSystemId systemId,
                                          Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer;
+  std::vector<char, Allocator> buffer;
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -18127,7 +18126,7 @@ Instance::getVulkanInstanceExtensionsKHR(XrSystemId systemId,
                                          Allocator const &vectorAllocator,
                                          Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer{vectorAllocator};
+  std::vector<char, Allocator> buffer{vectorAllocator};
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -18180,7 +18179,7 @@ OPENXR_HPP_INLINE typename ResultValueType<
 Instance::getVulkanDeviceExtensionsKHR(XrSystemId systemId,
                                        Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer;
+  std::vector<char, Allocator> buffer;
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 
@@ -18218,7 +18217,7 @@ Instance::getVulkanDeviceExtensionsKHR(XrSystemId systemId,
                                        Allocator const &vectorAllocator,
                                        Dispatch &&d) const {
   // Two-call idiom
-  ::std::vector<char, Allocator> buffer{vectorAllocator};
+  std::vector<char, Allocator> buffer{vectorAllocator};
   uint32_t bufferCountOutput = 0;
   uint32_t bufferCapacityInput = 0;
 

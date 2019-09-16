@@ -75,12 +75,12 @@ struct /*{projected_type }*/ : public /*{ parent_type }*/ {
                   )
             :
 
-              //# if typed_struct
+        //# if typed_struct
 
               Parent(/*{ struct_type }*/) /*{ "," if member_count > 2 }*/
 
-              //# endif
-              //# for member in struct.members if not cpp_hidden_member(member) and not is_static_length_string(member)
+        //# endif
+        //# for member in struct.members if not cpp_hidden_member(member) and not is_static_length_string(member)
               /*{ member.name }*/ {/*{ member.name + "_"}*/} /*{ "," if not loop.last }*/
         //# endfor
         {

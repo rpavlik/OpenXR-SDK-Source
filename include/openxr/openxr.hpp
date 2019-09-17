@@ -115,8 +115,8 @@ using SystemId = XrSystemId;
 using Version = XrVersion;
 
 enum Side : uint32_t {
-  Left = 0,
-  Right = 1,
+    Left = 0,
+    Right = 1,
 };
 
 constexpr uint32_t SIDE_COUNT = 2;
@@ -126,12 +126,15 @@ using BilateralPaths = std::array<Path, SIDE_COUNT>;
 using SideHandler = std::function<void(Side)>;
 using IndexHandler = std::function<void(uint32_t)>;
 
-constexpr char const *const reserved_paths[] = {
-    "/user/hand/left", "/user/hand/right", "/user/head",
-    "/user/gamepad",   "/user/treadmill",
+constexpr char const* const reserved_paths[] = {
+    "/user/hand/left",
+    "/user/hand/right",
+    "/user/head",
+    "/user/gamepad",
+    "/user/treadmill",
 };
 
-constexpr char const *const interaction_profiles[] = {
+constexpr char const* const interaction_profiles[] = {
     "/interaction_profiles/khr/simple_controller",
     "/interaction_profiles/google/daydream_controller",
     "/interaction_profiles/htc/vive_controller",
@@ -144,90 +147,106 @@ constexpr char const *const interaction_profiles[] = {
 };
 
 template <typename SideHandler>
-static inline void for_each_side(SideHandler &&handler) {
-  handler(Left);
-  handler(Right);
+static inline void for_each_side(SideHandler&& handler)
+{
+    handler(Left);
+    handler(Right);
 }
 
 template <typename IndexHandler>
-static inline void for_each_side_index(IndexHandler &&handler) {
-  handler(0);
-  handler(1);
+static inline void for_each_side_index(IndexHandler&& handler)
+{
+    handler(0);
+    handler(1);
 }
 class Duration {
 public:
-  OPENXR_HPP_CONSTEXPR Duration() = default;
-  OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration t) : val_(t) {}
+    OPENXR_HPP_CONSTEXPR Duration() = default;
+    OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration t)
+        : val_(t)
+    {
+    }
 
-  OPENXR_HPP_CONSTEXPR XrDuration get() const noexcept { return val_; }
+    OPENXR_HPP_CONSTEXPR XrDuration get() const noexcept { return val_; }
 
-  XrDuration *put() noexcept {
-    val_ = 0;
-    return &val_;
-  }
+    XrDuration* put() noexcept
+    {
+        val_ = 0;
+        return &val_;
+    }
 
-  Duration &operator-=(Duration d) noexcept {
-    val_ -= d.val_;
-    return *this;
-  }
-  Duration &operator+=(Duration d) noexcept {
-    val_ += d.val_;
-    return *this;
-  }
+    OPENXR_HPP_CONSTEXPR Duration& operator-=(Duration d) noexcept
+    {
+        val_ -= d.val_;
+        return *this;
+    }
+    OPENXR_HPP_CONSTEXPR Duration& operator+=(Duration d) noexcept
+    {
+        val_ += d.val_;
+        return *this;
+    }
+
+    static OPENXR_HPP_CONSTEXPR Duration infinite() noexcept
+    {
+        return Duration { XR_INFINITE_DURATION };
+    }
+
+    static OPENXR_HPP_CONSTEXPR Duration minHaptic() noexcept
+    {
+        return Duration { XR_MIN_HAPTIC_DURATION };
+    }
 
 private:
-  XrDuration val_{};
+    XrDuration val_ {};
 };
 
-OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration d) noexcept {
-  return d.get();
-}
+OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration d) noexcept { return d.get(); }
 
-inline XrDuration *put(Duration &d) noexcept { return d.put(); }
-OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs,
-                                               Duration rhs) noexcept {
-  return lhs += rhs;
-}
-OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs,
-                                               Duration rhs) noexcept {
-  return lhs -= rhs;
-}
+inline XrDuration* put(Duration& d) noexcept { return d.put(); }
+OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs, Duration rhs) noexcept { return lhs += rhs; }
+OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs, Duration rhs) noexcept { return lhs -= rhs; }
 
 class Time {
 public:
-  OPENXR_HPP_CONSTEXPR Time() = default;
-  OPENXR_HPP_CONSTEXPR explicit Time(XrTime t) : val_(t) {}
+    OPENXR_HPP_CONSTEXPR Time() = default;
+    OPENXR_HPP_CONSTEXPR explicit Time(XrTime t)
+        : val_(t)
+    {
+    }
 
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
-    return val_ == 0;
-  }
-  OPENXR_HPP_CONSTEXPR XrTime get() const noexcept { return val_; }
+    OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept { return val_ == 0; }
+    OPENXR_HPP_CONSTEXPR XrTime get() const noexcept { return val_; }
 
-  XrTime *put() noexcept {
-    val_ = 0;
-    return &val_;
-  }
+    XrTime* put() noexcept
+    {
+        val_ = 0;
+        return &val_;
+    }
 
-  Time &operator-=(Duration d) noexcept {
-    val_ -= d.get();
-    return *this;
-  }
-  Time &operator+=(Duration d) noexcept {
-    val_ += d.get();
-    return *this;
-  }
+    OPENXR_HPP_CONSTEXPR Time& operator-=(Duration d) noexcept
+    {
+        val_ -= d.get();
+        return *this;
+    }
+    OPENXR_HPP_CONSTEXPR Time& operator+=(Duration d) noexcept
+    {
+        val_ += d.get();
+        return *this;
+    }
 
 private:
-  XrTime val_{};
+    XrTime val_ {};
 };
 
 OPENXR_HPP_CONSTEXPR inline XrTime get(Time t) noexcept { return t.get(); }
 
-inline XrTime *put(Time &t) noexcept { return t.put(); }
+inline XrTime* put(Time& t) noexcept { return t.put(); }
 
-OPENXR_HPP_CONSTEXPR inline Duration operator-(Time lhs, Time rhs) noexcept {
-  return Duration{lhs.get() - rhs.get()};
-}
+OPENXR_HPP_CONSTEXPR inline Duration operator-(Time lhs, Time rhs) noexcept { return Duration { lhs.get() - rhs.get() }; }
+
+OPENXR_HPP_CONSTEXPR inline Time operator-(Time lhs, Duration rhs) noexcept { return lhs -= rhs; }
+
+OPENXR_HPP_CONSTEXPR inline Time operator+(Time lhs, Duration rhs) noexcept { return lhs += rhs; }
 
 } // namespace OPENXR_HPP_NAMESPACE
 
@@ -603,101 +622,6 @@ template <typename BitType>
 Flags<BitType> operator^(BitType bit, Flags<BitType> const& flags)
 {
     return flags ^ bit;
-}
-
-} // namespace OPENXR_HPP_NAMESPACE
-
-namespace OPENXR_HPP_NAMESPACE {
-
-template <typename FlagBitsType> struct FlagTraits {
-  enum { allFlags = 0 };
-};
-
-template <typename BitType, typename MaskType = XrFlags64> class Flags {
-public:
-  OPENXR_HPP_CONSTEXPR Flags() : m_mask(0) {}
-
-  Flags(BitType bit) : m_mask(static_cast<MaskType>(bit)) {}
-
-  Flags(Flags<BitType> const &rhs) : m_mask(rhs.m_mask) {}
-
-  explicit Flags(MaskType flags) : m_mask(flags) {}
-
-  Flags<BitType> &operator=(Flags<BitType> const &rhs) {
-    m_mask = rhs.m_mask;
-    return *this;
-  }
-
-  Flags<BitType> &operator|=(Flags<BitType> const &rhs) {
-    m_mask |= rhs.m_mask;
-    return *this;
-  }
-
-  Flags<BitType> &operator&=(Flags<BitType> const &rhs) {
-    m_mask &= rhs.m_mask;
-    return *this;
-  }
-
-  Flags<BitType> &operator^=(Flags<BitType> const &rhs) {
-    m_mask ^= rhs.m_mask;
-    return *this;
-  }
-
-  Flags<BitType> operator|(Flags<BitType> const &rhs) const {
-    Flags<BitType> result(*this);
-    result |= rhs;
-    return result;
-  }
-
-  Flags<BitType> operator&(Flags<BitType> const &rhs) const {
-    Flags<BitType> result(*this);
-    result &= rhs;
-    return result;
-  }
-
-  Flags<BitType> operator^(Flags<BitType> const &rhs) const {
-    Flags<BitType> result(*this);
-    result ^= rhs;
-    return result;
-  }
-
-  bool operator!() const { return !m_mask; }
-
-  Flags<BitType> operator~() const {
-    Flags<BitType> result(*this);
-    result.m_mask ^= FlagTraits<BitType>::allFlags;
-    return result;
-  }
-
-  bool operator==(Flags<BitType> const &rhs) const {
-    return m_mask == rhs.m_mask;
-  }
-
-  bool operator!=(Flags<BitType> const &rhs) const {
-    return m_mask != rhs.m_mask;
-  }
-
-  explicit operator bool() const { return !!m_mask; }
-
-  explicit operator MaskType() const { return m_mask; }
-
-private:
-  MaskType m_mask;
-};
-
-template <typename BitType>
-Flags<BitType> operator|(BitType bit, Flags<BitType> const &flags) {
-  return flags | bit;
-}
-
-template <typename BitType>
-Flags<BitType> operator&(BitType bit, Flags<BitType> const &flags) {
-  return flags & bit;
-}
-
-template <typename BitType>
-Flags<BitType> operator^(BitType bit, Flags<BitType> const &flags) {
-  return flags ^ bit;
 }
 
 } // namespace OPENXR_HPP_NAMESPACE
@@ -2359,191 +2283,185 @@ namespace OPENXR_HPP_NAMESPACE {
 
 /*!
  * @defgroup enums Flags
- * @brief C++ flags classes corresponding to OpenXR C flags and flagbits, plus
- * associated utility functions.
+ * @brief C++ flags classes corresponding to OpenXR C flags and flagbits, plus associated utility functions.
  * @{
  */
 
 //! @brief Flags class associated with XrInstanceCreateFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInstanceCreateFlags>
-enum class InstanceCreateFlagBits : XrFlags64 { None = 0, AllBits = 0 };
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInstanceCreateFlags>
+enum class InstanceCreateFlagBits : XrFlags64 {
+    None = 0,
+    AllBits = 0
+};
 
-using InstanceCreateFlags =
-    Flags<InstanceCreateFlagBits, XrInstanceCreateFlags>;
+using InstanceCreateFlags = Flags<InstanceCreateFlagBits, XrInstanceCreateFlags>;
 
 //! @brief Flags class associated with XrSessionCreateFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSessionCreateFlags>
-enum class SessionCreateFlagBits : XrFlags64 { None = 0, AllBits = 0 };
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSessionCreateFlags>
+enum class SessionCreateFlagBits : XrFlags64 {
+    None = 0,
+    AllBits = 0
+};
 
 using SessionCreateFlags = Flags<SessionCreateFlagBits, XrSessionCreateFlags>;
 
 //! @brief Flags class associated with XrSpaceVelocityFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlags>
 enum class SpaceVelocityFlagBits : XrFlags64 {
-  None = 0,
-  LinearValid = XR_SPACE_VELOCITY_LINEAR_VALID_BIT,
-  AngularValid = XR_SPACE_VELOCITY_ANGULAR_VALID_BIT,
-  AllBits = 0 | XR_SPACE_VELOCITY_LINEAR_VALID_BIT |
-            XR_SPACE_VELOCITY_ANGULAR_VALID_BIT
+    None = 0,
+    LinearValid = XR_SPACE_VELOCITY_LINEAR_VALID_BIT,
+    AngularValid = XR_SPACE_VELOCITY_ANGULAR_VALID_BIT,
+    AllBits = 0
+        | XR_SPACE_VELOCITY_LINEAR_VALID_BIT
+        | XR_SPACE_VELOCITY_ANGULAR_VALID_BIT
 };
 
 using SpaceVelocityFlags = Flags<SpaceVelocityFlagBits, XrSpaceVelocityFlags>;
 
 //! @brief Flags class associated with XrSpaceLocationFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlags>
 enum class SpaceLocationFlagBits : XrFlags64 {
-  None = 0,
-  OrientationValid = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
-  PositionValid = XR_SPACE_LOCATION_POSITION_VALID_BIT,
-  OrientationTracked = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT,
-  PositionTracked = XR_SPACE_LOCATION_POSITION_TRACKED_BIT,
-  AllBits = 0 | XR_SPACE_LOCATION_ORIENTATION_VALID_BIT |
-            XR_SPACE_LOCATION_POSITION_VALID_BIT |
-            XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT |
-            XR_SPACE_LOCATION_POSITION_TRACKED_BIT
+    None = 0,
+    OrientationValid = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
+    PositionValid = XR_SPACE_LOCATION_POSITION_VALID_BIT,
+    OrientationTracked = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT,
+    PositionTracked = XR_SPACE_LOCATION_POSITION_TRACKED_BIT,
+    AllBits = 0
+        | XR_SPACE_LOCATION_ORIENTATION_VALID_BIT
+        | XR_SPACE_LOCATION_POSITION_VALID_BIT
+        | XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT
+        | XR_SPACE_LOCATION_POSITION_TRACKED_BIT
 };
 
 using SpaceLocationFlags = Flags<SpaceLocationFlagBits, XrSpaceLocationFlags>;
 
 //! @brief Flags class associated with XrSwapchainCreateFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlags>
 enum class SwapchainCreateFlagBits : XrFlags64 {
-  None = 0,
-  ProtectedContent = XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT,
-  StaticImage = XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT,
-  AllBits = 0 | XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT |
-            XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
+    None = 0,
+    ProtectedContent = XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT,
+    StaticImage = XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT,
+    AllBits = 0
+        | XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT
+        | XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
 };
 
-using SwapchainCreateFlags =
-    Flags<SwapchainCreateFlagBits, XrSwapchainCreateFlags>;
+using SwapchainCreateFlags = Flags<SwapchainCreateFlagBits, XrSwapchainCreateFlags>;
 
 //! @brief Flags class associated with XrSwapchainUsageFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainUsageFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainUsageFlags>
 enum class SwapchainUsageFlagBits : XrFlags64 {
-  None = 0,
-  ColorAttachment = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT,
-  DepthStencilAttachment = XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-  UnorderedAccess = XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT,
-  TransferSrc = XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT,
-  TransferDst = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,
-  Sampled = XR_SWAPCHAIN_USAGE_SAMPLED_BIT,
-  MutableFormat = XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT,
-  AllBits = 0 | XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT |
-            XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
-            XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT |
-            XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT |
-            XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT |
-            XR_SWAPCHAIN_USAGE_SAMPLED_BIT |
-            XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+    None = 0,
+    ColorAttachment = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT,
+    DepthStencilAttachment = XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+    UnorderedAccess = XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT,
+    TransferSrc = XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT,
+    TransferDst = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,
+    Sampled = XR_SWAPCHAIN_USAGE_SAMPLED_BIT,
+    MutableFormat = XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT,
+    AllBits = 0
+        | XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+        | XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+        | XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+        | XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+        | XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+        | XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+        | XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
 };
 
-using SwapchainUsageFlags =
-    Flags<SwapchainUsageFlagBits, XrSwapchainUsageFlags>;
+using SwapchainUsageFlags = Flags<SwapchainUsageFlagBits, XrSwapchainUsageFlags>;
 
 //! @brief Flags class associated with XrCompositionLayerFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlags>
 enum class CompositionLayerFlagBits : XrFlags64 {
-  None = 0,
-  CorrectChromaticAberration =
-      XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT,
-  BlendTextureSourceAlpha = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT,
-  UnpremultipliedAlpha = XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT,
-  AllBits = 0 | XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT |
-            XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
-            XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
+    None = 0,
+    CorrectChromaticAberration = XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT,
+    BlendTextureSourceAlpha = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT,
+    UnpremultipliedAlpha = XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT,
+    AllBits = 0
+        | XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT
+        | XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT
+        | XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
 };
 
-using CompositionLayerFlags =
-    Flags<CompositionLayerFlagBits, XrCompositionLayerFlags>;
+using CompositionLayerFlags = Flags<CompositionLayerFlagBits, XrCompositionLayerFlags>;
 
 //! @brief Flags class associated with XrViewStateFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlags>
 enum class ViewStateFlagBits : XrFlags64 {
-  None = 0,
-  OrientationValid = XR_VIEW_STATE_ORIENTATION_VALID_BIT,
-  PositionValid = XR_VIEW_STATE_POSITION_VALID_BIT,
-  OrientationTracked = XR_VIEW_STATE_ORIENTATION_TRACKED_BIT,
-  PositionTracked = XR_VIEW_STATE_POSITION_TRACKED_BIT,
-  AllBits = 0 | XR_VIEW_STATE_ORIENTATION_VALID_BIT |
-            XR_VIEW_STATE_POSITION_VALID_BIT |
-            XR_VIEW_STATE_ORIENTATION_TRACKED_BIT |
-            XR_VIEW_STATE_POSITION_TRACKED_BIT
+    None = 0,
+    OrientationValid = XR_VIEW_STATE_ORIENTATION_VALID_BIT,
+    PositionValid = XR_VIEW_STATE_POSITION_VALID_BIT,
+    OrientationTracked = XR_VIEW_STATE_ORIENTATION_TRACKED_BIT,
+    PositionTracked = XR_VIEW_STATE_POSITION_TRACKED_BIT,
+    AllBits = 0
+        | XR_VIEW_STATE_ORIENTATION_VALID_BIT
+        | XR_VIEW_STATE_POSITION_VALID_BIT
+        | XR_VIEW_STATE_ORIENTATION_TRACKED_BIT
+        | XR_VIEW_STATE_POSITION_TRACKED_BIT
 };
 
 using ViewStateFlags = Flags<ViewStateFlagBits, XrViewStateFlags>;
 
 //! @brief Flags class associated with XrInputSourceLocalizedNameFlags
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlags>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlags>
 enum class InputSourceLocalizedNameFlagBits : XrFlags64 {
-  None = 0,
-  UserPath = XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT,
-  InteractionProfile = XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT,
-  Component = XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT,
-  AllBits = 0 | XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT |
-            XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT |
-            XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
+    None = 0,
+    UserPath = XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT,
+    InteractionProfile = XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT,
+    Component = XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT,
+    AllBits = 0
+        | XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT
+        | XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT
+        | XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
 };
 
-using InputSourceLocalizedNameFlags =
-    Flags<InputSourceLocalizedNameFlagBits, XrInputSourceLocalizedNameFlags>;
+using InputSourceLocalizedNameFlags = Flags<InputSourceLocalizedNameFlagBits, XrInputSourceLocalizedNameFlags>;
 
 //! @brief Flags class associated with XrDebugUtilsMessageSeverityFlagsEXT
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagsEXT>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagsEXT>
 enum class DebugUtilsMessageSeverityFlagBitsEXT : XrFlags64 {
-  None = 0,
-  Verbose = XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
-  Info = XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
-  Warning = XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
-  Error = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-  AllBits = 0 | XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+    None = 0,
+    Verbose = XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
+    Info = XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
+    Warning = XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+    Error = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+    AllBits = 0
+        | XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
 };
 
-using DebugUtilsMessageSeverityFlagsEXT =
-    Flags<DebugUtilsMessageSeverityFlagBitsEXT,
-          XrDebugUtilsMessageSeverityFlagsEXT>;
+using DebugUtilsMessageSeverityFlagsEXT = Flags<DebugUtilsMessageSeverityFlagBitsEXT, XrDebugUtilsMessageSeverityFlagsEXT>;
 
 //! @brief Flags class associated with XrDebugUtilsMessageTypeFlagsEXT
 //!
-//! See the related specification text at
-//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagsEXT>
+//! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagsEXT>
 enum class DebugUtilsMessageTypeFlagBitsEXT : XrFlags64 {
-  None = 0,
-  General = XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT,
-  Validation = XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-  Performance = XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-  Conformance = XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT,
-  AllBits = 0 | XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
-            XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+    None = 0,
+    General = XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT,
+    Validation = XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+    Performance = XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+    Conformance = XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT,
+    AllBits = 0
+        | XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+        | XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
 };
 
-using DebugUtilsMessageTypeFlagsEXT =
-    Flags<DebugUtilsMessageTypeFlagBitsEXT, XrDebugUtilsMessageTypeFlagsEXT>;
+using DebugUtilsMessageTypeFlagsEXT = Flags<DebugUtilsMessageTypeFlagBitsEXT, XrDebugUtilsMessageTypeFlagsEXT>;
 
 //! @}
 
@@ -4224,24 +4142,22 @@ public:
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetInstanceProperties wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
+    //! @brief xrGetInstanceProperties wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getInstanceProperties(InstanceProperties &instanceProperties,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getInstanceProperties(
+        InstanceProperties& instanceProperties, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetInstanceProperties wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
+    //! @brief xrGetInstanceProperties wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInstanceProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<InstanceProperties>::type
-  getInstanceProperties(Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<InstanceProperties>::type getInstanceProperties(
+        Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4250,16 +4166,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPollEvent>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result pollEvent(EventDataBuffer &eventData, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result pollEvent(
+        EventDataBuffer& eventData, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrPollEvent wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPollEvent>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result pollEvent(EventDataBuffer &eventData, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result pollEvent(
+        EventDataBuffer& eventData, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4311,88 +4229,68 @@ public:
 
 #endif //  OPENXR_HPP_PROVIDE_DISCOURAGED_FUNCTIONS
 
-  //! @brief xrGetSystem wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
+    //! @brief xrGetSystem wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getSystem(const SystemGetInfo &getInfo, XrSystemId *systemId,
-                   Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getSystem(
+        const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetSystem wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
+    //! @brief xrGetSystem wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystem>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<SystemId>::type
-  getSystem(const SystemGetInfo &getInfo, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<SystemId>::type getSystem(
+        const SystemGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetSystemProperties wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
+    //! @brief xrGetSystemProperties wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getSystemProperties(XrSystemId systemId, SystemProperties &properties,
-                             Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getSystemProperties(
+        XrSystemId systemId, SystemProperties& properties, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetSystemProperties wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
+    //! @brief xrGetSystemProperties wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSystemProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<SystemProperties>::type
-  getSystemProperties(XrSystemId systemId, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<SystemProperties>::type getSystemProperties(
+        XrSystemId systemId, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrEnumerateEnvironmentBlendModes wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
+    //! @brief xrEnumerateEnvironmentBlendModes wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result
-  enumerateEnvironmentBlendModes(XrSystemId systemId,
-                                 ViewConfigurationType viewConfigurationType,
-                                 uint32_t environmentBlendModeCapacityInput,
-                                 uint32_t *environmentBlendModeCountOutput,
-                                 XrEnvironmentBlendMode *environmentBlendModes,
-                                 Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result enumerateEnvironmentBlendModes(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, XrEnvironmentBlendMode* environmentBlendModes, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
+    //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-  template <typename Allocator = std::allocator<EnvironmentBlendMode>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
-  enumerateEnvironmentBlendModes(XrSystemId systemId,
-                                 ViewConfigurationType viewConfigurationType,
-                                 Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<EnvironmentBlendMode>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type enumerateEnvironmentBlendModes(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d = Dispatch {}) const;
 
-  //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
+    //! @brief xrEnumerateEnvironmentBlendModes wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateEnvironmentBlendModes>
 
-  template <typename Allocator = std::allocator<EnvironmentBlendMode>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
-  enumerateEnvironmentBlendModes(XrSystemId systemId,
-                                 ViewConfigurationType viewConfigurationType,
-                                 Allocator const &vectorAllocator,
-                                 Dispatch &&d) const;
+    template <typename Allocator = std::allocator<EnvironmentBlendMode>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type enumerateEnvironmentBlendModes(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4400,19 +4298,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createSession(const SessionCreateInfo &createInfo, Session &session,
-                       Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createSession(
+        const SessionCreateInfo& createInfo, Session& session, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSession wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Session>::type
-  createSession(const SessionCreateInfo &createInfo,
-                Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Session>::type createSession(
+        const SessionCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -4420,76 +4317,55 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type
-  createSessionUnique(const SessionCreateInfo &createInfo,
-                      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type createSessionUnique(
+        const SessionCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrEnumerateViewConfigurations wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
+    //! @brief xrEnumerateViewConfigurations wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result
-  enumerateViewConfigurations(XrSystemId systemId,
-                              uint32_t viewConfigurationTypeCapacityInput,
-                              uint32_t *viewConfigurationTypeCountOutput,
-                              XrViewConfigurationType *viewConfigurationTypes,
-                              Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result enumerateViewConfigurations(
+        XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, XrViewConfigurationType* viewConfigurationTypes, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
+    //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-  template <typename Allocator = std::allocator<ViewConfigurationType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type
-  enumerateViewConfigurations(XrSystemId systemId,
-                              Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<ViewConfigurationType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type enumerateViewConfigurations(
+        XrSystemId systemId, Dispatch&& d = Dispatch {}) const;
 
-  //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
+    //! @brief xrEnumerateViewConfigurations wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurations>
 
-  template <typename Allocator = std::allocator<ViewConfigurationType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type
-  enumerateViewConfigurations(XrSystemId systemId,
-                              Allocator const &vectorAllocator,
-                              Dispatch &&d) const;
+    template <typename Allocator = std::allocator<ViewConfigurationType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type enumerateViewConfigurations(
+        XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetViewConfigurationProperties wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
+    //! @brief xrGetViewConfigurationProperties wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getViewConfigurationProperties(
-      XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-      ViewConfigurationProperties &configurationProperties,
-      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getViewConfigurationProperties(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetViewConfigurationProperties wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
+    //! @brief xrGetViewConfigurationProperties wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetViewConfigurationProperties>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ViewConfigurationProperties>::type
-  getViewConfigurationProperties(XrSystemId systemId,
-                                 ViewConfigurationType viewConfigurationType,
-                                 Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ViewConfigurationProperties>::type getViewConfigurationProperties(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4502,52 +4378,40 @@ public:
         XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrViewConfigurationView* views, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrEnumerateViewConfigurationViews wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
+    //! @brief xrEnumerateViewConfigurationViews wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
 
-  template <typename Allocator = std::allocator<ViewConfigurationView>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type
-  enumerateViewConfigurationViews(XrSystemId systemId,
-                                  ViewConfigurationType viewConfigurationType,
-                                  Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<ViewConfigurationView>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type enumerateViewConfigurationViews(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d = Dispatch {}) const;
 
-  //! @brief xrEnumerateViewConfigurationViews wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
+    //! @brief xrEnumerateViewConfigurationViews wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateViewConfigurationViews>
 
-  template <typename Allocator = std::allocator<ViewConfigurationView>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type
-  enumerateViewConfigurationViews(XrSystemId systemId,
-                                  ViewConfigurationType viewConfigurationType,
-                                  Allocator const &vectorAllocator,
-                                  Dispatch &&d) const;
+    template <typename Allocator = std::allocator<ViewConfigurationView>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type enumerateViewConfigurationViews(
+        XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrStringToPath wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
+    //! @brief xrStringToPath wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result stringToPath(
         const char* pathString, XrPath* path, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrStringToPath wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
+    //! @brief xrStringToPath wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStringToPath>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Path>::type
-  stringToPath(const char *pathString, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Path>::type stringToPath(
+        const char* pathString, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4564,22 +4428,17 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPathToString>
 
-  template <typename Allocator = std::allocator<char>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  pathToString(XrPath path, Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type pathToString(
+        XrPath path, Dispatch&& d = Dispatch {}) const;
 
     //! @brief xrPathToString wrapper - enhanced mode, stateful allocator for two-call result.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPathToString>
 
-  template <typename Allocator = std::allocator<char>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  pathToString(XrPath path, Allocator const &vectorAllocator,
-               Dispatch &&d) const;
+    template <typename Allocator = std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type pathToString(
+        XrPath path, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4587,19 +4446,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSet>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createActionSet(const ActionSetCreateInfo &createInfo,
-                         ActionSet &actionSet, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createActionSet(
+        const ActionSetCreateInfo& createInfo, ActionSet& actionSet, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateActionSet wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSet>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ActionSet>::type
-  createActionSet(const ActionSetCreateInfo &createInfo,
-                  Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ActionSet>::type createActionSet(
+        const ActionSetCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -4607,11 +4465,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSet>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type
-  createActionSetUnique(const ActionSetCreateInfo &createInfo,
-                        Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type createActionSetUnique(
+        const ActionSetCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4620,48 +4476,43 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSuggestInteractionProfileBindings>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result suggestInteractionProfileBindings(
-      const InteractionProfileSuggestedBinding &suggestedBindings,
-      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result suggestInteractionProfileBindings(
+        const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSuggestInteractionProfileBindings wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSuggestInteractionProfileBindings>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type suggestInteractionProfileBindings(
-      const InteractionProfileSuggestedBinding &suggestedBindings,
-      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type suggestInteractionProfileBindings(
+        const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL)
 
-  //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getOpenGLGraphicsRequirementsKHR(
-      XrSystemId systemId, GraphicsRequirementsOpenGLKHR &graphicsRequirements,
-      Dispatch &&d) const;
+    //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getOpenGLGraphicsRequirementsKHR(
+        XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type
-  getOpenGLGraphicsRequirementsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetOpenGLGraphicsRequirementsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type getOpenGLGraphicsRequirementsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4669,30 +4520,26 @@ public:
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
-  //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getOpenGLESGraphicsRequirementsKHR(
-      XrSystemId systemId,
-      GraphicsRequirementsOpenGLESKHR &graphicsRequirements,
-      Dispatch &&d) const;
+    //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getOpenGLESGraphicsRequirementsKHR(
+        XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type
-  getOpenGLESGraphicsRequirementsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetOpenGLESGraphicsRequirementsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetOpenGLESGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type getOpenGLESGraphicsRequirementsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4711,32 +4558,25 @@ public:
         XrSystemId systemId, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetVulkanInstanceExtensionsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanInstanceExtensionsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = std::allocator<char>, typename Dispatch>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getVulkanInstanceExtensionsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetVulkanInstanceExtensionsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanInstanceExtensionsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Allocator = std::allocator<char>, typename Dispatch>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getVulkanInstanceExtensionsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
-  //! @brief xrGetVulkanInstanceExtensionsKHR wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanInstanceExtensionsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = std::allocator<char>, typename Dispatch>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getVulkanInstanceExtensionsKHR(XrSystemId systemId,
-                                 Allocator const &vectorAllocator,
-                                 Dispatch &&d) const;
+    //! @brief xrGetVulkanInstanceExtensionsKHR wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanInstanceExtensionsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Allocator = std::allocator<char>, typename Dispatch>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getVulkanInstanceExtensionsKHR(
+        XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4755,32 +4595,25 @@ public:
         XrSystemId systemId, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetVulkanDeviceExtensionsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanDeviceExtensionsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = std::allocator<char>, typename Dispatch>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getVulkanDeviceExtensionsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetVulkanDeviceExtensionsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanDeviceExtensionsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Allocator = std::allocator<char>, typename Dispatch>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getVulkanDeviceExtensionsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
-  //! @brief xrGetVulkanDeviceExtensionsKHR wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanDeviceExtensionsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Allocator = std::allocator<char>, typename Dispatch>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getVulkanDeviceExtensionsKHR(XrSystemId systemId,
-                               Allocator const &vectorAllocator,
-                               Dispatch &&d) const;
+    //! @brief xrGetVulkanDeviceExtensionsKHR wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanDeviceExtensionsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Allocator = std::allocator<char>, typename Dispatch>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getVulkanDeviceExtensionsKHR(
+        XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4788,30 +4621,26 @@ public:
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 
-  //! @brief xrGetVulkanGraphicsDeviceKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
-                                    VkPhysicalDevice *vkPhysicalDevice,
-                                    Dispatch &&d) const;
+    //! @brief xrGetVulkanGraphicsDeviceKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getVulkanGraphicsDeviceKHR(
+        XrSystemId systemId, VkInstance vkInstance, VkPhysicalDevice* vkPhysicalDevice, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetVulkanGraphicsDeviceKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<VkPhysicalDevice>::type
-  getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
-                             Dispatch &&d) const;
+    //! @brief xrGetVulkanGraphicsDeviceKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsDeviceKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<VkPhysicalDevice>::type getVulkanGraphicsDeviceKHR(
+        XrSystemId systemId, VkInstance vkInstance, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4819,29 +4648,26 @@ public:
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 
-  //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getVulkanGraphicsRequirementsKHR(
-      XrSystemId systemId, GraphicsRequirementsVulkanKHR &graphicsRequirements,
-      Dispatch &&d) const;
+    //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getVulkanGraphicsRequirementsKHR(
+        XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<GraphicsRequirementsVulkanKHR>::type
-  getVulkanGraphicsRequirementsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetVulkanGraphicsRequirementsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<GraphicsRequirementsVulkanKHR>::type getVulkanGraphicsRequirementsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4849,29 +4675,26 @@ public:
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
 
-  //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getD3D11GraphicsRequirementsKHR(
-      XrSystemId systemId, GraphicsRequirementsD3D11KHR &graphicsRequirements,
-      Dispatch &&d) const;
+    //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getD3D11GraphicsRequirementsKHR(
+        XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<GraphicsRequirementsD3D11KHR>::type
-  getD3D11GraphicsRequirementsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetD3D11GraphicsRequirementsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D11GraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<GraphicsRequirementsD3D11KHR>::type getD3D11GraphicsRequirementsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4879,29 +4702,26 @@ public:
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
 
-  //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getD3D12GraphicsRequirementsKHR(
-      XrSystemId systemId, GraphicsRequirementsD3D12KHR &graphicsRequirements,
-      Dispatch &&d) const;
+    //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getD3D12GraphicsRequirementsKHR(
+        XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<GraphicsRequirementsD3D12KHR>::type
-  getD3D12GraphicsRequirementsKHR(XrSystemId systemId, Dispatch &&d) const;
+    //! @brief xrGetD3D12GraphicsRequirementsKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetD3D12GraphicsRequirementsKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<GraphicsRequirementsD3D12KHR>::type getD3D12GraphicsRequirementsKHR(
+        XrSystemId systemId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4909,29 +4729,26 @@ public:
 
 #if defined(XR_USE_PLATFORM_WIN32)
 
-  //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result convertWin32PerformanceCounterToTimeKHR(
-      const LARGE_INTEGER *performanceCounter, XrTime *time,
-      Dispatch &&d) const;
+    //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result convertWin32PerformanceCounterToTimeKHR(
+        const LARGE_INTEGER* performanceCounter, const Time& time, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<Time>::type convertWin32PerformanceCounterToTimeKHR(
-      const LARGE_INTEGER *performanceCounter, Dispatch &&d) const;
+    //! @brief xrConvertWin32PerformanceCounterToTimeKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertWin32PerformanceCounterToTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<Time>::type convertWin32PerformanceCounterToTimeKHR(
+        const LARGE_INTEGER* performanceCounter, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4939,28 +4756,26 @@ public:
 
 #if defined(XR_USE_PLATFORM_WIN32)
 
-  //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result convertTimeToWin32PerformanceCounterKHR(
-      XrTime time, LARGE_INTEGER *performanceCounter, Dispatch &&d) const;
+    //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result convertTimeToWin32PerformanceCounterKHR(
+        const Time& time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<LARGE_INTEGER>::type
-  convertTimeToWin32PerformanceCounterKHR(XrTime time, Dispatch &&d) const;
+    //! @brief xrConvertTimeToWin32PerformanceCounterKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToWin32PerformanceCounterKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<LARGE_INTEGER>::type convertTimeToWin32PerformanceCounterKHR(
+        const Time& time, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4968,29 +4783,26 @@ public:
 
 #if defined(XR_USE_TIMESPEC)
 
-  //! @brief xrConvertTimespecTimeToTimeKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result convertTimespecTimeToTimeKHR(const struct timespec *timespecTime,
-                                      XrTime *time, Dispatch &&d) const;
+    //! @brief xrConvertTimespecTimeToTimeKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result convertTimespecTimeToTimeKHR(
+        const struct timespec* timespecTime, const Time& time, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrConvertTimespecTimeToTimeKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<Time>::type
-  convertTimespecTimeToTimeKHR(const struct timespec *timespecTime,
-                               Dispatch &&d) const;
+    //! @brief xrConvertTimespecTimeToTimeKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimespecTimeToTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<Time>::type convertTimespecTimeToTimeKHR(
+        const struct timespec* timespecTime, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -4998,138 +4810,115 @@ public:
 
 #if defined(XR_USE_TIMESPEC)
 
-  //! @brief xrConvertTimeToTimespecTimeKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result convertTimeToTimespecTimeKHR(XrTime time,
-                                      struct timespec *timespecTime,
-                                      Dispatch &&d) const;
+    //! @brief xrConvertTimeToTimespecTimeKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result convertTimeToTimespecTimeKHR(
+        const Time& time, struct timespec* timespecTime, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrConvertTimeToTimespecTimeKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<timespec>::type
-  convertTimeToTimespecTimeKHR(XrTime time, Dispatch &&d) const;
+    //! @brief xrConvertTimeToTimespecTimeKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrConvertTimeToTimespecTimeKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<timespec>::type convertTimeToTimespecTimeKHR(
+        const Time& time, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #endif // defined(XR_USE_TIMESPEC)
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrSetDebugUtilsObjectNameEXT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetDebugUtilsObjectNameEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result setDebugUtilsObjectNameEXT(const DebugUtilsObjectNameInfoEXT &nameInfo,
-                                    Dispatch &&d) const;
+    //! @brief xrSetDebugUtilsObjectNameEXT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetDebugUtilsObjectNameEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result setDebugUtilsObjectNameEXT(
+        const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSetDebugUtilsObjectNameEXT wrapper - enhanced mode (hides basic
-  //! wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetDebugUtilsObjectNameEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  setDebugUtilsObjectNameEXT(const DebugUtilsObjectNameInfoEXT &nameInfo,
-                             Dispatch &&d) const;
+    //! @brief xrSetDebugUtilsObjectNameEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetDebugUtilsObjectNameEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type setDebugUtilsObjectNameEXT(
+        const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrCreateDebugUtilsMessengerEXT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result createDebugUtilsMessengerEXT(
-      const DebugUtilsMessengerCreateInfoEXT &createInfo,
-      DebugUtilsMessengerEXT &messenger, Dispatch &&d) const;
+    //! @brief xrCreateDebugUtilsMessengerEXT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result createDebugUtilsMessengerEXT(
+        const DebugUtilsMessengerCreateInfoEXT& createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrCreateDebugUtilsMessengerEXT wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<DebugUtilsMessengerEXT>::type
-  createDebugUtilsMessengerEXT(
-      const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const;
+    //! @brief xrCreateDebugUtilsMessengerEXT wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<DebugUtilsMessengerEXT>::type createDebugUtilsMessengerEXT(
+        const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
-  //! @brief xrCreateDebugUtilsMessengerEXT wrapper returning a smart handle.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<UniqueHandle<DebugUtilsMessengerEXT,
-                                        impl::RemoveRefConst<Dispatch>>>::type
-  createDebugUtilsMessengerUniqueEXT(
-      const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const;
+    //! @brief xrCreateDebugUtilsMessengerEXT wrapper returning a smart handle.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateDebugUtilsMessengerEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<UniqueHandle<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>>::type createDebugUtilsMessengerUniqueEXT(
+        const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrSubmitDebugUtilsMessageEXT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSubmitDebugUtilsMessageEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result submitDebugUtilsMessageEXT(
-      XrDebugUtilsMessageSeverityFlagsEXT messageSeverity,
-      XrDebugUtilsMessageTypeFlagsEXT messageTypes,
-      const DebugUtilsMessengerCallbackDataEXT &callbackData,
-      Dispatch &&d) const;
+    //! @brief xrSubmitDebugUtilsMessageEXT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSubmitDebugUtilsMessageEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result submitDebugUtilsMessageEXT(
+        XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSubmitDebugUtilsMessageEXT wrapper - enhanced mode (hides basic
-  //! wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSubmitDebugUtilsMessageEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type submitDebugUtilsMessageEXT(
-      XrDebugUtilsMessageSeverityFlagsEXT messageSeverity,
-      XrDebugUtilsMessageTypeFlagsEXT messageTypes,
-      const DebugUtilsMessengerCallbackDataEXT &callbackData,
-      Dispatch &&d) const;
+    //! @brief xrSubmitDebugUtilsMessageEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSubmitDebugUtilsMessageEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type submitDebugUtilsMessageEXT(
+        XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @}
+    //! @}
 private:
     RawHandleType m_raw;
 };
@@ -5389,31 +5178,26 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateReferenceSpaces>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result enumerateReferenceSpaces(uint32_t spaceCapacityInput,
-                                  uint32_t *spaceCountOutput,
-                                  XrReferenceSpaceType *spaces,
-                                  Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result enumerateReferenceSpaces(
+        uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, XrReferenceSpaceType* spaces, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrEnumerateReferenceSpaces wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateReferenceSpaces>
 
-  template <typename Allocator = std::allocator<ReferenceSpaceType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
-  enumerateReferenceSpaces(Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<ReferenceSpaceType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type enumerateReferenceSpaces(
+        Dispatch&& d = Dispatch {}) const;
 
     //! @brief xrEnumerateReferenceSpaces wrapper - enhanced mode, stateful allocator for two-call result.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateReferenceSpaces>
 
-  template <typename Allocator = std::allocator<ReferenceSpaceType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
-  enumerateReferenceSpaces(Allocator const &vectorAllocator,
-                           Dispatch &&d) const;
+    template <typename Allocator = std::allocator<ReferenceSpaceType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type enumerateReferenceSpaces(
+        Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5421,19 +5205,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateReferenceSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
-                              Space &space, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createReferenceSpace(
+        const ReferenceSpaceCreateInfo& createInfo, Space& space, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateReferenceSpace wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateReferenceSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Space>::type
-  createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
-                       Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Space>::type createReferenceSpace(
+        const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5441,11 +5224,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateReferenceSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-  createReferenceSpaceUnique(const ReferenceSpaceCreateInfo &createInfo,
-                             Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createReferenceSpaceUnique(
+        const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5454,20 +5235,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetReferenceSpaceBoundsRect>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
-                                     Extent2Df &bounds,
-                                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getReferenceSpaceBoundsRect(
+        ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrGetReferenceSpaceBoundsRect wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetReferenceSpaceBoundsRect>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
-                                     Extent2Df &bounds,
-                                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getReferenceSpaceBoundsRect(
+        ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5475,19 +5254,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createActionSpace(const ActionSpaceCreateInfo &createInfo,
-                           Space &space, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createActionSpace(
+        const ActionSpaceCreateInfo& createInfo, Space& space, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateActionSpace wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Space>::type
-  createActionSpace(const ActionSpaceCreateInfo &createInfo,
-                    Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Space>::type createActionSpace(
+        const ActionSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5495,11 +5273,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateActionSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-  createActionSpaceUnique(const ActionSpaceCreateInfo &createInfo,
-                          Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createActionSpaceUnique(
+        const ActionSpaceCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5516,20 +5292,17 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainFormats>
 
-  template <typename Allocator = std::allocator<int64_t>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<int64_t, Allocator>>::type
-  enumerateSwapchainFormats(Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<int64_t>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<int64_t, Allocator>>::type enumerateSwapchainFormats(
+        Dispatch&& d = Dispatch {}) const;
 
     //! @brief xrEnumerateSwapchainFormats wrapper - enhanced mode, stateful allocator for two-call result.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainFormats>
 
-  template <typename Allocator = std::allocator<int64_t>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<int64_t, Allocator>>::type
-  enumerateSwapchainFormats(Allocator const &vectorAllocator,
-                            Dispatch &&d) const;
+    template <typename Allocator = std::allocator<int64_t>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<int64_t, Allocator>>::type enumerateSwapchainFormats(
+        Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5537,19 +5310,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchain>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createSwapchain(const SwapchainCreateInfo &createInfo,
-                         Swapchain &swapchain, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createSwapchain(
+        const SwapchainCreateInfo& createInfo, Swapchain& swapchain, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateSwapchain wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchain>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Swapchain>::type
-  createSwapchain(const SwapchainCreateInfo &createInfo,
-                  Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Swapchain>::type createSwapchain(
+        const SwapchainCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -5557,11 +5329,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchain>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type
-  createSwapchainUnique(const SwapchainCreateInfo &createInfo,
-                        Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type createSwapchainUnique(
+        const SwapchainCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5570,18 +5340,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrBeginSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result beginSession(const SessionBeginInfo &beginInfo,
-                      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result beginSession(
+        const SessionBeginInfo& beginInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrBeginSession wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrBeginSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type beginSession(const SessionBeginInfo &beginInfo,
-                                           Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type beginSession(
+        const SessionBeginInfo& beginInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5599,8 +5369,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEndSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type endSession(Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type endSession(
+        Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5618,31 +5389,28 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrRequestExitSession>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type
-  requestExitSession(Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type requestExitSession(
+        Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrWaitFrame wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
+    //! @brief xrWaitFrame wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result waitFrame(const FrameWaitInfo &frameWaitInfo, FrameState &frameState,
-                   Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result waitFrame(
+        const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrWaitFrame wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
+    //! @brief xrWaitFrame wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<FrameState>::type
-  waitFrame(const FrameWaitInfo &frameWaitInfo,
-            Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<FrameState>::type waitFrame(
+        const FrameWaitInfo& frameWaitInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5651,18 +5419,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrBeginFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result beginFrame(const FrameBeginInfo &frameBeginInfo,
-                    Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result beginFrame(
+        const FrameBeginInfo& frameBeginInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrBeginFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrBeginFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result beginFrame(const FrameBeginInfo &frameBeginInfo,
-                    Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result beginFrame(
+        const FrameBeginInfo& frameBeginInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5671,18 +5439,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEndFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result endFrame(const FrameEndInfo &frameEndInfo,
-                  Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result endFrame(
+        const FrameEndInfo& frameEndInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrEndFrame wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEndFrame>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type endFrame(const FrameEndInfo &frameEndInfo,
-                                       Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type endFrame(
+        const FrameEndInfo& frameEndInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5690,32 +5458,26 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateViews>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result locateViews(const ViewLocateInfo &viewLocateInfo,
-                     XrViewState *viewState, uint32_t viewCapacityInput,
-                     uint32_t *viewCountOutput, XrView *views,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result locateViews(
+        const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrLocateViews wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateViews>
 
-  template <typename Allocator = std::allocator<View>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<View, Allocator>>::type
-  locateViews(const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
-              Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<View>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<View, Allocator>>::type locateViews(
+        const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Dispatch&& d = Dispatch {}) const;
 
     //! @brief xrLocateViews wrapper - enhanced mode, stateful allocator for two-call result.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateViews>
 
-  template <typename Allocator = std::allocator<View>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<View, Allocator>>::type
-  locateViews(const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
-              Allocator const &vectorAllocator, Dispatch &&d) const;
+    template <typename Allocator = std::allocator<View>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<View, Allocator>>::type locateViews(
+        const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5724,135 +5486,113 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAttachSessionActionSets>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result attachSessionActionSets(const SessionActionSetsAttachInfo &attachInfo,
-                                 Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result attachSessionActionSets(
+        const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrAttachSessionActionSets wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAttachSessionActionSets>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type
-  attachSessionActionSets(const SessionActionSetsAttachInfo &attachInfo,
-                          Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type attachSessionActionSets(
+        const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetCurrentInteractionProfile wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
+    //! @brief xrGetCurrentInteractionProfile wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result
-  getCurrentInteractionProfile(XrPath topLevelUserPath,
-                               InteractionProfileState &interactionProfile,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getCurrentInteractionProfile(
+        XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetCurrentInteractionProfile wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
+    //! @brief xrGetCurrentInteractionProfile wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetCurrentInteractionProfile>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<InteractionProfileState>::type
-  getCurrentInteractionProfile(XrPath topLevelUserPath,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<InteractionProfileState>::type getCurrentInteractionProfile(
+        XrPath topLevelUserPath, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetActionStateBoolean wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
+    //! @brief xrGetActionStateBoolean wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getActionStateBoolean(const ActionStateGetInfo &getInfo,
-                               ActionStateBoolean &state,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getActionStateBoolean(
+        const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetActionStateBoolean wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
+    //! @brief xrGetActionStateBoolean wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateBoolean>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ActionStateBoolean>::type
-  getActionStateBoolean(const ActionStateGetInfo &getInfo,
-                        Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ActionStateBoolean>::type getActionStateBoolean(
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetActionStateFloat wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
+    //! @brief xrGetActionStateFloat wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getActionStateFloat(const ActionStateGetInfo &getInfo,
-                             ActionStateFloat &state,
-                             Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getActionStateFloat(
+        const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetActionStateFloat wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
+    //! @brief xrGetActionStateFloat wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateFloat>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ActionStateFloat>::type
-  getActionStateFloat(const ActionStateGetInfo &getInfo,
-                      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ActionStateFloat>::type getActionStateFloat(
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetActionStateVector2f wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
+    //! @brief xrGetActionStateVector2f wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getActionStateVector2f(const ActionStateGetInfo &getInfo,
-                                ActionStateVector2f &state,
-                                Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getActionStateVector2f(
+        const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetActionStateVector2f wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
+    //! @brief xrGetActionStateVector2f wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStateVector2f>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ActionStateVector2f>::type
-  getActionStateVector2f(const ActionStateGetInfo &getInfo,
-                         Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ActionStateVector2f>::type getActionStateVector2f(
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetActionStatePose wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
+    //! @brief xrGetActionStatePose wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result getActionStatePose(const ActionStateGetInfo &getInfo,
-                            ActionStatePose &state,
-                            Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getActionStatePose(
+        const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetActionStatePose wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
+    //! @brief xrGetActionStatePose wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetActionStatePose>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<ActionStatePose>::type
-  getActionStatePose(const ActionStateGetInfo &getInfo,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<ActionStatePose>::type getActionStatePose(
+        const ActionStateGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5861,18 +5601,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSyncActions>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result syncActions(const ActionsSyncInfo &syncInfo,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result syncActions(
+        const ActionsSyncInfo& syncInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrSyncActions wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSyncActions>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result syncActions(const ActionsSyncInfo &syncInfo,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result syncActions(
+        const ActionsSyncInfo& syncInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5880,75 +5620,53 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result enumerateBoundSourcesForAction(
-      const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-      uint32_t sourceCapacityInput, uint32_t *sourceCountOutput,
-      XrPath *sources, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result enumerateBoundSourcesForAction(
+        const BoundSourcesForActionEnumerateInfo& enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
+    //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
 
-  template <typename Allocator = std::allocator<Path>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<Path, Allocator>>::type
-  enumerateBoundSourcesForAction(
-      const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-      Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<Path>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<Path, Allocator>>::type enumerateBoundSourcesForAction(
+        const BoundSourcesForActionEnumerateInfo& enumerateInfo, Dispatch&& d = Dispatch {}) const;
 
-  //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
+    //! @brief xrEnumerateBoundSourcesForAction wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateBoundSourcesForAction>
 
-  template <typename Allocator = std::allocator<Path>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<Path, Allocator>>::type
-  enumerateBoundSourcesForAction(
-      const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-      Allocator const &vectorAllocator, Dispatch &&d) const;
+    template <typename Allocator = std::allocator<Path>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<Path, Allocator>>::type enumerateBoundSourcesForAction(
+        const BoundSourcesForActionEnumerateInfo& enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrGetInputSourceLocalizedName wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
+    //! @brief xrGetInputSourceLocalizedName wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result
-  getInputSourceLocalizedName(const InputSourceLocalizedNameGetInfo &getInfo,
-                              uint32_t bufferCapacityInput,
-                              uint32_t *bufferCountOutput, char *buffer,
-                              Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result getInputSourceLocalizedName(
+        const InputSourceLocalizedNameGetInfo& getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrGetInputSourceLocalizedName wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
 
-  template <typename Allocator = std::allocator<char>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getInputSourceLocalizedName(const InputSourceLocalizedNameGetInfo &getInfo,
-                              Dispatch &&d = Dispatch{}) const;
+    template <typename Allocator = std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getInputSourceLocalizedName(
+        const InputSourceLocalizedNameGetInfo& getInfo, Dispatch&& d = Dispatch {}) const;
 
     //! @brief xrGetInputSourceLocalizedName wrapper - enhanced mode, stateful allocator for two-call result.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetInputSourceLocalizedName>
 
-  template <typename Allocator = std::allocator<char>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-  getInputSourceLocalizedName(const InputSourceLocalizedNameGetInfo &getInfo,
-                              Allocator const &vectorAllocator,
-                              Dispatch &&d) const;
+    template <typename Allocator = std::allocator<char>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type getInputSourceLocalizedName(
+        const InputSourceLocalizedNameGetInfo& getInfo, Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5957,21 +5675,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrApplyHapticFeedback>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                             const XrHapticBaseHeader *hapticFeedback,
-                             Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result applyHapticFeedback(
+        const HapticActionInfo& hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrApplyHapticFeedback wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrApplyHapticFeedback>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type
-  applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                      const XrHapticBaseHeader *hapticFeedback,
-                      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type applyHapticFeedback(
+        const HapticActionInfo& hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -5980,19 +5695,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStopHapticFeedback>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result stopHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                            Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result stopHapticFeedback(
+        const HapticActionInfo& hapticActionInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrStopHapticFeedback wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrStopHapticFeedback>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type
-  stopHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type stopHapticFeedback(
+        const HapticActionInfo& hapticActionInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6010,18 +5724,15 @@ public:
         AndroidThreadTypeKHR threadType, uint32_t threadId, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSetAndroidApplicationThreadKHR wrapper - enhanced mode (hides
-  //! basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetAndroidApplicationThreadKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  setAndroidApplicationThreadKHR(AndroidThreadTypeKHR threadType,
-                                 uint32_t threadId, Dispatch &&d) const;
+    //! @brief xrSetAndroidApplicationThreadKHR wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetAndroidApplicationThreadKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type setAndroidApplicationThreadKHR(
+        AndroidThreadTypeKHR threadType, uint32_t threadId, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6029,78 +5740,63 @@ public:
 
 #if defined(XR_USE_PLATFORM_ANDROID)
 
-  //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result createSwapchainAndroidSurfaceKHR(const SwapchainCreateInfo &info,
-                                          Swapchain &swapchain,
-                                          jobject *surface, Dispatch &&d) const;
+    //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result createSwapchainAndroidSurfaceKHR(
+        const SwapchainCreateInfo& info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<jobject>::type
-  createSwapchainAndroidSurfaceKHR(const SwapchainCreateInfo &info,
-                                   Swapchain &swapchain, Dispatch &&d) const;
+    //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<jobject>::type createSwapchainAndroidSurfaceKHR(
+        const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
-  //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper returning a smart
-  //! handle.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<
-      UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type
-  createSwapchainAndroidSurfaceUniqueKHR(const SwapchainCreateInfo &info,
-                                         Swapchain &swapchain,
-                                         Dispatch &&d) const;
+    //! @brief xrCreateSwapchainAndroidSurfaceKHR wrapper returning a smart handle.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSwapchainAndroidSurfaceKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type createSwapchainAndroidSurfaceUniqueKHR(
+        const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #endif // defined(XR_USE_PLATFORM_ANDROID)
 
-  //! @brief xrGetVisibilityMaskKHR wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result getVisibilityMaskKHR(ViewConfigurationType viewConfigurationType,
-                              uint32_t viewIndex,
-                              VisibilityMaskTypeKHR visibilityMaskType,
-                              VisibilityMaskKHR &visibilityMask,
-                              Dispatch &&d) const;
+    //! @brief xrGetVisibilityMaskKHR wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result getVisibilityMaskKHR(
+        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrGetVisibilityMaskKHR wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<VisibilityMaskKHR>::type getVisibilityMaskKHR(
-      ViewConfigurationType viewConfigurationType, uint32_t viewIndex,
-      VisibilityMaskTypeKHR visibilityMaskType, Dispatch &&d) const;
+    //! @brief xrGetVisibilityMaskKHR wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVisibilityMaskKHR>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<VisibilityMaskKHR>::type getVisibilityMaskKHR(
+        ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6116,19 +5812,15 @@ public:
         PerfSettingsDomainEXT domain, PerfSettingsLevelEXT level, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrPerfSettingsSetPerformanceLevelEXT wrapper - enhanced mode (hides
-  //! basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPerfSettingsSetPerformanceLevelEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  perfSettingsSetPerformanceLevelEXT(PerfSettingsDomainEXT domain,
-                                     PerfSettingsLevelEXT level,
-                                     Dispatch &&d) const;
+    //! @brief xrPerfSettingsSetPerformanceLevelEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrPerfSettingsSetPerformanceLevelEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type perfSettingsSetPerformanceLevelEXT(
+        PerfSettingsDomainEXT domain, PerfSettingsLevelEXT level, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6144,48 +5836,39 @@ public:
         PerfSettingsDomainEXT domain, PerfSettingsNotificationLevelEXT& notificationLevel, float* tempHeadroom, float* tempSlope, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrThermalGetTemperatureTrendEXT wrapper - enhanced mode (hides
-  //! basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrThermalGetTemperatureTrendEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type thermalGetTemperatureTrendEXT(
-      PerfSettingsDomainEXT domain,
-      PerfSettingsNotificationLevelEXT &notificationLevel, float *tempHeadroom,
-      float *tempSlope, Dispatch &&d) const;
+    //! @brief xrThermalGetTemperatureTrendEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrThermalGetTemperatureTrendEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type thermalGetTemperatureTrendEXT(
+        PerfSettingsDomainEXT domain, PerfSettingsNotificationLevelEXT& notificationLevel, float* tempHeadroom, float* tempSlope, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrSessionBeginDebugUtilsLabelRegionEXT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionBeginDebugUtilsLabelRegionEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result
-  sessionBeginDebugUtilsLabelRegionEXT(const DebugUtilsLabelEXT &labelInfo,
-                                       Dispatch &&d) const;
+    //! @brief xrSessionBeginDebugUtilsLabelRegionEXT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionBeginDebugUtilsLabelRegionEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result sessionBeginDebugUtilsLabelRegionEXT(
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSessionBeginDebugUtilsLabelRegionEXT wrapper - enhanced mode
-  //! (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionBeginDebugUtilsLabelRegionEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  sessionBeginDebugUtilsLabelRegionEXT(const DebugUtilsLabelEXT &labelInfo,
-                                       Dispatch &&d) const;
+    //! @brief xrSessionBeginDebugUtilsLabelRegionEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionBeginDebugUtilsLabelRegionEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type sessionBeginDebugUtilsLabelRegionEXT(
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6201,127 +5884,109 @@ public:
         Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSessionEndDebugUtilsLabelRegionEXT wrapper - enhanced mode (hides
-  //! basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionEndDebugUtilsLabelRegionEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  sessionEndDebugUtilsLabelRegionEXT(Dispatch &&d) const;
+    //! @brief xrSessionEndDebugUtilsLabelRegionEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionEndDebugUtilsLabelRegionEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type sessionEndDebugUtilsLabelRegionEXT(
+        Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrSessionInsertDebugUtilsLabelEXT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionInsertDebugUtilsLabelEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result sessionInsertDebugUtilsLabelEXT(const DebugUtilsLabelEXT &labelInfo,
-                                         Dispatch &&d) const;
+    //! @brief xrSessionInsertDebugUtilsLabelEXT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionInsertDebugUtilsLabelEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result sessionInsertDebugUtilsLabelEXT(
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
-  //! @brief xrSessionInsertDebugUtilsLabelEXT wrapper - enhanced mode (hides
-  //! basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionInsertDebugUtilsLabelEXT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  ResultValueType<void>::type
-  sessionInsertDebugUtilsLabelEXT(const DebugUtilsLabelEXT &labelInfo,
-                                  Dispatch &&d) const;
+    //! @brief xrSessionInsertDebugUtilsLabelEXT wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSessionInsertDebugUtilsLabelEXT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    ResultValueType<void>::type sessionInsertDebugUtilsLabelEXT(
+        const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrCreateSpatialAnchorMSFT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result createSpatialAnchorMSFT(const SpatialAnchorCreateInfoMSFT &createInfo,
-                                 SpatialAnchorMSFT &anchor, Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorMSFT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result createSpatialAnchorMSFT(
+        const SpatialAnchorCreateInfoMSFT& createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrCreateSpatialAnchorMSFT wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<SpatialAnchorMSFT>::type
-  createSpatialAnchorMSFT(const SpatialAnchorCreateInfoMSFT &createInfo,
-                          Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorMSFT wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<SpatialAnchorMSFT>::type createSpatialAnchorMSFT(
+        const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
-  //! @brief xrCreateSpatialAnchorMSFT wrapper returning a smart handle.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<
-      UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type
-  createSpatialAnchorUniqueMSFT(const SpatialAnchorCreateInfoMSFT &createInfo,
-                                Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorMSFT wrapper returning a smart handle.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type createSpatialAnchorUniqueMSFT(
+        const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  Result createSpatialAnchorSpaceMSFT(
-      const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Space &space,
-      Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    Result createSpatialAnchorSpaceMSFT(
+        const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Space& space, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<Space>::type createSpatialAnchorSpaceMSFT(
-      const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<Space>::type createSpatialAnchorSpaceMSFT(
+        const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
-  //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper returning a smart handle.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
-  //!
-  //! @note No default dispatch is provided as this is a non-core function,
-  //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
-  template <typename Dispatch>
-  typename ResultValueType<
-      UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-  createSpatialAnchorSpaceUniqueMSFT(
-      const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const;
+    //! @brief xrCreateSpatialAnchorSpaceMSFT wrapper returning a smart handle.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateSpatialAnchorSpaceMSFT>
+    //!
+    //! @note No default dispatch is provided as this is a non-core function,
+    //! and thus requires some dynamic dispatch class (like DispatchLoaderDynamic)
+    template <typename Dispatch>
+    typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type createSpatialAnchorSpaceUniqueMSFT(
+        const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -6549,24 +6214,34 @@ public:
         return &m_raw;
     }
 
-  //! @brief xrLocateSpace wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
+    //! @brief Gets the raw handle type.
+    //!
+    //! See also OPENXR_HPP_NAMESPACE::get()
+    OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result locateSpace(Space baseSpace, XrTime time, SpaceLocation &location,
-                     Dispatch &&d = Dispatch{}) const;
+    //! @}
+
+    /*!
+     * @name OpenXR API calls as member functions
+     * @{
+     */
+
+    //! @brief xrLocateSpace wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
+
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result locateSpace(
+        Space baseSpace, const Time& time, SpaceLocation& location, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrLocateSpace wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
+    //! @brief xrLocateSpace wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrLocateSpace>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<SpaceLocation>::type
-  locateSpace(Space baseSpace, XrTime time, Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<SpaceLocation>::type locateSpace(
+        Space baseSpace, const Time& time, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7102,62 +6777,49 @@ public:
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrEnumerateSwapchainImages wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
+    //! @brief xrEnumerateSwapchainImages wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
 
     template <typename Dispatch = DispatchLoaderStatic>
     Result enumerateSwapchainImages(
         uint32_t imageCapacityInput, uint32_t* imageCountOutput, XrSwapchainImageBaseHeader* images, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrEnumerateSwapchainImages wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
+    //! @brief xrEnumerateSwapchainImages wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
 
-  template <typename ResultItemType,
-            typename Allocator = std::allocator<ResultItemType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
-  enumerateSwapchainImages(Dispatch &&d = Dispatch{}) const;
+    template <typename ResultItemType, typename Allocator = std::allocator<ResultItemType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type enumerateSwapchainImages(
+        Dispatch&& d = Dispatch {}) const;
 
-  //! @brief xrEnumerateSwapchainImages wrapper - enhanced mode, stateful
-  //! allocator for two-call result.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
+    //! @brief xrEnumerateSwapchainImages wrapper - enhanced mode, stateful allocator for two-call result.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateSwapchainImages>
 
-  template <typename ResultItemType,
-            typename Allocator = std::allocator<ResultItemType>,
-            typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
-  enumerateSwapchainImages(Allocator const &vectorAllocator,
-                           Dispatch &&d) const;
+    template <typename ResultItemType, typename Allocator = std::allocator<ResultItemType>, typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type enumerateSwapchainImages(
+        Allocator const& vectorAllocator, Dispatch&& d) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
-  //! @brief xrAcquireSwapchainImage wrapper.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
+    //! @brief xrAcquireSwapchainImage wrapper.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
-                               uint32_t *index,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result acquireSwapchainImage(
+        const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-  //! @brief xrAcquireSwapchainImage wrapper - enhanced mode.
-  //!
-  //! See the related specification text at
-  //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
+    //! @brief xrAcquireSwapchainImage wrapper - enhanced mode.
+    //!
+    //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrAcquireSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<uint32_t>::type
-  acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
-                        Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<uint32_t>::type acquireSwapchainImage(
+        const SwapchainImageAcquireInfo& acquireInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7166,18 +6828,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result waitSwapchainImage(const SwapchainImageWaitInfo &waitInfo,
-                            Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result waitSwapchainImage(
+        const SwapchainImageWaitInfo& waitInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrWaitSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrWaitSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result waitSwapchainImage(const SwapchainImageWaitInfo &waitInfo,
-                            Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result waitSwapchainImage(
+        const SwapchainImageWaitInfo& waitInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7186,19 +6848,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrReleaseSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result releaseSwapchainImage(const SwapchainImageReleaseInfo &releaseInfo,
-                               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result releaseSwapchainImage(
+        const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d = Dispatch {}) const;
 
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
     //! @brief xrReleaseSwapchainImage wrapper - enhanced mode (hides basic wrapper unless OPENXR_HPP_DISABLE_ENHANCED_MODE defined).
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrReleaseSwapchainImage>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  ResultValueType<void>::type
-  releaseSwapchainImage(const SwapchainImageReleaseInfo &releaseInfo,
-                        Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    ResultValueType<void>::type releaseSwapchainImage(
+        const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d = Dispatch {}) const;
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -7462,19 +7123,18 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateAction>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  Result createAction(const ActionCreateInfo &createInfo, Action &action,
-                      Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    Result createAction(
+        const ActionCreateInfo& createInfo, Action& action, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
     //! @brief xrCreateAction wrapper - enhanced mode.
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateAction>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<Action>::type
-  createAction(const ActionCreateInfo &createInfo,
-               Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<Action>::type createAction(
+        const ActionCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -7482,11 +7142,9 @@ public:
     //!
     //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateAction>
 
-  template <typename Dispatch = DispatchLoaderStatic>
-  typename ResultValueType<
-      UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type
-  createActionUnique(const ActionCreateInfo &createInfo,
-                     Dispatch &&d = Dispatch{}) const;
+    template <typename Dispatch = DispatchLoaderStatic>
+    typename ResultValueType<UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type createActionUnique(
+        const ActionCreateInfo& createInfo, Dispatch&& d = Dispatch {}) const;
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8144,19 +7802,17 @@ Result enumerateApiLayerProperties(
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateApiLayerProperties>
 
-template <typename Allocator = std::allocator<ApiLayerProperties>,
-          typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
-enumerateApiLayerProperties(Dispatch &&d = Dispatch{});
+template <typename Allocator = std::allocator<ApiLayerProperties>, typename Dispatch = DispatchLoaderStatic>
+typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type enumerateApiLayerProperties(
+    Dispatch&& d = Dispatch {});
 
 //! @brief xrEnumerateApiLayerProperties wrapper - enhanced mode, stateful allocator for two-call result.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateApiLayerProperties>
 
-template <typename Allocator = std::allocator<ApiLayerProperties>,
-          typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
-enumerateApiLayerProperties(Allocator const &vectorAllocator, Dispatch &&d);
+template <typename Allocator = std::allocator<ApiLayerProperties>, typename Dispatch = DispatchLoaderStatic>
+typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type enumerateApiLayerProperties(
+    Allocator const& vectorAllocator, Dispatch&& d);
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8173,22 +7829,17 @@ Result enumerateInstanceExtensionProperties(
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateInstanceExtensionProperties>
 
-template <typename Allocator = std::allocator<ExtensionProperties>,
-          typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
-enumerateInstanceExtensionProperties(const char *layerName,
-                                     Dispatch &&d = Dispatch{});
+template <typename Allocator = std::allocator<ExtensionProperties>, typename Dispatch = DispatchLoaderStatic>
+typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type enumerateInstanceExtensionProperties(
+    const char* layerName, Dispatch&& d = Dispatch {});
 
 //! @brief xrEnumerateInstanceExtensionProperties wrapper - enhanced mode, stateful allocator for two-call result.
 //!
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrEnumerateInstanceExtensionProperties>
 
-template <typename Allocator = std::allocator<ExtensionProperties>,
-          typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
-enumerateInstanceExtensionProperties(const char *layerName,
-                                     Allocator const &vectorAllocator,
-                                     Dispatch &&d);
+template <typename Allocator = std::allocator<ExtensionProperties>, typename Dispatch = DispatchLoaderStatic>
+typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type enumerateInstanceExtensionProperties(
+    const char* layerName, Allocator const& vectorAllocator, Dispatch&& d);
 
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8197,8 +7848,8 @@ enumerateInstanceExtensionProperties(const char *layerName,
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateInstance>
 
 template <typename Dispatch = DispatchLoaderStatic>
-Result createInstance(const InstanceCreateInfo &createInfo, Instance &instance,
-                      Dispatch &&d = Dispatch{});
+Result createInstance(
+    const InstanceCreateInfo& createInfo, Instance& instance, Dispatch&& d = Dispatch {});
 
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 //! @brief xrCreateInstance wrapper - enhanced mode.
@@ -8206,8 +7857,8 @@ Result createInstance(const InstanceCreateInfo &createInfo, Instance &instance,
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateInstance>
 
 template <typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<Instance>::type
-createInstance(const InstanceCreateInfo &createInfo, Dispatch &&d = Dispatch{});
+typename ResultValueType<Instance>::type createInstance(
+    const InstanceCreateInfo& createInfo, Dispatch&& d = Dispatch {});
 
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
@@ -8216,10 +7867,8 @@ createInstance(const InstanceCreateInfo &createInfo, Dispatch &&d = Dispatch{});
 //! See the related specification text at <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrCreateInstance>
 
 template <typename Dispatch = DispatchLoaderStatic>
-typename ResultValueType<
-    UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type
-createInstanceUnique(const InstanceCreateInfo &createInfo,
-                     Dispatch &&d = Dispatch{});
+typename ResultValueType<UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type createInstanceUnique(
+    const InstanceCreateInfo& createInfo, Dispatch&& d = Dispatch {});
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -8231,4772 +7880,6 @@ createInstanceUnique(const InstanceCreateInfo &createInfo,
 namespace OPENXR_HPP_NAMESPACE {
 
 namespace traits {
-
-template <typename Type> class TypedStructTraits {
-protected:
-  TypedStructTraits(StructureType type_) : type(type_) {}
-
-public:
-  StructureType type;
-  const void *next{nullptr};
-};
-
-} // namespace traits
-
-struct HapticBaseHeader {
-  StructureType type;
-  const void *next;
-};
-static_assert(sizeof(HapticBaseHeader) == sizeof(XrHapticBaseHeader),
-              "struct and wrapper have different size!");
-
-struct CompositionLayerBaseHeader {
-  StructureType type;
-  const void *next;
-  CompositionLayerFlags layerFlags;
-  Space space;
-};
-static_assert(sizeof(CompositionLayerBaseHeader) ==
-                  sizeof(XrCompositionLayerBaseHeader),
-              "struct and wrapper have different size!");
-
-struct ApiLayerProperties
-    : public traits::TypedStructTraits<ApiLayerProperties> {
-private:
-  using Parent = traits::TypedStructTraits<ApiLayerProperties>;
-
-public:
-  // ctor
-  ApiLayerProperties() : Parent(StructureType::ApiLayerProperties) {}
-
-  operator const XrApiLayerProperties &() const {
-    return *reinterpret_cast<const XrApiLayerProperties *>(this);
-  }
-  operator XrApiLayerProperties &() {
-    return *reinterpret_cast<XrApiLayerProperties *>(this);
-  }
-
-  // member decl
-  char layerName[XR_MAX_API_LAYER_NAME_SIZE];
-  Version specVersion;
-  uint32_t layerVersion;
-  char description[XR_MAX_API_LAYER_DESCRIPTION_SIZE];
-};
-static_assert(sizeof(ApiLayerProperties) == sizeof(XrApiLayerProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ApiLayerProperties as a raw
-//! XrApiLayerProperties
-//! @relates ApiLayerProperties
-OPENXR_HPP_INLINE XrApiLayerProperties const *get(ApiLayerProperties const &h) {
-  return &(h.operator XrApiLayerProperties const &());
-}
-
-//! @brief Free function accessor for passing ApiLayerProperties as the address
-//! of a raw XrApiLayerProperties
-//! @relates ApiLayerProperties
-OPENXR_HPP_INLINE XrApiLayerProperties *put(ApiLayerProperties &h) {
-  return &(h.operator XrApiLayerProperties &());
-}
-
-struct ExtensionProperties
-    : public traits::TypedStructTraits<ExtensionProperties> {
-private:
-  using Parent = traits::TypedStructTraits<ExtensionProperties>;
-
-public:
-  // ctor
-  ExtensionProperties() : Parent(StructureType::ExtensionProperties) {}
-
-  operator const XrExtensionProperties &() const {
-    return *reinterpret_cast<const XrExtensionProperties *>(this);
-  }
-  operator XrExtensionProperties &() {
-    return *reinterpret_cast<XrExtensionProperties *>(this);
-  }
-
-  // member decl
-  char extensionName[XR_MAX_EXTENSION_NAME_SIZE];
-  uint32_t extensionVersion;
-};
-static_assert(sizeof(ExtensionProperties) == sizeof(XrExtensionProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ExtensionProperties as a raw
-//! XrExtensionProperties
-//! @relates ExtensionProperties
-OPENXR_HPP_INLINE XrExtensionProperties const *
-get(ExtensionProperties const &h) {
-  return &(h.operator XrExtensionProperties const &());
-}
-
-//! @brief Free function accessor for passing ExtensionProperties as the address
-//! of a raw XrExtensionProperties
-//! @relates ExtensionProperties
-OPENXR_HPP_INLINE XrExtensionProperties *put(ExtensionProperties &h) {
-  return &(h.operator XrExtensionProperties &());
-}
-
-struct ApplicationInfo {
-  // ctor
-  ApplicationInfo(const char *applicationName_ = nullptr,
-                  uint32_t applicationVersion_ = 0,
-                  const char *engineName_ = nullptr,
-                  uint32_t engineVersion_ = 0, const Version &apiVersion_ = {})
-      :
-
-        applicationVersion{applicationVersion_}, engineVersion{engineVersion_},
-        apiVersion{apiVersion_} {
-    if (nullptr != applicationName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(applicationName, applicationName_, XR_MAX_APPLICATION_NAME_SIZE);
-    }
-    if (nullptr != engineName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(engineName, engineName_, XR_MAX_ENGINE_NAME_SIZE);
-    }
-  }
-  operator const XrApplicationInfo &() const {
-    return *reinterpret_cast<const XrApplicationInfo *>(this);
-  }
-  operator XrApplicationInfo &() {
-    return *reinterpret_cast<XrApplicationInfo *>(this);
-  }
-
-  // member decl
-  char applicationName[XR_MAX_APPLICATION_NAME_SIZE];
-  uint32_t applicationVersion;
-  char engineName[XR_MAX_ENGINE_NAME_SIZE];
-  uint32_t engineVersion;
-  Version apiVersion;
-};
-static_assert(sizeof(ApplicationInfo) == sizeof(XrApplicationInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ApplicationInfo as a raw XrApplicationInfo
-//! @relates ApplicationInfo
-OPENXR_HPP_INLINE XrApplicationInfo const *get(ApplicationInfo const &h) {
-  return &(h.operator XrApplicationInfo const &());
-}
-
-//! @brief Free function accessor for passing ApplicationInfo as the address of
-//! a raw XrApplicationInfo
-//! @relates ApplicationInfo
-OPENXR_HPP_INLINE XrApplicationInfo *put(ApplicationInfo &h) {
-  return &(h.operator XrApplicationInfo &());
-}
-
-struct InstanceCreateInfo
-    : public traits::TypedStructTraits<InstanceCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<InstanceCreateInfo>;
-
-public:
-  // ctor
-  InstanceCreateInfo(const InstanceCreateFlags &createFlags_ = {},
-                     const ApplicationInfo &applicationInfo_ = {},
-                     uint32_t enabledApiLayerCount_ = 0,
-                     const char *const *enabledApiLayerNames_ = nullptr,
-                     uint32_t enabledExtensionCount_ = 0,
-                     const char *const *enabledExtensionNames_ = nullptr)
-      :
-
-        Parent(StructureType::InstanceCreateInfo),
-
-        createFlags{createFlags_}, applicationInfo{applicationInfo_},
-        enabledApiLayerCount{enabledApiLayerCount_},
-        enabledApiLayerNames{enabledApiLayerNames_},
-        enabledExtensionCount{enabledExtensionCount_},
-        enabledExtensionNames{enabledExtensionNames_} {}
-  operator const XrInstanceCreateInfo &() const {
-    return *reinterpret_cast<const XrInstanceCreateInfo *>(this);
-  }
-  operator XrInstanceCreateInfo &() {
-    return *reinterpret_cast<XrInstanceCreateInfo *>(this);
-  }
-
-  // member decl
-  InstanceCreateFlags createFlags;
-  ApplicationInfo applicationInfo;
-  uint32_t enabledApiLayerCount;
-  const char *const *enabledApiLayerNames;
-  uint32_t enabledExtensionCount;
-  const char *const *enabledExtensionNames;
-};
-static_assert(sizeof(InstanceCreateInfo) == sizeof(XrInstanceCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InstanceCreateInfo as a raw
-//! XrInstanceCreateInfo
-//! @relates InstanceCreateInfo
-OPENXR_HPP_INLINE XrInstanceCreateInfo const *get(InstanceCreateInfo const &h) {
-  return &(h.operator XrInstanceCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing InstanceCreateInfo as the address
-//! of a raw XrInstanceCreateInfo
-//! @relates InstanceCreateInfo
-OPENXR_HPP_INLINE XrInstanceCreateInfo *put(InstanceCreateInfo &h) {
-  return &(h.operator XrInstanceCreateInfo &());
-}
-
-struct InstanceProperties
-    : public traits::TypedStructTraits<InstanceProperties> {
-private:
-  using Parent = traits::TypedStructTraits<InstanceProperties>;
-
-public:
-  // ctor
-  InstanceProperties() : Parent(StructureType::InstanceProperties) {}
-
-  operator const XrInstanceProperties &() const {
-    return *reinterpret_cast<const XrInstanceProperties *>(this);
-  }
-  operator XrInstanceProperties &() {
-    return *reinterpret_cast<XrInstanceProperties *>(this);
-  }
-
-  // member decl
-  Version runtimeVersion;
-  char runtimeName[XR_MAX_RUNTIME_NAME_SIZE];
-};
-static_assert(sizeof(InstanceProperties) == sizeof(XrInstanceProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InstanceProperties as a raw
-//! XrInstanceProperties
-//! @relates InstanceProperties
-OPENXR_HPP_INLINE XrInstanceProperties const *get(InstanceProperties const &h) {
-  return &(h.operator XrInstanceProperties const &());
-}
-
-//! @brief Free function accessor for passing InstanceProperties as the address
-//! of a raw XrInstanceProperties
-//! @relates InstanceProperties
-OPENXR_HPP_INLINE XrInstanceProperties *put(InstanceProperties &h) {
-  return &(h.operator XrInstanceProperties &());
-}
-
-struct EventDataBuffer : public traits::TypedStructTraits<EventDataBuffer> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataBuffer>;
-
-public:
-  // ctor
-  EventDataBuffer() : Parent(StructureType::EventDataBuffer) {}
-
-  operator const XrEventDataBuffer &() const {
-    return *reinterpret_cast<const XrEventDataBuffer *>(this);
-  }
-  operator XrEventDataBuffer &() {
-    return *reinterpret_cast<XrEventDataBuffer *>(this);
-  }
-
-  // member decl
-  uint8_t varying[4000];
-};
-static_assert(sizeof(EventDataBuffer) == sizeof(XrEventDataBuffer),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataBuffer as a raw XrEventDataBuffer
-//! @relates EventDataBuffer
-OPENXR_HPP_INLINE XrEventDataBuffer const *get(EventDataBuffer const &h) {
-  return &(h.operator XrEventDataBuffer const &());
-}
-
-//! @brief Free function accessor for passing EventDataBuffer as the address of
-//! a raw XrEventDataBuffer
-//! @relates EventDataBuffer
-OPENXR_HPP_INLINE XrEventDataBuffer *put(EventDataBuffer &h) {
-  return &(h.operator XrEventDataBuffer &());
-}
-
-struct SystemGetInfo : public traits::TypedStructTraits<SystemGetInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SystemGetInfo>;
-
-public:
-  // ctor
-  SystemGetInfo(const FormFactor &formFactor_ = {})
-      :
-
-        Parent(StructureType::SystemGetInfo),
-
-        formFactor{formFactor_} {}
-  operator const XrSystemGetInfo &() const {
-    return *reinterpret_cast<const XrSystemGetInfo *>(this);
-  }
-  operator XrSystemGetInfo &() {
-    return *reinterpret_cast<XrSystemGetInfo *>(this);
-  }
-
-  // member decl
-  FormFactor formFactor;
-};
-static_assert(sizeof(SystemGetInfo) == sizeof(XrSystemGetInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SystemGetInfo as a raw XrSystemGetInfo
-//! @relates SystemGetInfo
-OPENXR_HPP_INLINE XrSystemGetInfo const *get(SystemGetInfo const &h) {
-  return &(h.operator XrSystemGetInfo const &());
-}
-
-//! @brief Free function accessor for passing SystemGetInfo as the address of a
-//! raw XrSystemGetInfo
-//! @relates SystemGetInfo
-OPENXR_HPP_INLINE XrSystemGetInfo *put(SystemGetInfo &h) {
-  return &(h.operator XrSystemGetInfo &());
-}
-
-struct SystemGraphicsProperties {
-  // ctor
-  SystemGraphicsProperties(uint32_t maxSwapchainImageHeight_ = 0,
-                           uint32_t maxSwapchainImageWidth_ = 0,
-                           uint32_t maxLayerCount_ = 0)
-      :
-
-        maxSwapchainImageHeight{maxSwapchainImageHeight_},
-        maxSwapchainImageWidth{maxSwapchainImageWidth_}, maxLayerCount{
-                                                             maxLayerCount_} {}
-  operator const XrSystemGraphicsProperties &() const {
-    return *reinterpret_cast<const XrSystemGraphicsProperties *>(this);
-  }
-  operator XrSystemGraphicsProperties &() {
-    return *reinterpret_cast<XrSystemGraphicsProperties *>(this);
-  }
-
-  // member decl
-  uint32_t maxSwapchainImageHeight;
-  uint32_t maxSwapchainImageWidth;
-  uint32_t maxLayerCount;
-};
-static_assert(sizeof(SystemGraphicsProperties) ==
-                  sizeof(XrSystemGraphicsProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SystemGraphicsProperties as a raw
-//! XrSystemGraphicsProperties
-//! @relates SystemGraphicsProperties
-OPENXR_HPP_INLINE XrSystemGraphicsProperties const *
-get(SystemGraphicsProperties const &h) {
-  return &(h.operator XrSystemGraphicsProperties const &());
-}
-
-//! @brief Free function accessor for passing SystemGraphicsProperties as the
-//! address of a raw XrSystemGraphicsProperties
-//! @relates SystemGraphicsProperties
-OPENXR_HPP_INLINE XrSystemGraphicsProperties *put(SystemGraphicsProperties &h) {
-  return &(h.operator XrSystemGraphicsProperties &());
-}
-
-struct SystemTrackingProperties {
-  // ctor
-  SystemTrackingProperties(const Bool32 &orientationTracking_ = XR_FALSE,
-                           const Bool32 &positionTracking_ = XR_FALSE)
-      :
-
-        orientationTracking{orientationTracking_}, positionTracking{
-                                                       positionTracking_} {}
-  operator const XrSystemTrackingProperties &() const {
-    return *reinterpret_cast<const XrSystemTrackingProperties *>(this);
-  }
-  operator XrSystemTrackingProperties &() {
-    return *reinterpret_cast<XrSystemTrackingProperties *>(this);
-  }
-
-  // member decl
-  Bool32 orientationTracking;
-  Bool32 positionTracking;
-};
-static_assert(sizeof(SystemTrackingProperties) ==
-                  sizeof(XrSystemTrackingProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SystemTrackingProperties as a raw
-//! XrSystemTrackingProperties
-//! @relates SystemTrackingProperties
-OPENXR_HPP_INLINE XrSystemTrackingProperties const *
-get(SystemTrackingProperties const &h) {
-  return &(h.operator XrSystemTrackingProperties const &());
-}
-
-//! @brief Free function accessor for passing SystemTrackingProperties as the
-//! address of a raw XrSystemTrackingProperties
-//! @relates SystemTrackingProperties
-OPENXR_HPP_INLINE XrSystemTrackingProperties *put(SystemTrackingProperties &h) {
-  return &(h.operator XrSystemTrackingProperties &());
-}
-
-struct SystemProperties : public traits::TypedStructTraits<SystemProperties> {
-private:
-  using Parent = traits::TypedStructTraits<SystemProperties>;
-
-public:
-  // ctor
-  SystemProperties() : Parent(StructureType::SystemProperties) {}
-
-  operator const XrSystemProperties &() const {
-    return *reinterpret_cast<const XrSystemProperties *>(this);
-  }
-  operator XrSystemProperties &() {
-    return *reinterpret_cast<XrSystemProperties *>(this);
-  }
-
-  // member decl
-  SystemId systemId;
-  uint32_t vendorId;
-  char systemName[XR_MAX_SYSTEM_NAME_SIZE];
-  SystemGraphicsProperties graphicsProperties;
-  SystemTrackingProperties trackingProperties;
-};
-static_assert(sizeof(SystemProperties) == sizeof(XrSystemProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SystemProperties as a raw
-//! XrSystemProperties
-//! @relates SystemProperties
-OPENXR_HPP_INLINE XrSystemProperties const *get(SystemProperties const &h) {
-  return &(h.operator XrSystemProperties const &());
-}
-
-//! @brief Free function accessor for passing SystemProperties as the address of
-//! a raw XrSystemProperties
-//! @relates SystemProperties
-OPENXR_HPP_INLINE XrSystemProperties *put(SystemProperties &h) {
-  return &(h.operator XrSystemProperties &());
-}
-
-struct SessionCreateInfo : public traits::TypedStructTraits<SessionCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SessionCreateInfo>;
-
-public:
-  // ctor
-  SessionCreateInfo(const SessionCreateFlags &createFlags_ = {},
-                    const SystemId &systemId_ = {})
-      :
-
-        Parent(StructureType::SessionCreateInfo),
-
-        createFlags{createFlags_}, systemId{systemId_} {}
-  operator const XrSessionCreateInfo &() const {
-    return *reinterpret_cast<const XrSessionCreateInfo *>(this);
-  }
-  operator XrSessionCreateInfo &() {
-    return *reinterpret_cast<XrSessionCreateInfo *>(this);
-  }
-
-  // member decl
-  SessionCreateFlags createFlags;
-  SystemId systemId;
-};
-static_assert(sizeof(SessionCreateInfo) == sizeof(XrSessionCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SessionCreateInfo as a raw
-//! XrSessionCreateInfo
-//! @relates SessionCreateInfo
-OPENXR_HPP_INLINE XrSessionCreateInfo const *get(SessionCreateInfo const &h) {
-  return &(h.operator XrSessionCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing SessionCreateInfo as the address
-//! of a raw XrSessionCreateInfo
-//! @relates SessionCreateInfo
-OPENXR_HPP_INLINE XrSessionCreateInfo *put(SessionCreateInfo &h) {
-  return &(h.operator XrSessionCreateInfo &());
-}
-
-struct Vector3f {
-  // ctor
-  Vector3f(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f)
-      :
-
-        x{x_}, y{y_}, z{z_} {}
-  operator const XrVector3f &() const {
-    return *reinterpret_cast<const XrVector3f *>(this);
-  }
-  operator XrVector3f &() { return *reinterpret_cast<XrVector3f *>(this); }
-
-  // member decl
-  float x;
-  float y;
-  float z;
-};
-static_assert(sizeof(Vector3f) == sizeof(XrVector3f),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Vector3f as a raw XrVector3f
-//! @relates Vector3f
-OPENXR_HPP_INLINE XrVector3f const *get(Vector3f const &h) {
-  return &(h.operator XrVector3f const &());
-}
-
-//! @brief Free function accessor for passing Vector3f as the address of a raw
-//! XrVector3f
-//! @relates Vector3f
-OPENXR_HPP_INLINE XrVector3f *put(Vector3f &h) {
-  return &(h.operator XrVector3f &());
-}
-
-struct SpaceVelocity : public traits::TypedStructTraits<SpaceVelocity> {
-private:
-  using Parent = traits::TypedStructTraits<SpaceVelocity>;
-
-public:
-  // ctor
-  SpaceVelocity(const SpaceVelocityFlags &velocityFlags_ = {},
-                const Vector3f &linearVelocity_ = {},
-                const Vector3f &angularVelocity_ = {})
-      :
-
-        Parent(StructureType::SpaceVelocity),
-
-        velocityFlags{velocityFlags_}, linearVelocity{linearVelocity_},
-        angularVelocity{angularVelocity_} {}
-  operator const XrSpaceVelocity &() const {
-    return *reinterpret_cast<const XrSpaceVelocity *>(this);
-  }
-  operator XrSpaceVelocity &() {
-    return *reinterpret_cast<XrSpaceVelocity *>(this);
-  }
-
-  // member decl
-  SpaceVelocityFlags velocityFlags;
-  Vector3f linearVelocity;
-  Vector3f angularVelocity;
-};
-static_assert(sizeof(SpaceVelocity) == sizeof(XrSpaceVelocity),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SpaceVelocity as a raw XrSpaceVelocity
-//! @relates SpaceVelocity
-OPENXR_HPP_INLINE XrSpaceVelocity const *get(SpaceVelocity const &h) {
-  return &(h.operator XrSpaceVelocity const &());
-}
-
-//! @brief Free function accessor for passing SpaceVelocity as the address of a
-//! raw XrSpaceVelocity
-//! @relates SpaceVelocity
-OPENXR_HPP_INLINE XrSpaceVelocity *put(SpaceVelocity &h) {
-  return &(h.operator XrSpaceVelocity &());
-}
-
-struct Quaternionf {
-  // ctor
-  Quaternionf(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f,
-              float w_ = 1.0f)
-      :
-
-        x{x_}, y{y_}, z{z_}, w{w_} {}
-  operator const XrQuaternionf &() const {
-    return *reinterpret_cast<const XrQuaternionf *>(this);
-  }
-  operator XrQuaternionf &() {
-    return *reinterpret_cast<XrQuaternionf *>(this);
-  }
-
-  // member decl
-  float x;
-  float y;
-  float z;
-  float w;
-};
-static_assert(sizeof(Quaternionf) == sizeof(XrQuaternionf),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Quaternionf as a raw XrQuaternionf
-//! @relates Quaternionf
-OPENXR_HPP_INLINE XrQuaternionf const *get(Quaternionf const &h) {
-  return &(h.operator XrQuaternionf const &());
-}
-
-//! @brief Free function accessor for passing Quaternionf as the address of a
-//! raw XrQuaternionf
-//! @relates Quaternionf
-OPENXR_HPP_INLINE XrQuaternionf *put(Quaternionf &h) {
-  return &(h.operator XrQuaternionf &());
-}
-
-struct Posef {
-  // ctor
-  Posef(const Quaternionf &orientation_ = {}, const Vector3f &position_ = {})
-      :
-
-        orientation{orientation_}, position{position_} {}
-  operator const XrPosef &() const {
-    return *reinterpret_cast<const XrPosef *>(this);
-  }
-  operator XrPosef &() { return *reinterpret_cast<XrPosef *>(this); }
-
-  // member decl
-  Quaternionf orientation;
-  Vector3f position;
-};
-static_assert(sizeof(Posef) == sizeof(XrPosef),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Posef as a raw XrPosef
-//! @relates Posef
-OPENXR_HPP_INLINE XrPosef const *get(Posef const &h) {
-  return &(h.operator XrPosef const &());
-}
-
-//! @brief Free function accessor for passing Posef as the address of a raw
-//! XrPosef
-//! @relates Posef
-OPENXR_HPP_INLINE XrPosef *put(Posef &h) { return &(h.operator XrPosef &()); }
-
-struct ReferenceSpaceCreateInfo
-    : public traits::TypedStructTraits<ReferenceSpaceCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ReferenceSpaceCreateInfo>;
-
-public:
-  // ctor
-  ReferenceSpaceCreateInfo(const ReferenceSpaceType &referenceSpaceType_ = {},
-                           const Posef &poseInReferenceSpace_ = {})
-      :
-
-        Parent(StructureType::ReferenceSpaceCreateInfo),
-
-        referenceSpaceType{referenceSpaceType_}, poseInReferenceSpace{
-                                                     poseInReferenceSpace_} {}
-  operator const XrReferenceSpaceCreateInfo &() const {
-    return *reinterpret_cast<const XrReferenceSpaceCreateInfo *>(this);
-  }
-  operator XrReferenceSpaceCreateInfo &() {
-    return *reinterpret_cast<XrReferenceSpaceCreateInfo *>(this);
-  }
-
-  // member decl
-  ReferenceSpaceType referenceSpaceType;
-  Posef poseInReferenceSpace;
-};
-static_assert(sizeof(ReferenceSpaceCreateInfo) ==
-                  sizeof(XrReferenceSpaceCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ReferenceSpaceCreateInfo as a raw
-//! XrReferenceSpaceCreateInfo
-//! @relates ReferenceSpaceCreateInfo
-OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo const *
-get(ReferenceSpaceCreateInfo const &h) {
-  return &(h.operator XrReferenceSpaceCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing ReferenceSpaceCreateInfo as the
-//! address of a raw XrReferenceSpaceCreateInfo
-//! @relates ReferenceSpaceCreateInfo
-OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo *put(ReferenceSpaceCreateInfo &h) {
-  return &(h.operator XrReferenceSpaceCreateInfo &());
-}
-
-struct Extent2Df {
-  // ctor
-  Extent2Df(float width_ = 0.0f, float height_ = 0.0f)
-      :
-
-        width{width_}, height{height_} {}
-  operator const XrExtent2Df &() const {
-    return *reinterpret_cast<const XrExtent2Df *>(this);
-  }
-  operator XrExtent2Df &() { return *reinterpret_cast<XrExtent2Df *>(this); }
-
-  // member decl
-  float width;
-  float height;
-};
-static_assert(sizeof(Extent2Df) == sizeof(XrExtent2Df),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Extent2Df as a raw XrExtent2Df
-//! @relates Extent2Df
-OPENXR_HPP_INLINE XrExtent2Df const *get(Extent2Df const &h) {
-  return &(h.operator XrExtent2Df const &());
-}
-
-//! @brief Free function accessor for passing Extent2Df as the address of a raw
-//! XrExtent2Df
-//! @relates Extent2Df
-OPENXR_HPP_INLINE XrExtent2Df *put(Extent2Df &h) {
-  return &(h.operator XrExtent2Df &());
-}
-
-struct ActionSpaceCreateInfo
-    : public traits::TypedStructTraits<ActionSpaceCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ActionSpaceCreateInfo>;
-
-public:
-  // ctor
-  ActionSpaceCreateInfo(const Action &action_ = {},
-                        const Path &subactionPath_ = {},
-                        const Posef &poseInActionSpace_ = {})
-      :
-
-        Parent(StructureType::ActionSpaceCreateInfo),
-
-        action{action_}, subactionPath{subactionPath_},
-        poseInActionSpace{poseInActionSpace_} {}
-  operator const XrActionSpaceCreateInfo &() const {
-    return *reinterpret_cast<const XrActionSpaceCreateInfo *>(this);
-  }
-  operator XrActionSpaceCreateInfo &() {
-    return *reinterpret_cast<XrActionSpaceCreateInfo *>(this);
-  }
-
-  // member decl
-  Action action;
-  Path subactionPath;
-  Posef poseInActionSpace;
-};
-static_assert(sizeof(ActionSpaceCreateInfo) == sizeof(XrActionSpaceCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionSpaceCreateInfo as a raw
-//! XrActionSpaceCreateInfo
-//! @relates ActionSpaceCreateInfo
-OPENXR_HPP_INLINE XrActionSpaceCreateInfo const *
-get(ActionSpaceCreateInfo const &h) {
-  return &(h.operator XrActionSpaceCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing ActionSpaceCreateInfo as the
-//! address of a raw XrActionSpaceCreateInfo
-//! @relates ActionSpaceCreateInfo
-OPENXR_HPP_INLINE XrActionSpaceCreateInfo *put(ActionSpaceCreateInfo &h) {
-  return &(h.operator XrActionSpaceCreateInfo &());
-}
-
-struct SpaceLocation : public traits::TypedStructTraits<SpaceLocation> {
-private:
-  using Parent = traits::TypedStructTraits<SpaceLocation>;
-
-public:
-  // ctor
-  SpaceLocation(const SpaceLocationFlags &locationFlags_ = {},
-                const Posef &pose_ = {})
-      :
-
-        Parent(StructureType::SpaceLocation),
-
-        locationFlags{locationFlags_}, pose{pose_} {}
-  operator const XrSpaceLocation &() const {
-    return *reinterpret_cast<const XrSpaceLocation *>(this);
-  }
-  operator XrSpaceLocation &() {
-    return *reinterpret_cast<XrSpaceLocation *>(this);
-  }
-
-  // member decl
-  SpaceLocationFlags locationFlags;
-  Posef pose;
-};
-static_assert(sizeof(SpaceLocation) == sizeof(XrSpaceLocation),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SpaceLocation as a raw XrSpaceLocation
-//! @relates SpaceLocation
-OPENXR_HPP_INLINE XrSpaceLocation const *get(SpaceLocation const &h) {
-  return &(h.operator XrSpaceLocation const &());
-}
-
-//! @brief Free function accessor for passing SpaceLocation as the address of a
-//! raw XrSpaceLocation
-//! @relates SpaceLocation
-OPENXR_HPP_INLINE XrSpaceLocation *put(SpaceLocation &h) {
-  return &(h.operator XrSpaceLocation &());
-}
-
-struct ViewConfigurationProperties
-    : public traits::TypedStructTraits<ViewConfigurationProperties> {
-private:
-  using Parent = traits::TypedStructTraits<ViewConfigurationProperties>;
-
-public:
-  // ctor
-  ViewConfigurationProperties(
-      const ViewConfigurationType &viewConfigurationType_ = {},
-      const Bool32 &fovMutable_ = XR_FALSE)
-      :
-
-        Parent(StructureType::ViewConfigurationProperties),
-
-        viewConfigurationType{viewConfigurationType_}, fovMutable{fovMutable_} {
-  }
-  operator const XrViewConfigurationProperties &() const {
-    return *reinterpret_cast<const XrViewConfigurationProperties *>(this);
-  }
-  operator XrViewConfigurationProperties &() {
-    return *reinterpret_cast<XrViewConfigurationProperties *>(this);
-  }
-
-  // member decl
-  ViewConfigurationType viewConfigurationType;
-  Bool32 fovMutable;
-};
-static_assert(sizeof(ViewConfigurationProperties) ==
-                  sizeof(XrViewConfigurationProperties),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ViewConfigurationProperties as a raw
-//! XrViewConfigurationProperties
-//! @relates ViewConfigurationProperties
-OPENXR_HPP_INLINE XrViewConfigurationProperties const *
-get(ViewConfigurationProperties const &h) {
-  return &(h.operator XrViewConfigurationProperties const &());
-}
-
-//! @brief Free function accessor for passing ViewConfigurationProperties as the
-//! address of a raw XrViewConfigurationProperties
-//! @relates ViewConfigurationProperties
-OPENXR_HPP_INLINE XrViewConfigurationProperties *
-put(ViewConfigurationProperties &h) {
-  return &(h.operator XrViewConfigurationProperties &());
-}
-
-struct ViewConfigurationView
-    : public traits::TypedStructTraits<ViewConfigurationView> {
-private:
-  using Parent = traits::TypedStructTraits<ViewConfigurationView>;
-
-public:
-  // ctor
-  ViewConfigurationView(uint32_t recommendedImageRectWidth_ = 0,
-                        uint32_t maxImageRectWidth_ = 0,
-                        uint32_t recommendedImageRectHeight_ = 0,
-                        uint32_t maxImageRectHeight_ = 0,
-                        uint32_t recommendedSwapchainSampleCount_ = 0,
-                        uint32_t maxSwapchainSampleCount_ = 0)
-      :
-
-        Parent(StructureType::ViewConfigurationView),
-
-        recommendedImageRectWidth{recommendedImageRectWidth_},
-        maxImageRectWidth{maxImageRectWidth_},
-        recommendedImageRectHeight{recommendedImageRectHeight_},
-        maxImageRectHeight{maxImageRectHeight_},
-        recommendedSwapchainSampleCount{recommendedSwapchainSampleCount_},
-        maxSwapchainSampleCount{maxSwapchainSampleCount_} {}
-  operator const XrViewConfigurationView &() const {
-    return *reinterpret_cast<const XrViewConfigurationView *>(this);
-  }
-  operator XrViewConfigurationView &() {
-    return *reinterpret_cast<XrViewConfigurationView *>(this);
-  }
-
-  // member decl
-  uint32_t recommendedImageRectWidth;
-  uint32_t maxImageRectWidth;
-  uint32_t recommendedImageRectHeight;
-  uint32_t maxImageRectHeight;
-  uint32_t recommendedSwapchainSampleCount;
-  uint32_t maxSwapchainSampleCount;
-};
-static_assert(sizeof(ViewConfigurationView) == sizeof(XrViewConfigurationView),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ViewConfigurationView as a raw
-//! XrViewConfigurationView
-//! @relates ViewConfigurationView
-OPENXR_HPP_INLINE XrViewConfigurationView const *
-get(ViewConfigurationView const &h) {
-  return &(h.operator XrViewConfigurationView const &());
-}
-
-//! @brief Free function accessor for passing ViewConfigurationView as the
-//! address of a raw XrViewConfigurationView
-//! @relates ViewConfigurationView
-OPENXR_HPP_INLINE XrViewConfigurationView *put(ViewConfigurationView &h) {
-  return &(h.operator XrViewConfigurationView &());
-}
-
-struct SwapchainCreateInfo
-    : public traits::TypedStructTraits<SwapchainCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainCreateInfo>;
-
-public:
-  // ctor
-  SwapchainCreateInfo(const SwapchainCreateFlags &createFlags_ = {},
-                      const SwapchainUsageFlags &usageFlags_ = {},
-                      int64_t format_ = 0, uint32_t sampleCount_ = 0,
-                      uint32_t width_ = 0, uint32_t height_ = 0,
-                      uint32_t faceCount_ = 0, uint32_t arraySize_ = 0,
-                      uint32_t mipCount_ = 0)
-      :
-
-        Parent(StructureType::SwapchainCreateInfo),
-
-        createFlags{createFlags_}, usageFlags{usageFlags_}, format{format_},
-        sampleCount{sampleCount_}, width{width_}, height{height_},
-        faceCount{faceCount_}, arraySize{arraySize_}, mipCount{mipCount_} {}
-  operator const XrSwapchainCreateInfo &() const {
-    return *reinterpret_cast<const XrSwapchainCreateInfo *>(this);
-  }
-  operator XrSwapchainCreateInfo &() {
-    return *reinterpret_cast<XrSwapchainCreateInfo *>(this);
-  }
-
-  // member decl
-  SwapchainCreateFlags createFlags;
-  SwapchainUsageFlags usageFlags;
-  int64_t format;
-  uint32_t sampleCount;
-  uint32_t width;
-  uint32_t height;
-  uint32_t faceCount;
-  uint32_t arraySize;
-  uint32_t mipCount;
-};
-static_assert(sizeof(SwapchainCreateInfo) == sizeof(XrSwapchainCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainCreateInfo as a raw
-//! XrSwapchainCreateInfo
-//! @relates SwapchainCreateInfo
-OPENXR_HPP_INLINE XrSwapchainCreateInfo const *
-get(SwapchainCreateInfo const &h) {
-  return &(h.operator XrSwapchainCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing SwapchainCreateInfo as the address
-//! of a raw XrSwapchainCreateInfo
-//! @relates SwapchainCreateInfo
-OPENXR_HPP_INLINE XrSwapchainCreateInfo *put(SwapchainCreateInfo &h) {
-  return &(h.operator XrSwapchainCreateInfo &());
-}
-
-struct SwapchainImageAcquireInfo
-    : public traits::TypedStructTraits<SwapchainImageAcquireInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageAcquireInfo>;
-
-public:
-  // ctor
-  SwapchainImageAcquireInfo()
-      :
-
-        Parent(StructureType::SwapchainImageAcquireInfo)
-
-  {}
-  operator const XrSwapchainImageAcquireInfo &() const {
-    return *reinterpret_cast<const XrSwapchainImageAcquireInfo *>(this);
-  }
-  operator XrSwapchainImageAcquireInfo &() {
-    return *reinterpret_cast<XrSwapchainImageAcquireInfo *>(this);
-  }
-
-  // member decl
-};
-static_assert(sizeof(SwapchainImageAcquireInfo) ==
-                  sizeof(XrSwapchainImageAcquireInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageAcquireInfo as a raw
-//! XrSwapchainImageAcquireInfo
-//! @relates SwapchainImageAcquireInfo
-OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo const *
-get(SwapchainImageAcquireInfo const &h) {
-  return &(h.operator XrSwapchainImageAcquireInfo const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageAcquireInfo as the
-//! address of a raw XrSwapchainImageAcquireInfo
-//! @relates SwapchainImageAcquireInfo
-OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo *
-put(SwapchainImageAcquireInfo &h) {
-  return &(h.operator XrSwapchainImageAcquireInfo &());
-}
-
-struct SwapchainImageWaitInfo
-    : public traits::TypedStructTraits<SwapchainImageWaitInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageWaitInfo>;
-
-public:
-  // ctor
-  SwapchainImageWaitInfo(const Duration &timeout_ = {})
-      :
-
-        Parent(StructureType::SwapchainImageWaitInfo),
-
-        timeout{timeout_} {}
-  operator const XrSwapchainImageWaitInfo &() const {
-    return *reinterpret_cast<const XrSwapchainImageWaitInfo *>(this);
-  }
-  operator XrSwapchainImageWaitInfo &() {
-    return *reinterpret_cast<XrSwapchainImageWaitInfo *>(this);
-  }
-
-  // member decl
-  Duration timeout;
-};
-static_assert(sizeof(SwapchainImageWaitInfo) ==
-                  sizeof(XrSwapchainImageWaitInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageWaitInfo as a raw
-//! XrSwapchainImageWaitInfo
-//! @relates SwapchainImageWaitInfo
-OPENXR_HPP_INLINE XrSwapchainImageWaitInfo const *
-get(SwapchainImageWaitInfo const &h) {
-  return &(h.operator XrSwapchainImageWaitInfo const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageWaitInfo as the
-//! address of a raw XrSwapchainImageWaitInfo
-//! @relates SwapchainImageWaitInfo
-OPENXR_HPP_INLINE XrSwapchainImageWaitInfo *put(SwapchainImageWaitInfo &h) {
-  return &(h.operator XrSwapchainImageWaitInfo &());
-}
-
-struct SwapchainImageReleaseInfo
-    : public traits::TypedStructTraits<SwapchainImageReleaseInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageReleaseInfo>;
-
-public:
-  // ctor
-  SwapchainImageReleaseInfo()
-      :
-
-        Parent(StructureType::SwapchainImageReleaseInfo)
-
-  {}
-  operator const XrSwapchainImageReleaseInfo &() const {
-    return *reinterpret_cast<const XrSwapchainImageReleaseInfo *>(this);
-  }
-  operator XrSwapchainImageReleaseInfo &() {
-    return *reinterpret_cast<XrSwapchainImageReleaseInfo *>(this);
-  }
-
-  // member decl
-};
-static_assert(sizeof(SwapchainImageReleaseInfo) ==
-                  sizeof(XrSwapchainImageReleaseInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageReleaseInfo as a raw
-//! XrSwapchainImageReleaseInfo
-//! @relates SwapchainImageReleaseInfo
-OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo const *
-get(SwapchainImageReleaseInfo const &h) {
-  return &(h.operator XrSwapchainImageReleaseInfo const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageReleaseInfo as the
-//! address of a raw XrSwapchainImageReleaseInfo
-//! @relates SwapchainImageReleaseInfo
-OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo *
-put(SwapchainImageReleaseInfo &h) {
-  return &(h.operator XrSwapchainImageReleaseInfo &());
-}
-
-struct SessionBeginInfo : public traits::TypedStructTraits<SessionBeginInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SessionBeginInfo>;
-
-public:
-  // ctor
-  SessionBeginInfo(
-      const ViewConfigurationType &primaryViewConfigurationType_ = {})
-      :
-
-        Parent(StructureType::SessionBeginInfo),
-
-        primaryViewConfigurationType{primaryViewConfigurationType_} {}
-  operator const XrSessionBeginInfo &() const {
-    return *reinterpret_cast<const XrSessionBeginInfo *>(this);
-  }
-  operator XrSessionBeginInfo &() {
-    return *reinterpret_cast<XrSessionBeginInfo *>(this);
-  }
-
-  // member decl
-  ViewConfigurationType primaryViewConfigurationType;
-};
-static_assert(sizeof(SessionBeginInfo) == sizeof(XrSessionBeginInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SessionBeginInfo as a raw
-//! XrSessionBeginInfo
-//! @relates SessionBeginInfo
-OPENXR_HPP_INLINE XrSessionBeginInfo const *get(SessionBeginInfo const &h) {
-  return &(h.operator XrSessionBeginInfo const &());
-}
-
-//! @brief Free function accessor for passing SessionBeginInfo as the address of
-//! a raw XrSessionBeginInfo
-//! @relates SessionBeginInfo
-OPENXR_HPP_INLINE XrSessionBeginInfo *put(SessionBeginInfo &h) {
-  return &(h.operator XrSessionBeginInfo &());
-}
-
-struct FrameWaitInfo : public traits::TypedStructTraits<FrameWaitInfo> {
-private:
-  using Parent = traits::TypedStructTraits<FrameWaitInfo>;
-
-public:
-  // ctor
-  FrameWaitInfo()
-      :
-
-        Parent(StructureType::FrameWaitInfo)
-
-  {}
-  operator const XrFrameWaitInfo &() const {
-    return *reinterpret_cast<const XrFrameWaitInfo *>(this);
-  }
-  operator XrFrameWaitInfo &() {
-    return *reinterpret_cast<XrFrameWaitInfo *>(this);
-  }
-
-  // member decl
-};
-static_assert(sizeof(FrameWaitInfo) == sizeof(XrFrameWaitInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for FrameWaitInfo as a raw XrFrameWaitInfo
-//! @relates FrameWaitInfo
-OPENXR_HPP_INLINE XrFrameWaitInfo const *get(FrameWaitInfo const &h) {
-  return &(h.operator XrFrameWaitInfo const &());
-}
-
-//! @brief Free function accessor for passing FrameWaitInfo as the address of a
-//! raw XrFrameWaitInfo
-//! @relates FrameWaitInfo
-OPENXR_HPP_INLINE XrFrameWaitInfo *put(FrameWaitInfo &h) {
-  return &(h.operator XrFrameWaitInfo &());
-}
-
-struct FrameState : public traits::TypedStructTraits<FrameState> {
-private:
-  using Parent = traits::TypedStructTraits<FrameState>;
-
-public:
-  // ctor
-  FrameState(const Time &predictedDisplayTime_ = {},
-             const Duration &predictedDisplayPeriod_ = {},
-             const Bool32 &shouldRender_ = XR_FALSE)
-      :
-
-        Parent(StructureType::FrameState),
-
-        predictedDisplayTime{predictedDisplayTime_},
-        predictedDisplayPeriod{predictedDisplayPeriod_}, shouldRender{
-                                                             shouldRender_} {}
-  operator const XrFrameState &() const {
-    return *reinterpret_cast<const XrFrameState *>(this);
-  }
-  operator XrFrameState &() { return *reinterpret_cast<XrFrameState *>(this); }
-
-  // member decl
-  Time predictedDisplayTime;
-  Duration predictedDisplayPeriod;
-  Bool32 shouldRender;
-};
-static_assert(sizeof(FrameState) == sizeof(XrFrameState),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for FrameState as a raw XrFrameState
-//! @relates FrameState
-OPENXR_HPP_INLINE XrFrameState const *get(FrameState const &h) {
-  return &(h.operator XrFrameState const &());
-}
-
-//! @brief Free function accessor for passing FrameState as the address of a raw
-//! XrFrameState
-//! @relates FrameState
-OPENXR_HPP_INLINE XrFrameState *put(FrameState &h) {
-  return &(h.operator XrFrameState &());
-}
-
-struct FrameBeginInfo : public traits::TypedStructTraits<FrameBeginInfo> {
-private:
-  using Parent = traits::TypedStructTraits<FrameBeginInfo>;
-
-public:
-  // ctor
-  FrameBeginInfo()
-      :
-
-        Parent(StructureType::FrameBeginInfo)
-
-  {}
-  operator const XrFrameBeginInfo &() const {
-    return *reinterpret_cast<const XrFrameBeginInfo *>(this);
-  }
-  operator XrFrameBeginInfo &() {
-    return *reinterpret_cast<XrFrameBeginInfo *>(this);
-  }
-
-  // member decl
-};
-static_assert(sizeof(FrameBeginInfo) == sizeof(XrFrameBeginInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for FrameBeginInfo as a raw XrFrameBeginInfo
-//! @relates FrameBeginInfo
-OPENXR_HPP_INLINE XrFrameBeginInfo const *get(FrameBeginInfo const &h) {
-  return &(h.operator XrFrameBeginInfo const &());
-}
-
-//! @brief Free function accessor for passing FrameBeginInfo as the address of a
-//! raw XrFrameBeginInfo
-//! @relates FrameBeginInfo
-OPENXR_HPP_INLINE XrFrameBeginInfo *put(FrameBeginInfo &h) {
-  return &(h.operator XrFrameBeginInfo &());
-}
-
-struct FrameEndInfo : public traits::TypedStructTraits<FrameEndInfo> {
-private:
-  using Parent = traits::TypedStructTraits<FrameEndInfo>;
-
-public:
-  // ctor
-  FrameEndInfo(const Time &displayTime_ = {},
-               const EnvironmentBlendMode &environmentBlendMode_ = {},
-               uint32_t layerCount_ = 0,
-               const XrCompositionLayerBaseHeader *const *layers_ = nullptr)
-      :
-
-        Parent(StructureType::FrameEndInfo),
-
-        displayTime{displayTime_}, environmentBlendMode{environmentBlendMode_},
-        layerCount{layerCount_}, layers{layers_} {}
-  operator const XrFrameEndInfo &() const {
-    return *reinterpret_cast<const XrFrameEndInfo *>(this);
-  }
-  operator XrFrameEndInfo &() {
-    return *reinterpret_cast<XrFrameEndInfo *>(this);
-  }
-
-  // member decl
-  Time displayTime;
-  EnvironmentBlendMode environmentBlendMode;
-  uint32_t layerCount;
-  const XrCompositionLayerBaseHeader *const *layers;
-};
-static_assert(sizeof(FrameEndInfo) == sizeof(XrFrameEndInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for FrameEndInfo as a raw XrFrameEndInfo
-//! @relates FrameEndInfo
-OPENXR_HPP_INLINE XrFrameEndInfo const *get(FrameEndInfo const &h) {
-  return &(h.operator XrFrameEndInfo const &());
-}
-
-//! @brief Free function accessor for passing FrameEndInfo as the address of a
-//! raw XrFrameEndInfo
-//! @relates FrameEndInfo
-OPENXR_HPP_INLINE XrFrameEndInfo *put(FrameEndInfo &h) {
-  return &(h.operator XrFrameEndInfo &());
-}
-
-struct ViewLocateInfo : public traits::TypedStructTraits<ViewLocateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ViewLocateInfo>;
-
-public:
-  // ctor
-  ViewLocateInfo(const ViewConfigurationType &viewConfigurationType_ = {},
-                 const Time &displayTime_ = {}, const Space &space_ = {})
-      :
-
-        Parent(StructureType::ViewLocateInfo),
-
-        viewConfigurationType{viewConfigurationType_},
-        displayTime{displayTime_}, space{space_} {}
-  operator const XrViewLocateInfo &() const {
-    return *reinterpret_cast<const XrViewLocateInfo *>(this);
-  }
-  operator XrViewLocateInfo &() {
-    return *reinterpret_cast<XrViewLocateInfo *>(this);
-  }
-
-  // member decl
-  ViewConfigurationType viewConfigurationType;
-  Time displayTime;
-  Space space;
-};
-static_assert(sizeof(ViewLocateInfo) == sizeof(XrViewLocateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ViewLocateInfo as a raw XrViewLocateInfo
-//! @relates ViewLocateInfo
-OPENXR_HPP_INLINE XrViewLocateInfo const *get(ViewLocateInfo const &h) {
-  return &(h.operator XrViewLocateInfo const &());
-}
-
-//! @brief Free function accessor for passing ViewLocateInfo as the address of a
-//! raw XrViewLocateInfo
-//! @relates ViewLocateInfo
-OPENXR_HPP_INLINE XrViewLocateInfo *put(ViewLocateInfo &h) {
-  return &(h.operator XrViewLocateInfo &());
-}
-
-struct ViewState : public traits::TypedStructTraits<ViewState> {
-private:
-  using Parent = traits::TypedStructTraits<ViewState>;
-
-public:
-  // ctor
-  ViewState(const ViewStateFlags &viewStateFlags_ = {})
-      :
-
-        Parent(StructureType::ViewState),
-
-        viewStateFlags{viewStateFlags_} {}
-  operator const XrViewState &() const {
-    return *reinterpret_cast<const XrViewState *>(this);
-  }
-  operator XrViewState &() { return *reinterpret_cast<XrViewState *>(this); }
-
-  // member decl
-  ViewStateFlags viewStateFlags;
-};
-static_assert(sizeof(ViewState) == sizeof(XrViewState),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ViewState as a raw XrViewState
-//! @relates ViewState
-OPENXR_HPP_INLINE XrViewState const *get(ViewState const &h) {
-  return &(h.operator XrViewState const &());
-}
-
-//! @brief Free function accessor for passing ViewState as the address of a raw
-//! XrViewState
-//! @relates ViewState
-OPENXR_HPP_INLINE XrViewState *put(ViewState &h) {
-  return &(h.operator XrViewState &());
-}
-
-struct Fovf {
-  // ctor
-  Fovf(float angleLeft_ = 0.0f, float angleRight_ = 0.0f, float angleUp_ = 0.0f,
-       float angleDown_ = 0.0f)
-      :
-
-        angleLeft{angleLeft_},
-        angleRight{angleRight_}, angleUp{angleUp_}, angleDown{angleDown_} {}
-  operator const XrFovf &() const {
-    return *reinterpret_cast<const XrFovf *>(this);
-  }
-  operator XrFovf &() { return *reinterpret_cast<XrFovf *>(this); }
-
-  // member decl
-  float angleLeft;
-  float angleRight;
-  float angleUp;
-  float angleDown;
-};
-static_assert(sizeof(Fovf) == sizeof(XrFovf),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Fovf as a raw XrFovf
-//! @relates Fovf
-OPENXR_HPP_INLINE XrFovf const *get(Fovf const &h) {
-  return &(h.operator XrFovf const &());
-}
-
-//! @brief Free function accessor for passing Fovf as the address of a raw
-//! XrFovf
-//! @relates Fovf
-OPENXR_HPP_INLINE XrFovf *put(Fovf &h) { return &(h.operator XrFovf &()); }
-
-struct View : public traits::TypedStructTraits<View> {
-private:
-  using Parent = traits::TypedStructTraits<View>;
-
-public:
-  // ctor
-  View(const Posef &pose_ = {}, const Fovf &fov_ = {})
-      :
-
-        Parent(StructureType::View),
-
-        pose{pose_}, fov{fov_} {}
-  operator const XrView &() const {
-    return *reinterpret_cast<const XrView *>(this);
-  }
-  operator XrView &() { return *reinterpret_cast<XrView *>(this); }
-
-  // member decl
-  Posef pose;
-  Fovf fov;
-};
-static_assert(sizeof(View) == sizeof(XrView),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for View as a raw XrView
-//! @relates View
-OPENXR_HPP_INLINE XrView const *get(View const &h) {
-  return &(h.operator XrView const &());
-}
-
-//! @brief Free function accessor for passing View as the address of a raw
-//! XrView
-//! @relates View
-OPENXR_HPP_INLINE XrView *put(View &h) { return &(h.operator XrView &()); }
-
-struct ActionSetCreateInfo
-    : public traits::TypedStructTraits<ActionSetCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ActionSetCreateInfo>;
-
-public:
-  // ctor
-  ActionSetCreateInfo(const char *actionSetName_ = nullptr,
-                      const char *localizedActionSetName_ = nullptr,
-                      uint32_t priority_ = 0)
-      :
-
-        Parent(StructureType::ActionSetCreateInfo),
-
-        priority{priority_} {
-    if (nullptr != actionSetName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(actionSetName, actionSetName_, XR_MAX_ACTION_SET_NAME_SIZE);
-    }
-    if (nullptr != localizedActionSetName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(localizedActionSetName, localizedActionSetName_,
-              XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE);
-    }
-  }
-  operator const XrActionSetCreateInfo &() const {
-    return *reinterpret_cast<const XrActionSetCreateInfo *>(this);
-  }
-  operator XrActionSetCreateInfo &() {
-    return *reinterpret_cast<XrActionSetCreateInfo *>(this);
-  }
-
-  // member decl
-  char actionSetName[XR_MAX_ACTION_SET_NAME_SIZE];
-  char localizedActionSetName[XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE];
-  uint32_t priority;
-};
-static_assert(sizeof(ActionSetCreateInfo) == sizeof(XrActionSetCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionSetCreateInfo as a raw
-//! XrActionSetCreateInfo
-//! @relates ActionSetCreateInfo
-OPENXR_HPP_INLINE XrActionSetCreateInfo const *
-get(ActionSetCreateInfo const &h) {
-  return &(h.operator XrActionSetCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing ActionSetCreateInfo as the address
-//! of a raw XrActionSetCreateInfo
-//! @relates ActionSetCreateInfo
-OPENXR_HPP_INLINE XrActionSetCreateInfo *put(ActionSetCreateInfo &h) {
-  return &(h.operator XrActionSetCreateInfo &());
-}
-
-struct ActionCreateInfo : public traits::TypedStructTraits<ActionCreateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ActionCreateInfo>;
-
-public:
-  // ctor
-  ActionCreateInfo(const char *actionName_ = nullptr,
-                   const ActionType &actionType_ = {},
-                   uint32_t countSubactionPaths_ = 0,
-                   const XrPath *subactionPaths_ = nullptr,
-                   const char *localizedActionName_ = nullptr)
-      :
-
-        Parent(StructureType::ActionCreateInfo),
-
-        actionType{actionType_}, countSubactionPaths{countSubactionPaths_},
-        subactionPaths{subactionPaths_} {
-    if (nullptr != actionName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(actionName, actionName_, XR_MAX_ACTION_NAME_SIZE);
-    }
-    if (nullptr != localizedActionName_) {
-      // FIXME what is the safe way to do this?
-      strncpy(localizedActionName, localizedActionName_,
-              XR_MAX_LOCALIZED_ACTION_NAME_SIZE);
-    }
-  }
-  operator const XrActionCreateInfo &() const {
-    return *reinterpret_cast<const XrActionCreateInfo *>(this);
-  }
-  operator XrActionCreateInfo &() {
-    return *reinterpret_cast<XrActionCreateInfo *>(this);
-  }
-
-  // member decl
-  char actionName[XR_MAX_ACTION_NAME_SIZE];
-  ActionType actionType;
-  uint32_t countSubactionPaths;
-  const XrPath *subactionPaths;
-  char localizedActionName[XR_MAX_LOCALIZED_ACTION_NAME_SIZE];
-};
-static_assert(sizeof(ActionCreateInfo) == sizeof(XrActionCreateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionCreateInfo as a raw
-//! XrActionCreateInfo
-//! @relates ActionCreateInfo
-OPENXR_HPP_INLINE XrActionCreateInfo const *get(ActionCreateInfo const &h) {
-  return &(h.operator XrActionCreateInfo const &());
-}
-
-//! @brief Free function accessor for passing ActionCreateInfo as the address of
-//! a raw XrActionCreateInfo
-//! @relates ActionCreateInfo
-OPENXR_HPP_INLINE XrActionCreateInfo *put(ActionCreateInfo &h) {
-  return &(h.operator XrActionCreateInfo &());
-}
-
-struct ActionSuggestedBinding {
-  // ctor
-  ActionSuggestedBinding(const Action &action_ = {}, const Path &binding_ = {})
-      :
-
-        action{action_}, binding{binding_} {}
-  operator const XrActionSuggestedBinding &() const {
-    return *reinterpret_cast<const XrActionSuggestedBinding *>(this);
-  }
-  operator XrActionSuggestedBinding &() {
-    return *reinterpret_cast<XrActionSuggestedBinding *>(this);
-  }
-
-  // member decl
-  Action action;
-  Path binding;
-};
-static_assert(sizeof(ActionSuggestedBinding) ==
-                  sizeof(XrActionSuggestedBinding),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionSuggestedBinding as a raw
-//! XrActionSuggestedBinding
-//! @relates ActionSuggestedBinding
-OPENXR_HPP_INLINE XrActionSuggestedBinding const *
-get(ActionSuggestedBinding const &h) {
-  return &(h.operator XrActionSuggestedBinding const &());
-}
-
-//! @brief Free function accessor for passing ActionSuggestedBinding as the
-//! address of a raw XrActionSuggestedBinding
-//! @relates ActionSuggestedBinding
-OPENXR_HPP_INLINE XrActionSuggestedBinding *put(ActionSuggestedBinding &h) {
-  return &(h.operator XrActionSuggestedBinding &());
-}
-
-struct InteractionProfileSuggestedBinding
-    : public traits::TypedStructTraits<InteractionProfileSuggestedBinding> {
-private:
-  using Parent = traits::TypedStructTraits<InteractionProfileSuggestedBinding>;
-
-public:
-  // ctor
-  InteractionProfileSuggestedBinding(
-      const Path &interactionProfile_ = {},
-      uint32_t countSuggestedBindings_ = 0,
-      const XrActionSuggestedBinding *suggestedBindings_ = nullptr)
-      :
-
-        Parent(StructureType::InteractionProfileSuggestedBinding),
-
-        interactionProfile{interactionProfile_},
-        countSuggestedBindings{countSuggestedBindings_},
-        suggestedBindings{suggestedBindings_} {}
-  operator const XrInteractionProfileSuggestedBinding &() const {
-    return *reinterpret_cast<const XrInteractionProfileSuggestedBinding *>(
-        this);
-  }
-  operator XrInteractionProfileSuggestedBinding &() {
-    return *reinterpret_cast<XrInteractionProfileSuggestedBinding *>(this);
-  }
-
-  // member decl
-  Path interactionProfile;
-  uint32_t countSuggestedBindings;
-  const XrActionSuggestedBinding *suggestedBindings;
-};
-static_assert(sizeof(InteractionProfileSuggestedBinding) ==
-                  sizeof(XrInteractionProfileSuggestedBinding),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InteractionProfileSuggestedBinding as a
-//! raw XrInteractionProfileSuggestedBinding
-//! @relates InteractionProfileSuggestedBinding
-OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding const *
-get(InteractionProfileSuggestedBinding const &h) {
-  return &(h.operator XrInteractionProfileSuggestedBinding const &());
-}
-
-//! @brief Free function accessor for passing InteractionProfileSuggestedBinding
-//! as the address of a raw XrInteractionProfileSuggestedBinding
-//! @relates InteractionProfileSuggestedBinding
-OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding *
-put(InteractionProfileSuggestedBinding &h) {
-  return &(h.operator XrInteractionProfileSuggestedBinding &());
-}
-
-struct SessionActionSetsAttachInfo
-    : public traits::TypedStructTraits<SessionActionSetsAttachInfo> {
-private:
-  using Parent = traits::TypedStructTraits<SessionActionSetsAttachInfo>;
-
-public:
-  // ctor
-  SessionActionSetsAttachInfo(uint32_t countActionSets_ = 0,
-                              const XrActionSet *actionSets_ = nullptr)
-      :
-
-        Parent(StructureType::SessionActionSetsAttachInfo),
-
-        countActionSets{countActionSets_}, actionSets{actionSets_} {}
-  operator const XrSessionActionSetsAttachInfo &() const {
-    return *reinterpret_cast<const XrSessionActionSetsAttachInfo *>(this);
-  }
-  operator XrSessionActionSetsAttachInfo &() {
-    return *reinterpret_cast<XrSessionActionSetsAttachInfo *>(this);
-  }
-
-  // member decl
-  uint32_t countActionSets;
-  const XrActionSet *actionSets;
-};
-static_assert(sizeof(SessionActionSetsAttachInfo) ==
-                  sizeof(XrSessionActionSetsAttachInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SessionActionSetsAttachInfo as a raw
-//! XrSessionActionSetsAttachInfo
-//! @relates SessionActionSetsAttachInfo
-OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo const *
-get(SessionActionSetsAttachInfo const &h) {
-  return &(h.operator XrSessionActionSetsAttachInfo const &());
-}
-
-//! @brief Free function accessor for passing SessionActionSetsAttachInfo as the
-//! address of a raw XrSessionActionSetsAttachInfo
-//! @relates SessionActionSetsAttachInfo
-OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo *
-put(SessionActionSetsAttachInfo &h) {
-  return &(h.operator XrSessionActionSetsAttachInfo &());
-}
-
-struct InteractionProfileState
-    : public traits::TypedStructTraits<InteractionProfileState> {
-private:
-  using Parent = traits::TypedStructTraits<InteractionProfileState>;
-
-public:
-  // ctor
-  InteractionProfileState(const Path &interactionProfile_ = {})
-      :
-
-        Parent(StructureType::InteractionProfileState),
-
-        interactionProfile{interactionProfile_} {}
-  operator const XrInteractionProfileState &() const {
-    return *reinterpret_cast<const XrInteractionProfileState *>(this);
-  }
-  operator XrInteractionProfileState &() {
-    return *reinterpret_cast<XrInteractionProfileState *>(this);
-  }
-
-  // member decl
-  Path interactionProfile;
-};
-static_assert(sizeof(InteractionProfileState) ==
-                  sizeof(XrInteractionProfileState),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InteractionProfileState as a raw
-//! XrInteractionProfileState
-//! @relates InteractionProfileState
-OPENXR_HPP_INLINE XrInteractionProfileState const *
-get(InteractionProfileState const &h) {
-  return &(h.operator XrInteractionProfileState const &());
-}
-
-//! @brief Free function accessor for passing InteractionProfileState as the
-//! address of a raw XrInteractionProfileState
-//! @relates InteractionProfileState
-OPENXR_HPP_INLINE XrInteractionProfileState *put(InteractionProfileState &h) {
-  return &(h.operator XrInteractionProfileState &());
-}
-
-struct ActionStateGetInfo
-    : public traits::TypedStructTraits<ActionStateGetInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ActionStateGetInfo>;
-
-public:
-  // ctor
-  ActionStateGetInfo(const Action &action_ = {},
-                     const Path &subactionPath_ = {})
-      :
-
-        Parent(StructureType::ActionStateGetInfo),
-
-        action{action_}, subactionPath{subactionPath_} {}
-  operator const XrActionStateGetInfo &() const {
-    return *reinterpret_cast<const XrActionStateGetInfo *>(this);
-  }
-  operator XrActionStateGetInfo &() {
-    return *reinterpret_cast<XrActionStateGetInfo *>(this);
-  }
-
-  // member decl
-  Action action;
-  Path subactionPath;
-};
-static_assert(sizeof(ActionStateGetInfo) == sizeof(XrActionStateGetInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionStateGetInfo as a raw
-//! XrActionStateGetInfo
-//! @relates ActionStateGetInfo
-OPENXR_HPP_INLINE XrActionStateGetInfo const *get(ActionStateGetInfo const &h) {
-  return &(h.operator XrActionStateGetInfo const &());
-}
-
-//! @brief Free function accessor for passing ActionStateGetInfo as the address
-//! of a raw XrActionStateGetInfo
-//! @relates ActionStateGetInfo
-OPENXR_HPP_INLINE XrActionStateGetInfo *put(ActionStateGetInfo &h) {
-  return &(h.operator XrActionStateGetInfo &());
-}
-
-struct ActionStateBoolean
-    : public traits::TypedStructTraits<ActionStateBoolean> {
-private:
-  using Parent = traits::TypedStructTraits<ActionStateBoolean>;
-
-public:
-  // ctor
-  ActionStateBoolean(const Bool32 &currentState_ = XR_FALSE,
-                     const Bool32 &changedSinceLastSync_ = XR_FALSE,
-                     const Time &lastChangeTime_ = {},
-                     const Bool32 &isActive_ = XR_FALSE)
-      :
-
-        Parent(StructureType::ActionStateBoolean),
-
-        currentState{currentState_},
-        changedSinceLastSync{changedSinceLastSync_},
-        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
-  operator const XrActionStateBoolean &() const {
-    return *reinterpret_cast<const XrActionStateBoolean *>(this);
-  }
-  operator XrActionStateBoolean &() {
-    return *reinterpret_cast<XrActionStateBoolean *>(this);
-  }
-
-  // member decl
-  Bool32 currentState;
-  Bool32 changedSinceLastSync;
-  Time lastChangeTime;
-  Bool32 isActive;
-};
-static_assert(sizeof(ActionStateBoolean) == sizeof(XrActionStateBoolean),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionStateBoolean as a raw
-//! XrActionStateBoolean
-//! @relates ActionStateBoolean
-OPENXR_HPP_INLINE XrActionStateBoolean const *get(ActionStateBoolean const &h) {
-  return &(h.operator XrActionStateBoolean const &());
-}
-
-//! @brief Free function accessor for passing ActionStateBoolean as the address
-//! of a raw XrActionStateBoolean
-//! @relates ActionStateBoolean
-OPENXR_HPP_INLINE XrActionStateBoolean *put(ActionStateBoolean &h) {
-  return &(h.operator XrActionStateBoolean &());
-}
-
-struct ActionStateFloat : public traits::TypedStructTraits<ActionStateFloat> {
-private:
-  using Parent = traits::TypedStructTraits<ActionStateFloat>;
-
-public:
-  // ctor
-  ActionStateFloat(float currentState_ = 0.0f,
-                   const Bool32 &changedSinceLastSync_ = XR_FALSE,
-                   const Time &lastChangeTime_ = {},
-                   const Bool32 &isActive_ = XR_FALSE)
-      :
-
-        Parent(StructureType::ActionStateFloat),
-
-        currentState{currentState_},
-        changedSinceLastSync{changedSinceLastSync_},
-        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
-  operator const XrActionStateFloat &() const {
-    return *reinterpret_cast<const XrActionStateFloat *>(this);
-  }
-  operator XrActionStateFloat &() {
-    return *reinterpret_cast<XrActionStateFloat *>(this);
-  }
-
-  // member decl
-  float currentState;
-  Bool32 changedSinceLastSync;
-  Time lastChangeTime;
-  Bool32 isActive;
-};
-static_assert(sizeof(ActionStateFloat) == sizeof(XrActionStateFloat),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionStateFloat as a raw
-//! XrActionStateFloat
-//! @relates ActionStateFloat
-OPENXR_HPP_INLINE XrActionStateFloat const *get(ActionStateFloat const &h) {
-  return &(h.operator XrActionStateFloat const &());
-}
-
-//! @brief Free function accessor for passing ActionStateFloat as the address of
-//! a raw XrActionStateFloat
-//! @relates ActionStateFloat
-OPENXR_HPP_INLINE XrActionStateFloat *put(ActionStateFloat &h) {
-  return &(h.operator XrActionStateFloat &());
-}
-
-struct Vector2f {
-  // ctor
-  Vector2f(float x_ = 0.0f, float y_ = 0.0f)
-      :
-
-        x{x_}, y{y_} {}
-  operator const XrVector2f &() const {
-    return *reinterpret_cast<const XrVector2f *>(this);
-  }
-  operator XrVector2f &() { return *reinterpret_cast<XrVector2f *>(this); }
-
-  // member decl
-  float x;
-  float y;
-};
-static_assert(sizeof(Vector2f) == sizeof(XrVector2f),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Vector2f as a raw XrVector2f
-//! @relates Vector2f
-OPENXR_HPP_INLINE XrVector2f const *get(Vector2f const &h) {
-  return &(h.operator XrVector2f const &());
-}
-
-//! @brief Free function accessor for passing Vector2f as the address of a raw
-//! XrVector2f
-//! @relates Vector2f
-OPENXR_HPP_INLINE XrVector2f *put(Vector2f &h) {
-  return &(h.operator XrVector2f &());
-}
-
-struct ActionStateVector2f
-    : public traits::TypedStructTraits<ActionStateVector2f> {
-private:
-  using Parent = traits::TypedStructTraits<ActionStateVector2f>;
-
-public:
-  // ctor
-  ActionStateVector2f(const Vector2f &currentState_ = {},
-                      const Bool32 &changedSinceLastSync_ = XR_FALSE,
-                      const Time &lastChangeTime_ = {},
-                      const Bool32 &isActive_ = XR_FALSE)
-      :
-
-        Parent(StructureType::ActionStateVector2F),
-
-        currentState{currentState_},
-        changedSinceLastSync{changedSinceLastSync_},
-        lastChangeTime{lastChangeTime_}, isActive{isActive_} {}
-  operator const XrActionStateVector2f &() const {
-    return *reinterpret_cast<const XrActionStateVector2f *>(this);
-  }
-  operator XrActionStateVector2f &() {
-    return *reinterpret_cast<XrActionStateVector2f *>(this);
-  }
-
-  // member decl
-  Vector2f currentState;
-  Bool32 changedSinceLastSync;
-  Time lastChangeTime;
-  Bool32 isActive;
-};
-static_assert(sizeof(ActionStateVector2f) == sizeof(XrActionStateVector2f),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionStateVector2f as a raw
-//! XrActionStateVector2f
-//! @relates ActionStateVector2f
-OPENXR_HPP_INLINE XrActionStateVector2f const *
-get(ActionStateVector2f const &h) {
-  return &(h.operator XrActionStateVector2f const &());
-}
-
-//! @brief Free function accessor for passing ActionStateVector2f as the address
-//! of a raw XrActionStateVector2f
-//! @relates ActionStateVector2f
-OPENXR_HPP_INLINE XrActionStateVector2f *put(ActionStateVector2f &h) {
-  return &(h.operator XrActionStateVector2f &());
-}
-
-struct ActionStatePose : public traits::TypedStructTraits<ActionStatePose> {
-private:
-  using Parent = traits::TypedStructTraits<ActionStatePose>;
-
-public:
-  // ctor
-  ActionStatePose(const Bool32 &isActive_ = XR_FALSE)
-      :
-
-        Parent(StructureType::ActionStatePose),
-
-        isActive{isActive_} {}
-  operator const XrActionStatePose &() const {
-    return *reinterpret_cast<const XrActionStatePose *>(this);
-  }
-  operator XrActionStatePose &() {
-    return *reinterpret_cast<XrActionStatePose *>(this);
-  }
-
-  // member decl
-  Bool32 isActive;
-};
-static_assert(sizeof(ActionStatePose) == sizeof(XrActionStatePose),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionStatePose as a raw XrActionStatePose
-//! @relates ActionStatePose
-OPENXR_HPP_INLINE XrActionStatePose const *get(ActionStatePose const &h) {
-  return &(h.operator XrActionStatePose const &());
-}
-
-//! @brief Free function accessor for passing ActionStatePose as the address of
-//! a raw XrActionStatePose
-//! @relates ActionStatePose
-OPENXR_HPP_INLINE XrActionStatePose *put(ActionStatePose &h) {
-  return &(h.operator XrActionStatePose &());
-}
-
-struct ActiveActionSet {
-  // ctor
-  ActiveActionSet(const ActionSet &actionSet_ = {},
-                  const Path &subactionPath_ = {})
-      :
-
-        actionSet{actionSet_}, subactionPath{subactionPath_} {}
-  operator const XrActiveActionSet &() const {
-    return *reinterpret_cast<const XrActiveActionSet *>(this);
-  }
-  operator XrActiveActionSet &() {
-    return *reinterpret_cast<XrActiveActionSet *>(this);
-  }
-
-  // member decl
-  ActionSet actionSet;
-  Path subactionPath;
-};
-static_assert(sizeof(ActiveActionSet) == sizeof(XrActiveActionSet),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActiveActionSet as a raw XrActiveActionSet
-//! @relates ActiveActionSet
-OPENXR_HPP_INLINE XrActiveActionSet const *get(ActiveActionSet const &h) {
-  return &(h.operator XrActiveActionSet const &());
-}
-
-//! @brief Free function accessor for passing ActiveActionSet as the address of
-//! a raw XrActiveActionSet
-//! @relates ActiveActionSet
-OPENXR_HPP_INLINE XrActiveActionSet *put(ActiveActionSet &h) {
-  return &(h.operator XrActiveActionSet &());
-}
-
-struct ActionsSyncInfo : public traits::TypedStructTraits<ActionsSyncInfo> {
-private:
-  using Parent = traits::TypedStructTraits<ActionsSyncInfo>;
-
-public:
-  // ctor
-  ActionsSyncInfo(uint32_t countActiveActionSets_ = 0,
-                  const XrActiveActionSet *activeActionSets_ = nullptr)
-      :
-
-        Parent(StructureType::ActionsSyncInfo),
-
-        countActiveActionSets{countActiveActionSets_}, activeActionSets{
-                                                           activeActionSets_} {}
-  operator const XrActionsSyncInfo &() const {
-    return *reinterpret_cast<const XrActionsSyncInfo *>(this);
-  }
-  operator XrActionsSyncInfo &() {
-    return *reinterpret_cast<XrActionsSyncInfo *>(this);
-  }
-
-  // member decl
-  uint32_t countActiveActionSets;
-  const XrActiveActionSet *activeActionSets;
-};
-static_assert(sizeof(ActionsSyncInfo) == sizeof(XrActionsSyncInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for ActionsSyncInfo as a raw XrActionsSyncInfo
-//! @relates ActionsSyncInfo
-OPENXR_HPP_INLINE XrActionsSyncInfo const *get(ActionsSyncInfo const &h) {
-  return &(h.operator XrActionsSyncInfo const &());
-}
-
-//! @brief Free function accessor for passing ActionsSyncInfo as the address of
-//! a raw XrActionsSyncInfo
-//! @relates ActionsSyncInfo
-OPENXR_HPP_INLINE XrActionsSyncInfo *put(ActionsSyncInfo &h) {
-  return &(h.operator XrActionsSyncInfo &());
-}
-
-struct BoundSourcesForActionEnumerateInfo
-    : public traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo> {
-private:
-  using Parent = traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo>;
-
-public:
-  // ctor
-  BoundSourcesForActionEnumerateInfo(const Action &action_ = {})
-      :
-
-        Parent(StructureType::BoundSourcesForActionEnumerateInfo),
-
-        action{action_} {}
-  operator const XrBoundSourcesForActionEnumerateInfo &() const {
-    return *reinterpret_cast<const XrBoundSourcesForActionEnumerateInfo *>(
-        this);
-  }
-  operator XrBoundSourcesForActionEnumerateInfo &() {
-    return *reinterpret_cast<XrBoundSourcesForActionEnumerateInfo *>(this);
-  }
-
-  // member decl
-  Action action;
-};
-static_assert(sizeof(BoundSourcesForActionEnumerateInfo) ==
-                  sizeof(XrBoundSourcesForActionEnumerateInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for BoundSourcesForActionEnumerateInfo as a
-//! raw XrBoundSourcesForActionEnumerateInfo
-//! @relates BoundSourcesForActionEnumerateInfo
-OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo const *
-get(BoundSourcesForActionEnumerateInfo const &h) {
-  return &(h.operator XrBoundSourcesForActionEnumerateInfo const &());
-}
-
-//! @brief Free function accessor for passing BoundSourcesForActionEnumerateInfo
-//! as the address of a raw XrBoundSourcesForActionEnumerateInfo
-//! @relates BoundSourcesForActionEnumerateInfo
-OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo *
-put(BoundSourcesForActionEnumerateInfo &h) {
-  return &(h.operator XrBoundSourcesForActionEnumerateInfo &());
-}
-
-struct InputSourceLocalizedNameGetInfo
-    : public traits::TypedStructTraits<InputSourceLocalizedNameGetInfo> {
-private:
-  using Parent = traits::TypedStructTraits<InputSourceLocalizedNameGetInfo>;
-
-public:
-  // ctor
-  InputSourceLocalizedNameGetInfo(
-      const Path &sourcePath_ = {},
-      const InputSourceLocalizedNameFlags &whichComponents_ = {})
-      :
-
-        Parent(StructureType::InputSourceLocalizedNameGetInfo),
-
-        sourcePath{sourcePath_}, whichComponents{whichComponents_} {}
-  operator const XrInputSourceLocalizedNameGetInfo &() const {
-    return *reinterpret_cast<const XrInputSourceLocalizedNameGetInfo *>(this);
-  }
-  operator XrInputSourceLocalizedNameGetInfo &() {
-    return *reinterpret_cast<XrInputSourceLocalizedNameGetInfo *>(this);
-  }
-
-  // member decl
-  Path sourcePath;
-  InputSourceLocalizedNameFlags whichComponents;
-};
-static_assert(sizeof(InputSourceLocalizedNameGetInfo) ==
-                  sizeof(XrInputSourceLocalizedNameGetInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InputSourceLocalizedNameGetInfo as a raw
-//! XrInputSourceLocalizedNameGetInfo
-//! @relates InputSourceLocalizedNameGetInfo
-OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo const *
-get(InputSourceLocalizedNameGetInfo const &h) {
-  return &(h.operator XrInputSourceLocalizedNameGetInfo const &());
-}
-
-//! @brief Free function accessor for passing InputSourceLocalizedNameGetInfo as
-//! the address of a raw XrInputSourceLocalizedNameGetInfo
-//! @relates InputSourceLocalizedNameGetInfo
-OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo *
-put(InputSourceLocalizedNameGetInfo &h) {
-  return &(h.operator XrInputSourceLocalizedNameGetInfo &());
-}
-
-struct HapticActionInfo : public traits::TypedStructTraits<HapticActionInfo> {
-private:
-  using Parent = traits::TypedStructTraits<HapticActionInfo>;
-
-public:
-  // ctor
-  HapticActionInfo(const Action &action_ = {}, const Path &subactionPath_ = {})
-      :
-
-        Parent(StructureType::HapticActionInfo),
-
-        action{action_}, subactionPath{subactionPath_} {}
-  operator const XrHapticActionInfo &() const {
-    return *reinterpret_cast<const XrHapticActionInfo *>(this);
-  }
-  operator XrHapticActionInfo &() {
-    return *reinterpret_cast<XrHapticActionInfo *>(this);
-  }
-
-  // member decl
-  Action action;
-  Path subactionPath;
-};
-static_assert(sizeof(HapticActionInfo) == sizeof(XrHapticActionInfo),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for HapticActionInfo as a raw
-//! XrHapticActionInfo
-//! @relates HapticActionInfo
-OPENXR_HPP_INLINE XrHapticActionInfo const *get(HapticActionInfo const &h) {
-  return &(h.operator XrHapticActionInfo const &());
-}
-
-//! @brief Free function accessor for passing HapticActionInfo as the address of
-//! a raw XrHapticActionInfo
-//! @relates HapticActionInfo
-OPENXR_HPP_INLINE XrHapticActionInfo *put(HapticActionInfo &h) {
-  return &(h.operator XrHapticActionInfo &());
-}
-
-struct Offset2Di {
-  // ctor
-  Offset2Di(int32_t x_ = 0, int32_t y_ = 0)
-      :
-
-        x{x_}, y{y_} {}
-  operator const XrOffset2Di &() const {
-    return *reinterpret_cast<const XrOffset2Di *>(this);
-  }
-  operator XrOffset2Di &() { return *reinterpret_cast<XrOffset2Di *>(this); }
-
-  // member decl
-  int32_t x;
-  int32_t y;
-};
-static_assert(sizeof(Offset2Di) == sizeof(XrOffset2Di),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Offset2Di as a raw XrOffset2Di
-//! @relates Offset2Di
-OPENXR_HPP_INLINE XrOffset2Di const *get(Offset2Di const &h) {
-  return &(h.operator XrOffset2Di const &());
-}
-
-//! @brief Free function accessor for passing Offset2Di as the address of a raw
-//! XrOffset2Di
-//! @relates Offset2Di
-OPENXR_HPP_INLINE XrOffset2Di *put(Offset2Di &h) {
-  return &(h.operator XrOffset2Di &());
-}
-
-struct Extent2Di {
-  // ctor
-  Extent2Di(int32_t width_ = 0, int32_t height_ = 0)
-      :
-
-        width{width_}, height{height_} {}
-  operator const XrExtent2Di &() const {
-    return *reinterpret_cast<const XrExtent2Di *>(this);
-  }
-  operator XrExtent2Di &() { return *reinterpret_cast<XrExtent2Di *>(this); }
-
-  // member decl
-  int32_t width;
-  int32_t height;
-};
-static_assert(sizeof(Extent2Di) == sizeof(XrExtent2Di),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Extent2Di as a raw XrExtent2Di
-//! @relates Extent2Di
-OPENXR_HPP_INLINE XrExtent2Di const *get(Extent2Di const &h) {
-  return &(h.operator XrExtent2Di const &());
-}
-
-//! @brief Free function accessor for passing Extent2Di as the address of a raw
-//! XrExtent2Di
-//! @relates Extent2Di
-OPENXR_HPP_INLINE XrExtent2Di *put(Extent2Di &h) {
-  return &(h.operator XrExtent2Di &());
-}
-
-struct Rect2Di {
-  // ctor
-  Rect2Di(const Offset2Di &offset_ = {}, const Extent2Di &extent_ = {})
-      :
-
-        offset{offset_}, extent{extent_} {}
-  operator const XrRect2Di &() const {
-    return *reinterpret_cast<const XrRect2Di *>(this);
-  }
-  operator XrRect2Di &() { return *reinterpret_cast<XrRect2Di *>(this); }
-
-  // member decl
-  Offset2Di offset;
-  Extent2Di extent;
-};
-static_assert(sizeof(Rect2Di) == sizeof(XrRect2Di),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Rect2Di as a raw XrRect2Di
-//! @relates Rect2Di
-OPENXR_HPP_INLINE XrRect2Di const *get(Rect2Di const &h) {
-  return &(h.operator XrRect2Di const &());
-}
-
-//! @brief Free function accessor for passing Rect2Di as the address of a raw
-//! XrRect2Di
-//! @relates Rect2Di
-OPENXR_HPP_INLINE XrRect2Di *put(Rect2Di &h) {
-  return &(h.operator XrRect2Di &());
-}
-
-struct SwapchainSubImage {
-  // ctor
-  SwapchainSubImage(const Swapchain &swapchain_ = {},
-                    const Rect2Di &imageRect_ = {},
-                    uint32_t imageArrayIndex_ = 0)
-      :
-
-        swapchain{swapchain_}, imageRect{imageRect_}, imageArrayIndex{
-                                                          imageArrayIndex_} {}
-  operator const XrSwapchainSubImage &() const {
-    return *reinterpret_cast<const XrSwapchainSubImage *>(this);
-  }
-  operator XrSwapchainSubImage &() {
-    return *reinterpret_cast<XrSwapchainSubImage *>(this);
-  }
-
-  // member decl
-  Swapchain swapchain;
-  Rect2Di imageRect;
-  uint32_t imageArrayIndex;
-};
-static_assert(sizeof(SwapchainSubImage) == sizeof(XrSwapchainSubImage),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainSubImage as a raw
-//! XrSwapchainSubImage
-//! @relates SwapchainSubImage
-OPENXR_HPP_INLINE XrSwapchainSubImage const *get(SwapchainSubImage const &h) {
-  return &(h.operator XrSwapchainSubImage const &());
-}
-
-//! @brief Free function accessor for passing SwapchainSubImage as the address
-//! of a raw XrSwapchainSubImage
-//! @relates SwapchainSubImage
-OPENXR_HPP_INLINE XrSwapchainSubImage *put(SwapchainSubImage &h) {
-  return &(h.operator XrSwapchainSubImage &());
-}
-
-struct CompositionLayerProjectionView
-    : public traits::TypedStructTraits<CompositionLayerProjectionView> {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerProjectionView>;
-
-public:
-  // ctor
-  CompositionLayerProjectionView(const Posef &pose_ = {}, const Fovf &fov_ = {},
-                                 const SwapchainSubImage &subImage_ = {})
-      :
-
-        Parent(StructureType::CompositionLayerProjectionView),
-
-        pose{pose_}, fov{fov_}, subImage{subImage_} {}
-  operator const XrCompositionLayerProjectionView &() const {
-    return *reinterpret_cast<const XrCompositionLayerProjectionView *>(this);
-  }
-  operator XrCompositionLayerProjectionView &() {
-    return *reinterpret_cast<XrCompositionLayerProjectionView *>(this);
-  }
-
-  // member decl
-  Posef pose;
-  Fovf fov;
-  SwapchainSubImage subImage;
-};
-static_assert(sizeof(CompositionLayerProjectionView) ==
-                  sizeof(XrCompositionLayerProjectionView),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerProjectionView as a raw
-//! XrCompositionLayerProjectionView
-//! @relates CompositionLayerProjectionView
-OPENXR_HPP_INLINE XrCompositionLayerProjectionView const *
-get(CompositionLayerProjectionView const &h) {
-  return &(h.operator XrCompositionLayerProjectionView const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerProjectionView as
-//! the address of a raw XrCompositionLayerProjectionView
-//! @relates CompositionLayerProjectionView
-OPENXR_HPP_INLINE XrCompositionLayerProjectionView *
-put(CompositionLayerProjectionView &h) {
-  return &(h.operator XrCompositionLayerProjectionView &());
-}
-
-struct CompositionLayerProjection
-    : public traits::TypedStructTraits<CompositionLayerProjection> {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerProjection>;
-
-public:
-  // ctor
-  CompositionLayerProjection(
-      const CompositionLayerFlags &layerFlags_ = {}, const Space &space_ = {},
-      uint32_t viewCount_ = 0,
-      const XrCompositionLayerProjectionView *views_ = nullptr)
-      :
-
-        Parent(StructureType::CompositionLayerProjection),
-
-        layerFlags{layerFlags_}, space{space_}, viewCount{viewCount_},
-        views{views_} {}
-  operator const XrCompositionLayerProjection &() const {
-    return *reinterpret_cast<const XrCompositionLayerProjection *>(this);
-  }
-  operator XrCompositionLayerProjection &() {
-    return *reinterpret_cast<XrCompositionLayerProjection *>(this);
-  }
-
-  // member decl
-  CompositionLayerFlags layerFlags;
-  Space space;
-  uint32_t viewCount;
-  const XrCompositionLayerProjectionView *views;
-};
-static_assert(sizeof(CompositionLayerProjection) ==
-                  sizeof(XrCompositionLayerProjection),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerProjection as a raw
-//! XrCompositionLayerProjection
-//! @relates CompositionLayerProjection
-OPENXR_HPP_INLINE XrCompositionLayerProjection const *
-get(CompositionLayerProjection const &h) {
-  return &(h.operator XrCompositionLayerProjection const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerProjection as the
-//! address of a raw XrCompositionLayerProjection
-//! @relates CompositionLayerProjection
-OPENXR_HPP_INLINE XrCompositionLayerProjection *
-put(CompositionLayerProjection &h) {
-  return &(h.operator XrCompositionLayerProjection &());
-}
-
-struct CompositionLayerQuad
-    : public traits::TypedStructTraits<CompositionLayerQuad> {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerQuad>;
-
-public:
-  // ctor
-  CompositionLayerQuad(const CompositionLayerFlags &layerFlags_ = {},
-                       const Space &space_ = {},
-                       const EyeVisibility &eyeVisibility_ = {},
-                       const SwapchainSubImage &subImage_ = {},
-                       const Posef &pose_ = {}, const Extent2Df &size_ = {})
-      :
-
-        Parent(StructureType::CompositionLayerQuad),
-
-        layerFlags{layerFlags_}, space{space_}, eyeVisibility{eyeVisibility_},
-        subImage{subImage_}, pose{pose_}, size{size_} {}
-  operator const XrCompositionLayerQuad &() const {
-    return *reinterpret_cast<const XrCompositionLayerQuad *>(this);
-  }
-  operator XrCompositionLayerQuad &() {
-    return *reinterpret_cast<XrCompositionLayerQuad *>(this);
-  }
-
-  // member decl
-  CompositionLayerFlags layerFlags;
-  Space space;
-  EyeVisibility eyeVisibility;
-  SwapchainSubImage subImage;
-  Posef pose;
-  Extent2Df size;
-};
-static_assert(sizeof(CompositionLayerQuad) == sizeof(XrCompositionLayerQuad),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerQuad as a raw
-//! XrCompositionLayerQuad
-//! @relates CompositionLayerQuad
-OPENXR_HPP_INLINE XrCompositionLayerQuad const *
-get(CompositionLayerQuad const &h) {
-  return &(h.operator XrCompositionLayerQuad const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerQuad as the
-//! address of a raw XrCompositionLayerQuad
-//! @relates CompositionLayerQuad
-OPENXR_HPP_INLINE XrCompositionLayerQuad *put(CompositionLayerQuad &h) {
-  return &(h.operator XrCompositionLayerQuad &());
-}
-
-struct EventDataEventsLost
-    : public traits::TypedStructTraits<EventDataEventsLost> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataEventsLost>;
-
-public:
-  // ctor
-  EventDataEventsLost(uint32_t lostEventCount_ = 0)
-      :
-
-        Parent(StructureType::EventDataEventsLost),
-
-        lostEventCount{lostEventCount_} {}
-  operator const XrEventDataEventsLost &() const {
-    return *reinterpret_cast<const XrEventDataEventsLost *>(this);
-  }
-  operator XrEventDataEventsLost &() {
-    return *reinterpret_cast<XrEventDataEventsLost *>(this);
-  }
-
-  // member decl
-  uint32_t lostEventCount;
-};
-static_assert(sizeof(EventDataEventsLost) == sizeof(XrEventDataEventsLost),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataEventsLost as a raw
-//! XrEventDataEventsLost
-//! @relates EventDataEventsLost
-OPENXR_HPP_INLINE XrEventDataEventsLost const *
-get(EventDataEventsLost const &h) {
-  return &(h.operator XrEventDataEventsLost const &());
-}
-
-//! @brief Free function accessor for passing EventDataEventsLost as the address
-//! of a raw XrEventDataEventsLost
-//! @relates EventDataEventsLost
-OPENXR_HPP_INLINE XrEventDataEventsLost *put(EventDataEventsLost &h) {
-  return &(h.operator XrEventDataEventsLost &());
-}
-
-struct EventDataInstanceLossPending
-    : public traits::TypedStructTraits<EventDataInstanceLossPending> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataInstanceLossPending>;
-
-public:
-  // ctor
-  EventDataInstanceLossPending(const Time &lossTime_ = {})
-      :
-
-        Parent(StructureType::EventDataInstanceLossPending),
-
-        lossTime{lossTime_} {}
-  operator const XrEventDataInstanceLossPending &() const {
-    return *reinterpret_cast<const XrEventDataInstanceLossPending *>(this);
-  }
-  operator XrEventDataInstanceLossPending &() {
-    return *reinterpret_cast<XrEventDataInstanceLossPending *>(this);
-  }
-
-  // member decl
-  Time lossTime;
-};
-static_assert(sizeof(EventDataInstanceLossPending) ==
-                  sizeof(XrEventDataInstanceLossPending),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataInstanceLossPending as a raw
-//! XrEventDataInstanceLossPending
-//! @relates EventDataInstanceLossPending
-OPENXR_HPP_INLINE XrEventDataInstanceLossPending const *
-get(EventDataInstanceLossPending const &h) {
-  return &(h.operator XrEventDataInstanceLossPending const &());
-}
-
-//! @brief Free function accessor for passing EventDataInstanceLossPending as
-//! the address of a raw XrEventDataInstanceLossPending
-//! @relates EventDataInstanceLossPending
-OPENXR_HPP_INLINE XrEventDataInstanceLossPending *
-put(EventDataInstanceLossPending &h) {
-  return &(h.operator XrEventDataInstanceLossPending &());
-}
-
-struct EventDataSessionStateChanged
-    : public traits::TypedStructTraits<EventDataSessionStateChanged> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataSessionStateChanged>;
-
-public:
-  // ctor
-  EventDataSessionStateChanged(const Session &session_ = {},
-                               const SessionState &state_ = {},
-                               const Time &time_ = {})
-      :
-
-        Parent(StructureType::EventDataSessionStateChanged),
-
-        session{session_}, state{state_}, time{time_} {}
-  operator const XrEventDataSessionStateChanged &() const {
-    return *reinterpret_cast<const XrEventDataSessionStateChanged *>(this);
-  }
-  operator XrEventDataSessionStateChanged &() {
-    return *reinterpret_cast<XrEventDataSessionStateChanged *>(this);
-  }
-
-  // member decl
-  Session session;
-  SessionState state;
-  Time time;
-};
-static_assert(sizeof(EventDataSessionStateChanged) ==
-                  sizeof(XrEventDataSessionStateChanged),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataSessionStateChanged as a raw
-//! XrEventDataSessionStateChanged
-//! @relates EventDataSessionStateChanged
-OPENXR_HPP_INLINE XrEventDataSessionStateChanged const *
-get(EventDataSessionStateChanged const &h) {
-  return &(h.operator XrEventDataSessionStateChanged const &());
-}
-
-//! @brief Free function accessor for passing EventDataSessionStateChanged as
-//! the address of a raw XrEventDataSessionStateChanged
-//! @relates EventDataSessionStateChanged
-OPENXR_HPP_INLINE XrEventDataSessionStateChanged *
-put(EventDataSessionStateChanged &h) {
-  return &(h.operator XrEventDataSessionStateChanged &());
-}
-
-struct EventDataReferenceSpaceChangePending
-    : public traits::TypedStructTraits<EventDataReferenceSpaceChangePending> {
-private:
-  using Parent =
-      traits::TypedStructTraits<EventDataReferenceSpaceChangePending>;
-
-public:
-  // ctor
-  EventDataReferenceSpaceChangePending(
-      const Session &session_ = {},
-      const ReferenceSpaceType &referenceSpaceType_ = {},
-      const Time &changeTime_ = {}, const Bool32 &poseValid_ = XR_FALSE,
-      const Posef &poseInPreviousSpace_ = {})
-      :
-
-        Parent(StructureType::EventDataReferenceSpaceChangePending),
-
-        session{session_}, referenceSpaceType{referenceSpaceType_},
-        changeTime{changeTime_}, poseValid{poseValid_},
-        poseInPreviousSpace{poseInPreviousSpace_} {}
-  operator const XrEventDataReferenceSpaceChangePending &() const {
-    return *reinterpret_cast<const XrEventDataReferenceSpaceChangePending *>(
-        this);
-  }
-  operator XrEventDataReferenceSpaceChangePending &() {
-    return *reinterpret_cast<XrEventDataReferenceSpaceChangePending *>(this);
-  }
-
-  // member decl
-  Session session;
-  ReferenceSpaceType referenceSpaceType;
-  Time changeTime;
-  Bool32 poseValid;
-  Posef poseInPreviousSpace;
-};
-static_assert(sizeof(EventDataReferenceSpaceChangePending) ==
-                  sizeof(XrEventDataReferenceSpaceChangePending),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataReferenceSpaceChangePending as a
-//! raw XrEventDataReferenceSpaceChangePending
-//! @relates EventDataReferenceSpaceChangePending
-OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending const *
-get(EventDataReferenceSpaceChangePending const &h) {
-  return &(h.operator XrEventDataReferenceSpaceChangePending const &());
-}
-
-//! @brief Free function accessor for passing
-//! EventDataReferenceSpaceChangePending as the address of a raw
-//! XrEventDataReferenceSpaceChangePending
-//! @relates EventDataReferenceSpaceChangePending
-OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending *
-put(EventDataReferenceSpaceChangePending &h) {
-  return &(h.operator XrEventDataReferenceSpaceChangePending &());
-}
-
-struct EventDataInteractionProfileChanged
-    : public traits::TypedStructTraits<EventDataInteractionProfileChanged> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataInteractionProfileChanged>;
-
-public:
-  // ctor
-  EventDataInteractionProfileChanged(const Session &session_ = {})
-      :
-
-        Parent(StructureType::EventDataInteractionProfileChanged),
-
-        session{session_} {}
-  operator const XrEventDataInteractionProfileChanged &() const {
-    return *reinterpret_cast<const XrEventDataInteractionProfileChanged *>(
-        this);
-  }
-  operator XrEventDataInteractionProfileChanged &() {
-    return *reinterpret_cast<XrEventDataInteractionProfileChanged *>(this);
-  }
-
-  // member decl
-  Session session;
-};
-static_assert(sizeof(EventDataInteractionProfileChanged) ==
-                  sizeof(XrEventDataInteractionProfileChanged),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataInteractionProfileChanged as a
-//! raw XrEventDataInteractionProfileChanged
-//! @relates EventDataInteractionProfileChanged
-OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged const *
-get(EventDataInteractionProfileChanged const &h) {
-  return &(h.operator XrEventDataInteractionProfileChanged const &());
-}
-
-//! @brief Free function accessor for passing EventDataInteractionProfileChanged
-//! as the address of a raw XrEventDataInteractionProfileChanged
-//! @relates EventDataInteractionProfileChanged
-OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged *
-put(EventDataInteractionProfileChanged &h) {
-  return &(h.operator XrEventDataInteractionProfileChanged &());
-}
-
-struct HapticVibration : public traits::TypedStructTraits<HapticVibration> {
-private:
-  using Parent = traits::TypedStructTraits<HapticVibration>;
-
-public:
-  // ctor
-  HapticVibration(const Duration &duration_ = {}, float frequency_ = 0.0f,
-                  float amplitude_ = 0.0f)
-      :
-
-        Parent(StructureType::HapticVibration),
-
-        duration{duration_}, frequency{frequency_}, amplitude{amplitude_} {}
-  operator const XrHapticVibration &() const {
-    return *reinterpret_cast<const XrHapticVibration *>(this);
-  }
-  operator XrHapticVibration &() {
-    return *reinterpret_cast<XrHapticVibration *>(this);
-  }
-
-  // member decl
-  Duration duration;
-  float frequency;
-  float amplitude;
-};
-static_assert(sizeof(HapticVibration) == sizeof(XrHapticVibration),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for HapticVibration as a raw XrHapticVibration
-//! @relates HapticVibration
-OPENXR_HPP_INLINE XrHapticVibration const *get(HapticVibration const &h) {
-  return &(h.operator XrHapticVibration const &());
-}
-
-//! @brief Free function accessor for passing HapticVibration as the address of
-//! a raw XrHapticVibration
-//! @relates HapticVibration
-OPENXR_HPP_INLINE XrHapticVibration *put(HapticVibration &h) {
-  return &(h.operator XrHapticVibration &());
-}
-
-struct Offset2Df {
-  // ctor
-  Offset2Df(float x_ = 0.0f, float y_ = 0.0f)
-      :
-
-        x{x_}, y{y_} {}
-  operator const XrOffset2Df &() const {
-    return *reinterpret_cast<const XrOffset2Df *>(this);
-  }
-  operator XrOffset2Df &() { return *reinterpret_cast<XrOffset2Df *>(this); }
-
-  // member decl
-  float x;
-  float y;
-};
-static_assert(sizeof(Offset2Df) == sizeof(XrOffset2Df),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Offset2Df as a raw XrOffset2Df
-//! @relates Offset2Df
-OPENXR_HPP_INLINE XrOffset2Df const *get(Offset2Df const &h) {
-  return &(h.operator XrOffset2Df const &());
-}
-
-//! @brief Free function accessor for passing Offset2Df as the address of a raw
-//! XrOffset2Df
-//! @relates Offset2Df
-OPENXR_HPP_INLINE XrOffset2Df *put(Offset2Df &h) {
-  return &(h.operator XrOffset2Df &());
-}
-
-struct Rect2Df {
-  // ctor
-  Rect2Df(const Offset2Df &offset_ = {}, const Extent2Df &extent_ = {})
-      :
-
-        offset{offset_}, extent{extent_} {}
-  operator const XrRect2Df &() const {
-    return *reinterpret_cast<const XrRect2Df *>(this);
-  }
-  operator XrRect2Df &() { return *reinterpret_cast<XrRect2Df *>(this); }
-
-  // member decl
-  Offset2Df offset;
-  Extent2Df extent;
-};
-static_assert(sizeof(Rect2Df) == sizeof(XrRect2Df),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Rect2Df as a raw XrRect2Df
-//! @relates Rect2Df
-OPENXR_HPP_INLINE XrRect2Df const *get(Rect2Df const &h) {
-  return &(h.operator XrRect2Df const &());
-}
-
-//! @brief Free function accessor for passing Rect2Df as the address of a raw
-//! XrRect2Df
-//! @relates Rect2Df
-OPENXR_HPP_INLINE XrRect2Df *put(Rect2Df &h) {
-  return &(h.operator XrRect2Df &());
-}
-
-struct Vector4f {
-  // ctor
-  Vector4f(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f, float w_ = 0.0f)
-      :
-
-        x{x_}, y{y_}, z{z_}, w{w_} {}
-  operator const XrVector4f &() const {
-    return *reinterpret_cast<const XrVector4f *>(this);
-  }
-  operator XrVector4f &() { return *reinterpret_cast<XrVector4f *>(this); }
-
-  // member decl
-  float x;
-  float y;
-  float z;
-  float w;
-};
-static_assert(sizeof(Vector4f) == sizeof(XrVector4f),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Vector4f as a raw XrVector4f
-//! @relates Vector4f
-OPENXR_HPP_INLINE XrVector4f const *get(Vector4f const &h) {
-  return &(h.operator XrVector4f const &());
-}
-
-//! @brief Free function accessor for passing Vector4f as the address of a raw
-//! XrVector4f
-//! @relates Vector4f
-OPENXR_HPP_INLINE XrVector4f *put(Vector4f &h) {
-  return &(h.operator XrVector4f &());
-}
-
-struct Color4f {
-  // ctor
-  Color4f(float r_ = 0.0f, float g_ = 0.0f, float b_ = 0.0f, float a_ = 0.0f)
-      :
-
-        r{r_}, g{g_}, b{b_}, a{a_} {}
-  operator const XrColor4f &() const {
-    return *reinterpret_cast<const XrColor4f *>(this);
-  }
-  operator XrColor4f &() { return *reinterpret_cast<XrColor4f *>(this); }
-
-  // member decl
-  float r;
-  float g;
-  float b;
-  float a;
-};
-static_assert(sizeof(Color4f) == sizeof(XrColor4f),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for Color4f as a raw XrColor4f
-//! @relates Color4f
-OPENXR_HPP_INLINE XrColor4f const *get(Color4f const &h) {
-  return &(h.operator XrColor4f const &());
-}
-
-//! @brief Free function accessor for passing Color4f as the address of a raw
-//! XrColor4f
-//! @relates Color4f
-OPENXR_HPP_INLINE XrColor4f *put(Color4f &h) {
-  return &(h.operator XrColor4f &());
-}
-
-struct CompositionLayerCubeKHR
-    : public traits::TypedStructTraits<CompositionLayerCubeKHR> {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerCubeKHR>;
-
-public:
-  // ctor
-  CompositionLayerCubeKHR(const CompositionLayerFlags &layerFlags_ = {},
-                          const Space &space_ = {},
-                          const EyeVisibility &eyeVisibility_ = {},
-                          const Swapchain &swapchain_ = {},
-                          uint32_t imageArrayIndex_ = 0,
-                          const Quaternionf &orientation_ = {})
-      :
-
-        Parent(StructureType::CompositionLayerCubeKHR),
-
-        layerFlags{layerFlags_}, space{space_},
-        eyeVisibility{eyeVisibility_}, swapchain{swapchain_},
-        imageArrayIndex{imageArrayIndex_}, orientation{orientation_} {}
-  operator const XrCompositionLayerCubeKHR &() const {
-    return *reinterpret_cast<const XrCompositionLayerCubeKHR *>(this);
-  }
-  operator XrCompositionLayerCubeKHR &() {
-    return *reinterpret_cast<XrCompositionLayerCubeKHR *>(this);
-  }
-
-  // member decl
-  CompositionLayerFlags layerFlags;
-  Space space;
-  EyeVisibility eyeVisibility;
-  Swapchain swapchain;
-  uint32_t imageArrayIndex;
-  Quaternionf orientation;
-};
-static_assert(sizeof(CompositionLayerCubeKHR) ==
-                  sizeof(XrCompositionLayerCubeKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerCubeKHR as a raw
-//! XrCompositionLayerCubeKHR
-//! @relates CompositionLayerCubeKHR
-OPENXR_HPP_INLINE XrCompositionLayerCubeKHR const *
-get(CompositionLayerCubeKHR const &h) {
-  return &(h.operator XrCompositionLayerCubeKHR const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerCubeKHR as the
-//! address of a raw XrCompositionLayerCubeKHR
-//! @relates CompositionLayerCubeKHR
-OPENXR_HPP_INLINE XrCompositionLayerCubeKHR *put(CompositionLayerCubeKHR &h) {
-  return &(h.operator XrCompositionLayerCubeKHR &());
-}
-
-#if defined(XR_USE_PLATFORM_ANDROID)
-struct InstanceCreateInfoAndroidKHR
-    : public traits::TypedStructTraits<InstanceCreateInfoAndroidKHR> {
-private:
-  using Parent = traits::TypedStructTraits<InstanceCreateInfoAndroidKHR>;
-
-public:
-  // ctor
-  InstanceCreateInfoAndroidKHR(
-      void *XR_MAY_ALIAS applicationVM_ = nullptr,
-      void *XR_MAY_ALIAS applicationActivity_ = nullptr)
-      :
-
-        Parent(StructureType::InstanceCreateInfoAndroidKHR),
-
-        applicationVM{applicationVM_}, applicationActivity{
-                                           applicationActivity_} {}
-  operator const XrInstanceCreateInfoAndroidKHR &() const {
-    return *reinterpret_cast<const XrInstanceCreateInfoAndroidKHR *>(this);
-  }
-  operator XrInstanceCreateInfoAndroidKHR &() {
-    return *reinterpret_cast<XrInstanceCreateInfoAndroidKHR *>(this);
-  }
-
-  // member decl
-  void *XR_MAY_ALIAS applicationVM;
-  void *XR_MAY_ALIAS applicationActivity;
-};
-static_assert(sizeof(InstanceCreateInfoAndroidKHR) ==
-                  sizeof(XrInstanceCreateInfoAndroidKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for InstanceCreateInfoAndroidKHR as a raw
-//! XrInstanceCreateInfoAndroidKHR
-//! @relates InstanceCreateInfoAndroidKHR
-OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR const *
-get(InstanceCreateInfoAndroidKHR const &h) {
-  return &(h.operator XrInstanceCreateInfoAndroidKHR const &());
-}
-
-//! @brief Free function accessor for passing InstanceCreateInfoAndroidKHR as
-//! the address of a raw XrInstanceCreateInfoAndroidKHR
-//! @relates InstanceCreateInfoAndroidKHR
-OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR *
-put(InstanceCreateInfoAndroidKHR &h) {
-  return &(h.operator XrInstanceCreateInfoAndroidKHR &());
-}
-#endif // defined(XR_USE_PLATFORM_ANDROID)
-
-    struct CompositionLayerDepthInfoKHR : public traits::TypedStructTraits <
-    CompositionLayerDepthInfoKHR > {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerDepthInfoKHR>;
-
-public:
-  // ctor
-  CompositionLayerDepthInfoKHR(const SwapchainSubImage &subImage_ = {},
-                               float minDepth_ = 0.0f, float maxDepth_ = 0.0f,
-                               float nearZ_ = 0.0f, float farZ_ = 0.0f)
-      :
-
-        Parent(StructureType::CompositionLayerDepthInfoKHR),
-
-        subImage{subImage_}, minDepth{minDepth_}, maxDepth{maxDepth_},
-        nearZ{nearZ_}, farZ{farZ_} {}
-  operator const XrCompositionLayerDepthInfoKHR &() const {
-    return *reinterpret_cast<const XrCompositionLayerDepthInfoKHR *>(this);
-  }
-  operator XrCompositionLayerDepthInfoKHR &() {
-    return *reinterpret_cast<XrCompositionLayerDepthInfoKHR *>(this);
-  }
-
-  // member decl
-  SwapchainSubImage subImage;
-  float minDepth;
-  float maxDepth;
-  float nearZ;
-  float farZ;
-};
-static_assert(sizeof(CompositionLayerDepthInfoKHR) ==
-                  sizeof(XrCompositionLayerDepthInfoKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerDepthInfoKHR as a raw
-//! XrCompositionLayerDepthInfoKHR
-//! @relates CompositionLayerDepthInfoKHR
-OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR const *
-get(CompositionLayerDepthInfoKHR const &h) {
-  return &(h.operator XrCompositionLayerDepthInfoKHR const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerDepthInfoKHR as
-//! the address of a raw XrCompositionLayerDepthInfoKHR
-//! @relates CompositionLayerDepthInfoKHR
-OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR *
-put(CompositionLayerDepthInfoKHR &h) {
-  return &(h.operator XrCompositionLayerDepthInfoKHR &());
-}
-
-#if defined(XR_USE_GRAPHICS_API_VULKAN)
-struct VulkanSwapchainFormatListCreateInfoKHR
-    : public traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR> {
-private:
-  using Parent =
-      traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR>;
-
-public:
-  // ctor
-  VulkanSwapchainFormatListCreateInfoKHR(uint32_t viewFormatCount_ = 0,
-                                         const VkFormat *viewFormats_ = nullptr)
-      :
-
-        Parent(StructureType::VulkanSwapchainFormatListCreateInfoKHR),
-
-        viewFormatCount{viewFormatCount_}, viewFormats{viewFormats_} {}
-  operator const XrVulkanSwapchainFormatListCreateInfoKHR &() const {
-    return *reinterpret_cast<const XrVulkanSwapchainFormatListCreateInfoKHR *>(
-        this);
-  }
-  operator XrVulkanSwapchainFormatListCreateInfoKHR &() {
-    return *reinterpret_cast<XrVulkanSwapchainFormatListCreateInfoKHR *>(this);
-  }
-
-  // member decl
-  uint32_t viewFormatCount;
-  const VkFormat *viewFormats;
-};
-static_assert(sizeof(VulkanSwapchainFormatListCreateInfoKHR) ==
-                  sizeof(XrVulkanSwapchainFormatListCreateInfoKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for VulkanSwapchainFormatListCreateInfoKHR as
-//! a raw XrVulkanSwapchainFormatListCreateInfoKHR
-//! @relates VulkanSwapchainFormatListCreateInfoKHR
-OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR const *
-get(VulkanSwapchainFormatListCreateInfoKHR const &h) {
-  return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR const &());
-}
-
-//! @brief Free function accessor for passing
-//! VulkanSwapchainFormatListCreateInfoKHR as the address of a raw
-//! XrVulkanSwapchainFormatListCreateInfoKHR
-//! @relates VulkanSwapchainFormatListCreateInfoKHR
-OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR *
-put(VulkanSwapchainFormatListCreateInfoKHR &h) {
-  return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
-
-    struct CompositionLayerCylinderKHR : public traits::TypedStructTraits <
-    CompositionLayerCylinderKHR > {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerCylinderKHR>;
-
-public:
-  // ctor
-  CompositionLayerCylinderKHR(const CompositionLayerFlags &layerFlags_ = {},
-                              const Space &space_ = {},
-                              const EyeVisibility &eyeVisibility_ = {},
-                              const SwapchainSubImage &subImage_ = {},
-                              const Posef &pose_ = {}, float radius_ = 0.0f,
-                              float centralAngle_ = 0.0f,
-                              float aspectRatio_ = 0.0f)
-      :
-
-        Parent(StructureType::CompositionLayerCylinderKHR),
-
-        layerFlags{layerFlags_}, space{space_}, eyeVisibility{eyeVisibility_},
-        subImage{subImage_}, pose{pose_}, radius{radius_},
-        centralAngle{centralAngle_}, aspectRatio{aspectRatio_} {}
-  operator const XrCompositionLayerCylinderKHR &() const {
-    return *reinterpret_cast<const XrCompositionLayerCylinderKHR *>(this);
-  }
-  operator XrCompositionLayerCylinderKHR &() {
-    return *reinterpret_cast<XrCompositionLayerCylinderKHR *>(this);
-  }
-
-  // member decl
-  CompositionLayerFlags layerFlags;
-  Space space;
-  EyeVisibility eyeVisibility;
-  SwapchainSubImage subImage;
-  Posef pose;
-  float radius;
-  float centralAngle;
-  float aspectRatio;
-};
-static_assert(sizeof(CompositionLayerCylinderKHR) ==
-                  sizeof(XrCompositionLayerCylinderKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerCylinderKHR as a raw
-//! XrCompositionLayerCylinderKHR
-//! @relates CompositionLayerCylinderKHR
-OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR const *
-get(CompositionLayerCylinderKHR const &h) {
-  return &(h.operator XrCompositionLayerCylinderKHR const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerCylinderKHR as the
-//! address of a raw XrCompositionLayerCylinderKHR
-//! @relates CompositionLayerCylinderKHR
-OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR *
-put(CompositionLayerCylinderKHR &h) {
-  return &(h.operator XrCompositionLayerCylinderKHR &());
-}
-
-struct CompositionLayerEquirectKHR
-    : public traits::TypedStructTraits<CompositionLayerEquirectKHR> {
-private:
-  using Parent = traits::TypedStructTraits<CompositionLayerEquirectKHR>;
-
-public:
-  // ctor
-  CompositionLayerEquirectKHR(const CompositionLayerFlags &layerFlags_ = {},
-                              const Space &space_ = {},
-                              const EyeVisibility &eyeVisibility_ = {},
-                              const SwapchainSubImage &subImage_ = {},
-                              const Posef &pose_ = {}, float radius_ = 0.0f,
-                              const Vector2f &scale_ = {},
-                              const Vector2f &bias_ = {})
-      :
-
-        Parent(StructureType::CompositionLayerEquirectKHR),
-
-        layerFlags{layerFlags_}, space{space_},
-        eyeVisibility{eyeVisibility_}, subImage{subImage_}, pose{pose_},
-        radius{radius_}, scale{scale_}, bias{bias_} {}
-  operator const XrCompositionLayerEquirectKHR &() const {
-    return *reinterpret_cast<const XrCompositionLayerEquirectKHR *>(this);
-  }
-  operator XrCompositionLayerEquirectKHR &() {
-    return *reinterpret_cast<XrCompositionLayerEquirectKHR *>(this);
-  }
-
-  // member decl
-  CompositionLayerFlags layerFlags;
-  Space space;
-  EyeVisibility eyeVisibility;
-  SwapchainSubImage subImage;
-  Posef pose;
-  float radius;
-  Vector2f scale;
-  Vector2f bias;
-};
-static_assert(sizeof(CompositionLayerEquirectKHR) ==
-                  sizeof(XrCompositionLayerEquirectKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for CompositionLayerEquirectKHR as a raw
-//! XrCompositionLayerEquirectKHR
-//! @relates CompositionLayerEquirectKHR
-OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR const *
-get(CompositionLayerEquirectKHR const &h) {
-  return &(h.operator XrCompositionLayerEquirectKHR const &());
-}
-
-//! @brief Free function accessor for passing CompositionLayerEquirectKHR as the
-//! address of a raw XrCompositionLayerEquirectKHR
-//! @relates CompositionLayerEquirectKHR
-OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR *
-put(CompositionLayerEquirectKHR &h) {
-  return &(h.operator XrCompositionLayerEquirectKHR &());
-}
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
-struct GraphicsBindingOpenGLWin32KHR
-    : public traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR> {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR>;
-
-public:
-  // ctor
-  GraphicsBindingOpenGLWin32KHR(HDC hDC_ = {}, HGLRC hGLRC_ = {})
-      :
-
-        Parent(StructureType::GraphicsBindingOpenglWin32KHR),
-
-        hDC{hDC_}, hGLRC{hGLRC_} {}
-  operator const XrGraphicsBindingOpenGLWin32KHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingOpenGLWin32KHR *>(this);
-  }
-  operator XrGraphicsBindingOpenGLWin32KHR &() {
-    return *reinterpret_cast<XrGraphicsBindingOpenGLWin32KHR *>(this);
-  }
-
-  // member decl
-  HDC hDC;
-  HGLRC hGLRC;
-};
-static_assert(sizeof(GraphicsBindingOpenGLWin32KHR) ==
-                  sizeof(XrGraphicsBindingOpenGLWin32KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingOpenGLWin32KHR as a raw
-//! XrGraphicsBindingOpenGLWin32KHR
-//! @relates GraphicsBindingOpenGLWin32KHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR const *
-get(GraphicsBindingOpenGLWin32KHR const &h) {
-  return &(h.operator XrGraphicsBindingOpenGLWin32KHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingOpenGLWin32KHR as
-//! the address of a raw XrGraphicsBindingOpenGLWin32KHR
-//! @relates GraphicsBindingOpenGLWin32KHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR *
-put(GraphicsBindingOpenGLWin32KHR &h) {
-  return &(h.operator XrGraphicsBindingOpenGLWin32KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
-    struct GraphicsBindingOpenGLXlibKHR : public traits::TypedStructTraits <
-    GraphicsBindingOpenGLXlibKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLXlibKHR>;
-
-public:
-  // ctor
-  GraphicsBindingOpenGLXlibKHR(Display *xDisplay_ = nullptr,
-                               uint32_t visualid_ = 0,
-                               GLXFBConfig glxFBConfig_ = {},
-                               GLXDrawable glxDrawable_ = {},
-                               GLXContext glxContext_ = {})
-      :
-
-        Parent(StructureType::GraphicsBindingOpenglXlibKHR),
-
-        xDisplay{xDisplay_}, visualid{visualid_}, glxFBConfig{glxFBConfig_},
-        glxDrawable{glxDrawable_}, glxContext{glxContext_} {}
-  operator const XrGraphicsBindingOpenGLXlibKHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingOpenGLXlibKHR *>(this);
-  }
-  operator XrGraphicsBindingOpenGLXlibKHR &() {
-    return *reinterpret_cast<XrGraphicsBindingOpenGLXlibKHR *>(this);
-  }
-
-  // member decl
-  Display *xDisplay;
-  uint32_t visualid;
-  GLXFBConfig glxFBConfig;
-  GLXDrawable glxDrawable;
-  GLXContext glxContext;
-};
-static_assert(sizeof(GraphicsBindingOpenGLXlibKHR) ==
-                  sizeof(XrGraphicsBindingOpenGLXlibKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingOpenGLXlibKHR as a raw
-//! XrGraphicsBindingOpenGLXlibKHR
-//! @relates GraphicsBindingOpenGLXlibKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR const *
-get(GraphicsBindingOpenGLXlibKHR const &h) {
-  return &(h.operator XrGraphicsBindingOpenGLXlibKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingOpenGLXlibKHR as
-//! the address of a raw XrGraphicsBindingOpenGLXlibKHR
-//! @relates GraphicsBindingOpenGLXlibKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR *
-put(GraphicsBindingOpenGLXlibKHR &h) {
-  return &(h.operator XrGraphicsBindingOpenGLXlibKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
-    struct GraphicsBindingOpenGLXcbKHR : public traits::TypedStructTraits <
-    GraphicsBindingOpenGLXcbKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLXcbKHR>;
-
-public:
-  // ctor
-  GraphicsBindingOpenGLXcbKHR(xcb_connection_t *connection_ = {},
-                              uint32_t screenNumber_ = 0,
-                              xcb_glx_fbconfig_t fbconfigid_ = {},
-                              xcb_visualid_t visualid_ = {},
-                              xcb_glx_drawable_t glxDrawable_ = {},
-                              xcb_glx_context_t glxContext_ = {})
-      :
-
-        Parent(StructureType::GraphicsBindingOpenglXcbKHR),
-
-        connection{connection_}, screenNumber{screenNumber_},
-        fbconfigid{fbconfigid_}, visualid{visualid_}, glxDrawable{glxDrawable_},
-        glxContext{glxContext_} {}
-  operator const XrGraphicsBindingOpenGLXcbKHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingOpenGLXcbKHR *>(this);
-  }
-  operator XrGraphicsBindingOpenGLXcbKHR &() {
-    return *reinterpret_cast<XrGraphicsBindingOpenGLXcbKHR *>(this);
-  }
-
-  // member decl
-  xcb_connection_t *connection;
-  uint32_t screenNumber;
-  xcb_glx_fbconfig_t fbconfigid;
-  xcb_visualid_t visualid;
-  xcb_glx_drawable_t glxDrawable;
-  xcb_glx_context_t glxContext;
-};
-static_assert(sizeof(GraphicsBindingOpenGLXcbKHR) ==
-                  sizeof(XrGraphicsBindingOpenGLXcbKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingOpenGLXcbKHR as a raw
-//! XrGraphicsBindingOpenGLXcbKHR
-//! @relates GraphicsBindingOpenGLXcbKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR const *
-get(GraphicsBindingOpenGLXcbKHR const &h) {
-  return &(h.operator XrGraphicsBindingOpenGLXcbKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingOpenGLXcbKHR as the
-//! address of a raw XrGraphicsBindingOpenGLXcbKHR
-//! @relates GraphicsBindingOpenGLXcbKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR *
-put(GraphicsBindingOpenGLXcbKHR &h) {
-  return &(h.operator XrGraphicsBindingOpenGLXcbKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WAYLAND)
-    struct GraphicsBindingOpenGLWaylandKHR : public traits::TypedStructTraits <
-    GraphicsBindingOpenGLWaylandKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLWaylandKHR>;
-
-public:
-  // ctor
-  GraphicsBindingOpenGLWaylandKHR(struct wl_display *display_ = {})
-      :
-
-        Parent(StructureType::GraphicsBindingOpenglWaylandKHR),
-
-        display{display_} {}
-  operator const XrGraphicsBindingOpenGLWaylandKHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingOpenGLWaylandKHR *>(this);
-  }
-  operator XrGraphicsBindingOpenGLWaylandKHR &() {
-    return *reinterpret_cast<XrGraphicsBindingOpenGLWaylandKHR *>(this);
-  }
-
-  // member decl
-  struct wl_display *display;
-};
-static_assert(sizeof(GraphicsBindingOpenGLWaylandKHR) ==
-                  sizeof(XrGraphicsBindingOpenGLWaylandKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingOpenGLWaylandKHR as a raw
-//! XrGraphicsBindingOpenGLWaylandKHR
-//! @relates GraphicsBindingOpenGLWaylandKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR const *
-get(GraphicsBindingOpenGLWaylandKHR const &h) {
-  return &(h.operator XrGraphicsBindingOpenGLWaylandKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingOpenGLWaylandKHR as
-//! the address of a raw XrGraphicsBindingOpenGLWaylandKHR
-//! @relates GraphicsBindingOpenGLWaylandKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR *
-put(GraphicsBindingOpenGLWaylandKHR &h) {
-  return &(h.operator XrGraphicsBindingOpenGLWaylandKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL) &&
-       // defined(XR_USE_PLATFORM_WAYLAND)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL)
-    struct SwapchainImageOpenGLKHR : public traits::TypedStructTraits <
-    SwapchainImageOpenGLKHR > {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageOpenGLKHR>;
-
-public:
-  // ctor
-  SwapchainImageOpenGLKHR(uint32_t image_ = 0)
-      :
-
-        Parent(StructureType::SwapchainImageOpenglKHR),
-
-        image{image_} {}
-  operator const XrSwapchainImageOpenGLKHR &() const {
-    return *reinterpret_cast<const XrSwapchainImageOpenGLKHR *>(this);
-  }
-  operator XrSwapchainImageOpenGLKHR &() {
-    return *reinterpret_cast<XrSwapchainImageOpenGLKHR *>(this);
-  }
-
-  // member decl
-  uint32_t image;
-};
-static_assert(sizeof(SwapchainImageOpenGLKHR) ==
-                  sizeof(XrSwapchainImageOpenGLKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageOpenGLKHR as a raw
-//! XrSwapchainImageOpenGLKHR
-//! @relates SwapchainImageOpenGLKHR
-OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR const *
-get(SwapchainImageOpenGLKHR const &h) {
-  return &(h.operator XrSwapchainImageOpenGLKHR const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageOpenGLKHR as the
-//! address of a raw XrSwapchainImageOpenGLKHR
-//! @relates SwapchainImageOpenGLKHR
-OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR *put(SwapchainImageOpenGLKHR &h) {
-  return &(h.operator XrSwapchainImageOpenGLKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL)
-    struct GraphicsRequirementsOpenGLKHR : public traits::TypedStructTraits <
-    GraphicsRequirementsOpenGLKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsRequirementsOpenGLKHR>;
-
-public:
-  // ctor
-  GraphicsRequirementsOpenGLKHR(const Version &minApiVersionSupported_ = {},
-                                const Version &maxApiVersionSupported_ = {})
-      :
-
-        Parent(StructureType::GraphicsRequirementsOpenglKHR),
-
-        minApiVersionSupported{minApiVersionSupported_},
-        maxApiVersionSupported{maxApiVersionSupported_} {}
-  operator const XrGraphicsRequirementsOpenGLKHR &() const {
-    return *reinterpret_cast<const XrGraphicsRequirementsOpenGLKHR *>(this);
-  }
-  operator XrGraphicsRequirementsOpenGLKHR &() {
-    return *reinterpret_cast<XrGraphicsRequirementsOpenGLKHR *>(this);
-  }
-
-  // member decl
-  Version minApiVersionSupported;
-  Version maxApiVersionSupported;
-};
-static_assert(sizeof(GraphicsRequirementsOpenGLKHR) ==
-                  sizeof(XrGraphicsRequirementsOpenGLKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsRequirementsOpenGLKHR as a raw
-//! XrGraphicsRequirementsOpenGLKHR
-//! @relates GraphicsRequirementsOpenGLKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR const *
-get(GraphicsRequirementsOpenGLKHR const &h) {
-  return &(h.operator XrGraphicsRequirementsOpenGLKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsRequirementsOpenGLKHR as
-//! the address of a raw XrGraphicsRequirementsOpenGLKHR
-//! @relates GraphicsRequirementsOpenGLKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR *
-put(GraphicsRequirementsOpenGLKHR &h) {
-  return &(h.operator XrGraphicsRequirementsOpenGLKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL_ES) && defined(XR_USE_PLATFORM_ANDROID)
-    struct GraphicsBindingOpenGLESAndroidKHR : public traits::
-        TypedStructTraits < GraphicsBindingOpenGLESAndroidKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingOpenGLESAndroidKHR>;
-
-public:
-  // ctor
-  GraphicsBindingOpenGLESAndroidKHR(EGLDisplay display_ = {},
-                                    EGLConfig config_ = {},
-                                    EGLContext context_ = {})
-      :
-
-        Parent(StructureType::GraphicsBindingOpenglEsAndroidKHR),
-
-        display{display_}, config{config_}, context{context_} {}
-  operator const XrGraphicsBindingOpenGLESAndroidKHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingOpenGLESAndroidKHR *>(this);
-  }
-  operator XrGraphicsBindingOpenGLESAndroidKHR &() {
-    return *reinterpret_cast<XrGraphicsBindingOpenGLESAndroidKHR *>(this);
-  }
-
-  // member decl
-  EGLDisplay display;
-  EGLConfig config;
-  EGLContext context;
-};
-static_assert(sizeof(GraphicsBindingOpenGLESAndroidKHR) ==
-                  sizeof(XrGraphicsBindingOpenGLESAndroidKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingOpenGLESAndroidKHR as a raw
-//! XrGraphicsBindingOpenGLESAndroidKHR
-//! @relates GraphicsBindingOpenGLESAndroidKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR const *
-get(GraphicsBindingOpenGLESAndroidKHR const &h) {
-  return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingOpenGLESAndroidKHR
-//! as the address of a raw XrGraphicsBindingOpenGLESAndroidKHR
-//! @relates GraphicsBindingOpenGLESAndroidKHR
-OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR *
-put(GraphicsBindingOpenGLESAndroidKHR &h) {
-  return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES) &&
-       // defined(XR_USE_PLATFORM_ANDROID)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
-    struct SwapchainImageOpenGLESKHR : public traits::TypedStructTraits <
-    SwapchainImageOpenGLESKHR > {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageOpenGLESKHR>;
-
-public:
-  // ctor
-  SwapchainImageOpenGLESKHR(uint32_t image_ = 0)
-      :
-
-        Parent(StructureType::SwapchainImageOpenglEsKHR),
-
-        image{image_} {}
-  operator const XrSwapchainImageOpenGLESKHR &() const {
-    return *reinterpret_cast<const XrSwapchainImageOpenGLESKHR *>(this);
-  }
-  operator XrSwapchainImageOpenGLESKHR &() {
-    return *reinterpret_cast<XrSwapchainImageOpenGLESKHR *>(this);
-  }
-
-  // member decl
-  uint32_t image;
-};
-static_assert(sizeof(SwapchainImageOpenGLESKHR) ==
-                  sizeof(XrSwapchainImageOpenGLESKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageOpenGLESKHR as a raw
-//! XrSwapchainImageOpenGLESKHR
-//! @relates SwapchainImageOpenGLESKHR
-OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR const *
-get(SwapchainImageOpenGLESKHR const &h) {
-  return &(h.operator XrSwapchainImageOpenGLESKHR const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageOpenGLESKHR as the
-//! address of a raw XrSwapchainImageOpenGLESKHR
-//! @relates SwapchainImageOpenGLESKHR
-OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR *
-put(SwapchainImageOpenGLESKHR &h) {
-  return &(h.operator XrSwapchainImageOpenGLESKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
-
-#if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
-    struct GraphicsRequirementsOpenGLESKHR : public traits::TypedStructTraits <
-    GraphicsRequirementsOpenGLESKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsRequirementsOpenGLESKHR>;
-
-public:
-  // ctor
-  GraphicsRequirementsOpenGLESKHR(const Version &minApiVersionSupported_ = {},
-                                  const Version &maxApiVersionSupported_ = {})
-      :
-
-        Parent(StructureType::GraphicsRequirementsOpenglEsKHR),
-
-        minApiVersionSupported{minApiVersionSupported_},
-        maxApiVersionSupported{maxApiVersionSupported_} {}
-  operator const XrGraphicsRequirementsOpenGLESKHR &() const {
-    return *reinterpret_cast<const XrGraphicsRequirementsOpenGLESKHR *>(this);
-  }
-  operator XrGraphicsRequirementsOpenGLESKHR &() {
-    return *reinterpret_cast<XrGraphicsRequirementsOpenGLESKHR *>(this);
-  }
-
-  // member decl
-  Version minApiVersionSupported;
-  Version maxApiVersionSupported;
-};
-static_assert(sizeof(GraphicsRequirementsOpenGLESKHR) ==
-                  sizeof(XrGraphicsRequirementsOpenGLESKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsRequirementsOpenGLESKHR as a raw
-//! XrGraphicsRequirementsOpenGLESKHR
-//! @relates GraphicsRequirementsOpenGLESKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR const *
-get(GraphicsRequirementsOpenGLESKHR const &h) {
-  return &(h.operator XrGraphicsRequirementsOpenGLESKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsRequirementsOpenGLESKHR as
-//! the address of a raw XrGraphicsRequirementsOpenGLESKHR
-//! @relates GraphicsRequirementsOpenGLESKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR *
-put(GraphicsRequirementsOpenGLESKHR &h) {
-  return &(h.operator XrGraphicsRequirementsOpenGLESKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
-
-#if defined(XR_USE_GRAPHICS_API_VULKAN)
-    struct GraphicsBindingVulkanKHR : public traits::TypedStructTraits <
-    GraphicsBindingVulkanKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingVulkanKHR>;
-
-public:
-  // ctor
-  GraphicsBindingVulkanKHR(VkInstance instance_ = {},
-                           VkPhysicalDevice physicalDevice_ = {},
-                           VkDevice device_ = {},
-                           uint32_t queueFamilyIndex_ = 0,
-                           uint32_t queueIndex_ = 0)
-      :
-
-        Parent(StructureType::GraphicsBindingVulkanKHR),
-
-        instance{instance_}, physicalDevice{physicalDevice_}, device{device_},
-        queueFamilyIndex{queueFamilyIndex_}, queueIndex{queueIndex_} {}
-  operator const XrGraphicsBindingVulkanKHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingVulkanKHR *>(this);
-  }
-  operator XrGraphicsBindingVulkanKHR &() {
-    return *reinterpret_cast<XrGraphicsBindingVulkanKHR *>(this);
-  }
-
-  // member decl
-  VkInstance instance;
-  VkPhysicalDevice physicalDevice;
-  VkDevice device;
-  uint32_t queueFamilyIndex;
-  uint32_t queueIndex;
-};
-static_assert(sizeof(GraphicsBindingVulkanKHR) ==
-                  sizeof(XrGraphicsBindingVulkanKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingVulkanKHR as a raw
-//! XrGraphicsBindingVulkanKHR
-//! @relates GraphicsBindingVulkanKHR
-OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR const *
-get(GraphicsBindingVulkanKHR const &h) {
-  return &(h.operator XrGraphicsBindingVulkanKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingVulkanKHR as the
-//! address of a raw XrGraphicsBindingVulkanKHR
-//! @relates GraphicsBindingVulkanKHR
-OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR *put(GraphicsBindingVulkanKHR &h) {
-  return &(h.operator XrGraphicsBindingVulkanKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
-
-#if defined(XR_USE_GRAPHICS_API_VULKAN)
-    struct SwapchainImageVulkanKHR : public traits::TypedStructTraits <
-    SwapchainImageVulkanKHR > {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageVulkanKHR>;
-
-public:
-  // ctor
-  SwapchainImageVulkanKHR(VkImage image_ = {})
-      :
-
-        Parent(StructureType::SwapchainImageVulkanKHR),
-
-        image{image_} {}
-  operator const XrSwapchainImageVulkanKHR &() const {
-    return *reinterpret_cast<const XrSwapchainImageVulkanKHR *>(this);
-  }
-  operator XrSwapchainImageVulkanKHR &() {
-    return *reinterpret_cast<XrSwapchainImageVulkanKHR *>(this);
-  }
-
-  // member decl
-  VkImage image;
-};
-static_assert(sizeof(SwapchainImageVulkanKHR) ==
-                  sizeof(XrSwapchainImageVulkanKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageVulkanKHR as a raw
-//! XrSwapchainImageVulkanKHR
-//! @relates SwapchainImageVulkanKHR
-OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR const *
-get(SwapchainImageVulkanKHR const &h) {
-  return &(h.operator XrSwapchainImageVulkanKHR const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageVulkanKHR as the
-//! address of a raw XrSwapchainImageVulkanKHR
-//! @relates SwapchainImageVulkanKHR
-OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR *put(SwapchainImageVulkanKHR &h) {
-  return &(h.operator XrSwapchainImageVulkanKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
-
-#if defined(XR_USE_GRAPHICS_API_VULKAN)
-    struct GraphicsRequirementsVulkanKHR : public traits::TypedStructTraits <
-    GraphicsRequirementsVulkanKHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsRequirementsVulkanKHR>;
-
-public:
-  // ctor
-  GraphicsRequirementsVulkanKHR(const Version &minApiVersionSupported_ = {},
-                                const Version &maxApiVersionSupported_ = {})
-      :
-
-        Parent(StructureType::GraphicsRequirementsVulkanKHR),
-
-        minApiVersionSupported{minApiVersionSupported_},
-        maxApiVersionSupported{maxApiVersionSupported_} {}
-  operator const XrGraphicsRequirementsVulkanKHR &() const {
-    return *reinterpret_cast<const XrGraphicsRequirementsVulkanKHR *>(this);
-  }
-  operator XrGraphicsRequirementsVulkanKHR &() {
-    return *reinterpret_cast<XrGraphicsRequirementsVulkanKHR *>(this);
-  }
-
-  // member decl
-  Version minApiVersionSupported;
-  Version maxApiVersionSupported;
-};
-static_assert(sizeof(GraphicsRequirementsVulkanKHR) ==
-                  sizeof(XrGraphicsRequirementsVulkanKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsRequirementsVulkanKHR as a raw
-//! XrGraphicsRequirementsVulkanKHR
-//! @relates GraphicsRequirementsVulkanKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR const *
-get(GraphicsRequirementsVulkanKHR const &h) {
-  return &(h.operator XrGraphicsRequirementsVulkanKHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsRequirementsVulkanKHR as
-//! the address of a raw XrGraphicsRequirementsVulkanKHR
-//! @relates GraphicsRequirementsVulkanKHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR *
-put(GraphicsRequirementsVulkanKHR &h) {
-  return &(h.operator XrGraphicsRequirementsVulkanKHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_VULKAN)
-
-#if defined(XR_USE_GRAPHICS_API_D3D11)
-    struct GraphicsBindingD3D11KHR : public traits::TypedStructTraits <
-    GraphicsBindingD3D11KHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingD3D11KHR>;
-
-public:
-  // ctor
-  GraphicsBindingD3D11KHR(ID3D11Device *device_ = nullptr)
-      :
-
-        Parent(StructureType::GraphicsBindingD3D11KHR),
-
-        device{device_} {}
-  operator const XrGraphicsBindingD3D11KHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingD3D11KHR *>(this);
-  }
-  operator XrGraphicsBindingD3D11KHR &() {
-    return *reinterpret_cast<XrGraphicsBindingD3D11KHR *>(this);
-  }
-
-  // member decl
-  ID3D11Device *device;
-};
-static_assert(sizeof(GraphicsBindingD3D11KHR) ==
-                  sizeof(XrGraphicsBindingD3D11KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingD3D11KHR as a raw
-//! XrGraphicsBindingD3D11KHR
-//! @relates GraphicsBindingD3D11KHR
-OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR const *
-get(GraphicsBindingD3D11KHR const &h) {
-  return &(h.operator XrGraphicsBindingD3D11KHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingD3D11KHR as the
-//! address of a raw XrGraphicsBindingD3D11KHR
-//! @relates GraphicsBindingD3D11KHR
-OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR *put(GraphicsBindingD3D11KHR &h) {
-  return &(h.operator XrGraphicsBindingD3D11KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D11)
-
-#if defined(XR_USE_GRAPHICS_API_D3D11)
-    struct SwapchainImageD3D11KHR : public traits::TypedStructTraits <
-    SwapchainImageD3D11KHR > {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageD3D11KHR>;
-
-public:
-  // ctor
-  SwapchainImageD3D11KHR(ID3D11Texture2D *texture_ = nullptr)
-      :
-
-        Parent(StructureType::SwapchainImageD3D11KHR),
-
-        texture{texture_} {}
-  operator const XrSwapchainImageD3D11KHR &() const {
-    return *reinterpret_cast<const XrSwapchainImageD3D11KHR *>(this);
-  }
-  operator XrSwapchainImageD3D11KHR &() {
-    return *reinterpret_cast<XrSwapchainImageD3D11KHR *>(this);
-  }
-
-  // member decl
-  ID3D11Texture2D *texture;
-};
-static_assert(sizeof(SwapchainImageD3D11KHR) ==
-                  sizeof(XrSwapchainImageD3D11KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageD3D11KHR as a raw
-//! XrSwapchainImageD3D11KHR
-//! @relates SwapchainImageD3D11KHR
-OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR const *
-get(SwapchainImageD3D11KHR const &h) {
-  return &(h.operator XrSwapchainImageD3D11KHR const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageD3D11KHR as the
-//! address of a raw XrSwapchainImageD3D11KHR
-//! @relates SwapchainImageD3D11KHR
-OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR *put(SwapchainImageD3D11KHR &h) {
-  return &(h.operator XrSwapchainImageD3D11KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D11)
-
-#if defined(XR_USE_GRAPHICS_API_D3D11)
-    struct GraphicsRequirementsD3D11KHR : public traits::TypedStructTraits <
-    GraphicsRequirementsD3D11KHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsRequirementsD3D11KHR>;
-
-public:
-  // ctor
-  GraphicsRequirementsD3D11KHR(LUID adapterLuid_ = {},
-                               D3D_FEATURE_LEVEL minFeatureLevel_ = {})
-      :
-
-        Parent(StructureType::GraphicsRequirementsD3D11KHR),
-
-        adapterLuid{adapterLuid_}, minFeatureLevel{minFeatureLevel_} {}
-  operator const XrGraphicsRequirementsD3D11KHR &() const {
-    return *reinterpret_cast<const XrGraphicsRequirementsD3D11KHR *>(this);
-  }
-  operator XrGraphicsRequirementsD3D11KHR &() {
-    return *reinterpret_cast<XrGraphicsRequirementsD3D11KHR *>(this);
-  }
-
-  // member decl
-  LUID adapterLuid;
-  D3D_FEATURE_LEVEL minFeatureLevel;
-};
-static_assert(sizeof(GraphicsRequirementsD3D11KHR) ==
-                  sizeof(XrGraphicsRequirementsD3D11KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsRequirementsD3D11KHR as a raw
-//! XrGraphicsRequirementsD3D11KHR
-//! @relates GraphicsRequirementsD3D11KHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR const *
-get(GraphicsRequirementsD3D11KHR const &h) {
-  return &(h.operator XrGraphicsRequirementsD3D11KHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsRequirementsD3D11KHR as
-//! the address of a raw XrGraphicsRequirementsD3D11KHR
-//! @relates GraphicsRequirementsD3D11KHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR *
-put(GraphicsRequirementsD3D11KHR &h) {
-  return &(h.operator XrGraphicsRequirementsD3D11KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D11)
-
-#if defined(XR_USE_GRAPHICS_API_D3D12)
-    struct GraphicsBindingD3D12KHR : public traits::TypedStructTraits <
-    GraphicsBindingD3D12KHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsBindingD3D12KHR>;
-
-public:
-  // ctor
-  GraphicsBindingD3D12KHR(ID3D12Device *device_ = nullptr,
-                          ID3D12CommandQueue *queue_ = nullptr)
-      :
-
-        Parent(StructureType::GraphicsBindingD3D12KHR),
-
-        device{device_}, queue{queue_} {}
-  operator const XrGraphicsBindingD3D12KHR &() const {
-    return *reinterpret_cast<const XrGraphicsBindingD3D12KHR *>(this);
-  }
-  operator XrGraphicsBindingD3D12KHR &() {
-    return *reinterpret_cast<XrGraphicsBindingD3D12KHR *>(this);
-  }
-
-  // member decl
-  ID3D12Device *device;
-  ID3D12CommandQueue *queue;
-};
-static_assert(sizeof(GraphicsBindingD3D12KHR) ==
-                  sizeof(XrGraphicsBindingD3D12KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsBindingD3D12KHR as a raw
-//! XrGraphicsBindingD3D12KHR
-//! @relates GraphicsBindingD3D12KHR
-OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR const *
-get(GraphicsBindingD3D12KHR const &h) {
-  return &(h.operator XrGraphicsBindingD3D12KHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsBindingD3D12KHR as the
-//! address of a raw XrGraphicsBindingD3D12KHR
-//! @relates GraphicsBindingD3D12KHR
-OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR *put(GraphicsBindingD3D12KHR &h) {
-  return &(h.operator XrGraphicsBindingD3D12KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D12)
-
-#if defined(XR_USE_GRAPHICS_API_D3D12)
-    struct SwapchainImageD3D12KHR : public traits::TypedStructTraits <
-    SwapchainImageD3D12KHR > {
-private:
-  using Parent = traits::TypedStructTraits<SwapchainImageD3D12KHR>;
-
-public:
-  // ctor
-  SwapchainImageD3D12KHR(ID3D12Resource *texture_ = nullptr)
-      :
-
-        Parent(StructureType::SwapchainImageD3D12KHR),
-
-        texture{texture_} {}
-  operator const XrSwapchainImageD3D12KHR &() const {
-    return *reinterpret_cast<const XrSwapchainImageD3D12KHR *>(this);
-  }
-  operator XrSwapchainImageD3D12KHR &() {
-    return *reinterpret_cast<XrSwapchainImageD3D12KHR *>(this);
-  }
-
-  // member decl
-  ID3D12Resource *texture;
-};
-static_assert(sizeof(SwapchainImageD3D12KHR) ==
-                  sizeof(XrSwapchainImageD3D12KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SwapchainImageD3D12KHR as a raw
-//! XrSwapchainImageD3D12KHR
-//! @relates SwapchainImageD3D12KHR
-OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR const *
-get(SwapchainImageD3D12KHR const &h) {
-  return &(h.operator XrSwapchainImageD3D12KHR const &());
-}
-
-//! @brief Free function accessor for passing SwapchainImageD3D12KHR as the
-//! address of a raw XrSwapchainImageD3D12KHR
-//! @relates SwapchainImageD3D12KHR
-OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR *put(SwapchainImageD3D12KHR &h) {
-  return &(h.operator XrSwapchainImageD3D12KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D12)
-
-#if defined(XR_USE_GRAPHICS_API_D3D12)
-    struct GraphicsRequirementsD3D12KHR : public traits::TypedStructTraits <
-    GraphicsRequirementsD3D12KHR > {
-private:
-  using Parent = traits::TypedStructTraits<GraphicsRequirementsD3D12KHR>;
-
-public:
-  // ctor
-  GraphicsRequirementsD3D12KHR(LUID adapterLuid_ = {},
-                               D3D_FEATURE_LEVEL minFeatureLevel_ = {})
-      :
-
-        Parent(StructureType::GraphicsRequirementsD3D12KHR),
-
-        adapterLuid{adapterLuid_}, minFeatureLevel{minFeatureLevel_} {}
-  operator const XrGraphicsRequirementsD3D12KHR &() const {
-    return *reinterpret_cast<const XrGraphicsRequirementsD3D12KHR *>(this);
-  }
-  operator XrGraphicsRequirementsD3D12KHR &() {
-    return *reinterpret_cast<XrGraphicsRequirementsD3D12KHR *>(this);
-  }
-
-  // member decl
-  LUID adapterLuid;
-  D3D_FEATURE_LEVEL minFeatureLevel;
-};
-static_assert(sizeof(GraphicsRequirementsD3D12KHR) ==
-                  sizeof(XrGraphicsRequirementsD3D12KHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for GraphicsRequirementsD3D12KHR as a raw
-//! XrGraphicsRequirementsD3D12KHR
-//! @relates GraphicsRequirementsD3D12KHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR const *
-get(GraphicsRequirementsD3D12KHR const &h) {
-  return &(h.operator XrGraphicsRequirementsD3D12KHR const &());
-}
-
-//! @brief Free function accessor for passing GraphicsRequirementsD3D12KHR as
-//! the address of a raw XrGraphicsRequirementsD3D12KHR
-//! @relates GraphicsRequirementsD3D12KHR
-OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR *
-put(GraphicsRequirementsD3D12KHR &h) {
-  return &(h.operator XrGraphicsRequirementsD3D12KHR &());
-}
-#endif // defined(XR_USE_GRAPHICS_API_D3D12)
-
-    struct VisibilityMaskKHR : public traits::TypedStructTraits <
-    VisibilityMaskKHR > {
-private:
-  using Parent = traits::TypedStructTraits<VisibilityMaskKHR>;
-
-public:
-  // ctor
-  VisibilityMaskKHR(uint32_t vertexCapacityInput_ = 0,
-                    uint32_t vertexCountOutput_ = 0,
-                    Vector2f *vertices_ = nullptr,
-                    uint32_t indexCapacityInput_ = 0,
-                    uint32_t indexCountOutput_ = 0,
-                    uint32_t *indices_ = nullptr)
-      :
-
-        Parent(StructureType::VisibilityMaskKHR),
-
-        vertexCapacityInput{vertexCapacityInput_},
-        vertexCountOutput{vertexCountOutput_}, vertices{vertices_},
-        indexCapacityInput{indexCapacityInput_},
-        indexCountOutput{indexCountOutput_}, indices{indices_} {}
-  operator const XrVisibilityMaskKHR &() const {
-    return *reinterpret_cast<const XrVisibilityMaskKHR *>(this);
-  }
-  operator XrVisibilityMaskKHR &() {
-    return *reinterpret_cast<XrVisibilityMaskKHR *>(this);
-  }
-
-  // member decl
-  uint32_t vertexCapacityInput;
-  uint32_t vertexCountOutput;
-  Vector2f *vertices;
-  uint32_t indexCapacityInput;
-  uint32_t indexCountOutput;
-  uint32_t *indices;
-};
-static_assert(sizeof(VisibilityMaskKHR) == sizeof(XrVisibilityMaskKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for VisibilityMaskKHR as a raw
-//! XrVisibilityMaskKHR
-//! @relates VisibilityMaskKHR
-OPENXR_HPP_INLINE XrVisibilityMaskKHR const *get(VisibilityMaskKHR const &h) {
-  return &(h.operator XrVisibilityMaskKHR const &());
-}
-
-//! @brief Free function accessor for passing VisibilityMaskKHR as the address
-//! of a raw XrVisibilityMaskKHR
-//! @relates VisibilityMaskKHR
-OPENXR_HPP_INLINE XrVisibilityMaskKHR *put(VisibilityMaskKHR &h) {
-  return &(h.operator XrVisibilityMaskKHR &());
-}
-
-struct EventDataVisibilityMaskChangedKHR
-    : public traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR>;
-
-public:
-  // ctor
-  EventDataVisibilityMaskChangedKHR(
-      const Session &session_ = {},
-      const ViewConfigurationType &viewConfigurationType_ = {},
-      uint32_t viewIndex_ = 0)
-      :
-
-        Parent(StructureType::EventDataVisibilityMaskChangedKHR),
-
-        session{session_},
-        viewConfigurationType{viewConfigurationType_}, viewIndex{viewIndex_} {}
-  operator const XrEventDataVisibilityMaskChangedKHR &() const {
-    return *reinterpret_cast<const XrEventDataVisibilityMaskChangedKHR *>(this);
-  }
-  operator XrEventDataVisibilityMaskChangedKHR &() {
-    return *reinterpret_cast<XrEventDataVisibilityMaskChangedKHR *>(this);
-  }
-
-  // member decl
-  Session session;
-  ViewConfigurationType viewConfigurationType;
-  uint32_t viewIndex;
-};
-static_assert(sizeof(EventDataVisibilityMaskChangedKHR) ==
-                  sizeof(XrEventDataVisibilityMaskChangedKHR),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataVisibilityMaskChangedKHR as a raw
-//! XrEventDataVisibilityMaskChangedKHR
-//! @relates EventDataVisibilityMaskChangedKHR
-OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR const *
-get(EventDataVisibilityMaskChangedKHR const &h) {
-  return &(h.operator XrEventDataVisibilityMaskChangedKHR const &());
-}
-
-//! @brief Free function accessor for passing EventDataVisibilityMaskChangedKHR
-//! as the address of a raw XrEventDataVisibilityMaskChangedKHR
-//! @relates EventDataVisibilityMaskChangedKHR
-OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR *
-put(EventDataVisibilityMaskChangedKHR &h) {
-  return &(h.operator XrEventDataVisibilityMaskChangedKHR &());
-}
-
-struct EventDataPerfSettingsEXT
-    : public traits::TypedStructTraits<EventDataPerfSettingsEXT> {
-private:
-  using Parent = traits::TypedStructTraits<EventDataPerfSettingsEXT>;
-
-public:
-  // ctor
-  EventDataPerfSettingsEXT(
-      const PerfSettingsDomainEXT &domain_ = {},
-      const PerfSettingsSubDomainEXT &subDomain_ = {},
-      const PerfSettingsNotificationLevelEXT &fromLevel_ = {},
-      const PerfSettingsNotificationLevelEXT &toLevel_ = {})
-      :
-
-        Parent(StructureType::EventDataPerfSettingsEXT),
-
-        domain{domain_}, subDomain{subDomain_}, fromLevel{fromLevel_},
-        toLevel{toLevel_} {}
-  operator const XrEventDataPerfSettingsEXT &() const {
-    return *reinterpret_cast<const XrEventDataPerfSettingsEXT *>(this);
-  }
-  operator XrEventDataPerfSettingsEXT &() {
-    return *reinterpret_cast<XrEventDataPerfSettingsEXT *>(this);
-  }
-
-  // member decl
-  PerfSettingsDomainEXT domain;
-  PerfSettingsSubDomainEXT subDomain;
-  PerfSettingsNotificationLevelEXT fromLevel;
-  PerfSettingsNotificationLevelEXT toLevel;
-};
-static_assert(sizeof(EventDataPerfSettingsEXT) ==
-                  sizeof(XrEventDataPerfSettingsEXT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for EventDataPerfSettingsEXT as a raw
-//! XrEventDataPerfSettingsEXT
-//! @relates EventDataPerfSettingsEXT
-OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT const *
-get(EventDataPerfSettingsEXT const &h) {
-  return &(h.operator XrEventDataPerfSettingsEXT const &());
-}
-
-//! @brief Free function accessor for passing EventDataPerfSettingsEXT as the
-//! address of a raw XrEventDataPerfSettingsEXT
-//! @relates EventDataPerfSettingsEXT
-OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT *put(EventDataPerfSettingsEXT &h) {
-  return &(h.operator XrEventDataPerfSettingsEXT &());
-}
-
-struct DebugUtilsObjectNameInfoEXT
-    : public traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT> {
-private:
-  using Parent = traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT>;
-
-public:
-  // ctor
-  DebugUtilsObjectNameInfoEXT(const ObjectType &objectType_ = {},
-                              uint64_t objectHandle_ = 0,
-                              const char *objectName_ = nullptr)
-      :
-
-        Parent(StructureType::DebugUtilsObjectNameInfoEXT),
-
-        objectType{objectType_}, objectHandle{objectHandle_},
-        objectName{objectName_} {}
-  operator const XrDebugUtilsObjectNameInfoEXT &() const {
-    return *reinterpret_cast<const XrDebugUtilsObjectNameInfoEXT *>(this);
-  }
-  operator XrDebugUtilsObjectNameInfoEXT &() {
-    return *reinterpret_cast<XrDebugUtilsObjectNameInfoEXT *>(this);
-  }
-
-  // member decl
-  ObjectType objectType;
-  uint64_t objectHandle;
-  const char *objectName;
-};
-static_assert(sizeof(DebugUtilsObjectNameInfoEXT) ==
-                  sizeof(XrDebugUtilsObjectNameInfoEXT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for DebugUtilsObjectNameInfoEXT as a raw
-//! XrDebugUtilsObjectNameInfoEXT
-//! @relates DebugUtilsObjectNameInfoEXT
-OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT const *
-get(DebugUtilsObjectNameInfoEXT const &h) {
-  return &(h.operator XrDebugUtilsObjectNameInfoEXT const &());
-}
-
-//! @brief Free function accessor for passing DebugUtilsObjectNameInfoEXT as the
-//! address of a raw XrDebugUtilsObjectNameInfoEXT
-//! @relates DebugUtilsObjectNameInfoEXT
-OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT *
-put(DebugUtilsObjectNameInfoEXT &h) {
-  return &(h.operator XrDebugUtilsObjectNameInfoEXT &());
-}
-
-struct DebugUtilsLabelEXT
-    : public traits::TypedStructTraits<DebugUtilsLabelEXT> {
-private:
-  using Parent = traits::TypedStructTraits<DebugUtilsLabelEXT>;
-
-public:
-  // ctor
-  DebugUtilsLabelEXT(const char *labelName_ = nullptr)
-      :
-
-        Parent(StructureType::DebugUtilsLabelEXT),
-
-        labelName{labelName_} {}
-  operator const XrDebugUtilsLabelEXT &() const {
-    return *reinterpret_cast<const XrDebugUtilsLabelEXT *>(this);
-  }
-  operator XrDebugUtilsLabelEXT &() {
-    return *reinterpret_cast<XrDebugUtilsLabelEXT *>(this);
-  }
-
-  // member decl
-  const char *labelName;
-};
-static_assert(sizeof(DebugUtilsLabelEXT) == sizeof(XrDebugUtilsLabelEXT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for DebugUtilsLabelEXT as a raw
-//! XrDebugUtilsLabelEXT
-//! @relates DebugUtilsLabelEXT
-OPENXR_HPP_INLINE XrDebugUtilsLabelEXT const *get(DebugUtilsLabelEXT const &h) {
-  return &(h.operator XrDebugUtilsLabelEXT const &());
-}
-
-//! @brief Free function accessor for passing DebugUtilsLabelEXT as the address
-//! of a raw XrDebugUtilsLabelEXT
-//! @relates DebugUtilsLabelEXT
-OPENXR_HPP_INLINE XrDebugUtilsLabelEXT *put(DebugUtilsLabelEXT &h) {
-  return &(h.operator XrDebugUtilsLabelEXT &());
-}
-
-struct DebugUtilsMessengerCallbackDataEXT
-    : public traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT> {
-private:
-  using Parent = traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT>;
-
-public:
-  // ctor
-  DebugUtilsMessengerCallbackDataEXT(
-      const char *messageId_ = nullptr, const char *functionName_ = nullptr,
-      const char *message_ = nullptr, uint32_t objectCount_ = 0,
-      DebugUtilsObjectNameInfoEXT *objects_ = nullptr,
-      uint32_t sessionLabelCount_ = 0,
-      DebugUtilsLabelEXT *sessionLabels_ = nullptr)
-      :
-
-        Parent(StructureType::DebugUtilsMessengerCallbackDataEXT),
-
-        messageId{messageId_}, functionName{functionName_}, message{message_},
-        objectCount{objectCount_}, objects{objects_},
-        sessionLabelCount{sessionLabelCount_}, sessionLabels{sessionLabels_} {}
-  operator const XrDebugUtilsMessengerCallbackDataEXT &() const {
-    return *reinterpret_cast<const XrDebugUtilsMessengerCallbackDataEXT *>(
-        this);
-  }
-  operator XrDebugUtilsMessengerCallbackDataEXT &() {
-    return *reinterpret_cast<XrDebugUtilsMessengerCallbackDataEXT *>(this);
-  }
-
-  // member decl
-  const char *messageId;
-  const char *functionName;
-  const char *message;
-  uint32_t objectCount;
-  DebugUtilsObjectNameInfoEXT *objects;
-  uint32_t sessionLabelCount;
-  DebugUtilsLabelEXT *sessionLabels;
-};
-static_assert(sizeof(DebugUtilsMessengerCallbackDataEXT) ==
-                  sizeof(XrDebugUtilsMessengerCallbackDataEXT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for DebugUtilsMessengerCallbackDataEXT as a
-//! raw XrDebugUtilsMessengerCallbackDataEXT
-//! @relates DebugUtilsMessengerCallbackDataEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT const *
-get(DebugUtilsMessengerCallbackDataEXT const &h) {
-  return &(h.operator XrDebugUtilsMessengerCallbackDataEXT const &());
-}
-
-//! @brief Free function accessor for passing DebugUtilsMessengerCallbackDataEXT
-//! as the address of a raw XrDebugUtilsMessengerCallbackDataEXT
-//! @relates DebugUtilsMessengerCallbackDataEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT *
-put(DebugUtilsMessengerCallbackDataEXT &h) {
-  return &(h.operator XrDebugUtilsMessengerCallbackDataEXT &());
-}
-
-struct DebugUtilsMessengerCreateInfoEXT
-    : public traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT> {
-private:
-  using Parent = traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT>;
-
-public:
-  // ctor
-  DebugUtilsMessengerCreateInfoEXT(
-      const DebugUtilsMessageSeverityFlagsEXT &messageSeverities_ = {},
-      const DebugUtilsMessageTypeFlagsEXT &messageTypes_ = {},
-      PFN_xrDebugUtilsMessengerCallbackEXT userCallback_ = nullptr,
-      void *XR_MAY_ALIAS userData_ = nullptr)
-      :
-
-        Parent(StructureType::DebugUtilsMessengerCreateInfoEXT),
-
-        messageSeverities{messageSeverities_}, messageTypes{messageTypes_},
-        userCallback{userCallback_}, userData{userData_} {}
-  operator const XrDebugUtilsMessengerCreateInfoEXT &() const {
-    return *reinterpret_cast<const XrDebugUtilsMessengerCreateInfoEXT *>(this);
-  }
-  operator XrDebugUtilsMessengerCreateInfoEXT &() {
-    return *reinterpret_cast<XrDebugUtilsMessengerCreateInfoEXT *>(this);
-  }
-
-  // member decl
-  DebugUtilsMessageSeverityFlagsEXT messageSeverities;
-  DebugUtilsMessageTypeFlagsEXT messageTypes;
-  PFN_xrDebugUtilsMessengerCallbackEXT userCallback;
-  void *XR_MAY_ALIAS userData;
-};
-static_assert(sizeof(DebugUtilsMessengerCreateInfoEXT) ==
-                  sizeof(XrDebugUtilsMessengerCreateInfoEXT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for DebugUtilsMessengerCreateInfoEXT as a raw
-//! XrDebugUtilsMessengerCreateInfoEXT
-//! @relates DebugUtilsMessengerCreateInfoEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT const *
-get(DebugUtilsMessengerCreateInfoEXT const &h) {
-  return &(h.operator XrDebugUtilsMessengerCreateInfoEXT const &());
-}
-
-//! @brief Free function accessor for passing DebugUtilsMessengerCreateInfoEXT
-//! as the address of a raw XrDebugUtilsMessengerCreateInfoEXT
-//! @relates DebugUtilsMessengerCreateInfoEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT *
-put(DebugUtilsMessengerCreateInfoEXT &h) {
-  return &(h.operator XrDebugUtilsMessengerCreateInfoEXT &());
-}
-
-struct SpatialAnchorCreateInfoMSFT
-    : public traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT> {
-private:
-  using Parent = traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT>;
-
-public:
-  // ctor
-  SpatialAnchorCreateInfoMSFT(const Space &space_ = {}, const Posef &pose_ = {},
-                              const Time &time_ = {})
-      :
-
-        Parent(StructureType::SpatialAnchorCreateInfoMSFT),
-
-        space{space_}, pose{pose_}, time{time_} {}
-  operator const XrSpatialAnchorCreateInfoMSFT &() const {
-    return *reinterpret_cast<const XrSpatialAnchorCreateInfoMSFT *>(this);
-  }
-  operator XrSpatialAnchorCreateInfoMSFT &() {
-    return *reinterpret_cast<XrSpatialAnchorCreateInfoMSFT *>(this);
-  }
-
-  // member decl
-  Space space;
-  Posef pose;
-  Time time;
-};
-static_assert(sizeof(SpatialAnchorCreateInfoMSFT) ==
-                  sizeof(XrSpatialAnchorCreateInfoMSFT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SpatialAnchorCreateInfoMSFT as a raw
-//! XrSpatialAnchorCreateInfoMSFT
-//! @relates SpatialAnchorCreateInfoMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT const *
-get(SpatialAnchorCreateInfoMSFT const &h) {
-  return &(h.operator XrSpatialAnchorCreateInfoMSFT const &());
-}
-
-//! @brief Free function accessor for passing SpatialAnchorCreateInfoMSFT as the
-//! address of a raw XrSpatialAnchorCreateInfoMSFT
-//! @relates SpatialAnchorCreateInfoMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT *
-put(SpatialAnchorCreateInfoMSFT &h) {
-  return &(h.operator XrSpatialAnchorCreateInfoMSFT &());
-}
-
-struct SpatialAnchorSpaceCreateInfoMSFT
-    : public traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT> {
-private:
-  using Parent = traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT>;
-
-public:
-  // ctor
-  SpatialAnchorSpaceCreateInfoMSFT(const SpatialAnchorMSFT &anchor_ = {},
-                                   const Posef &poseInAnchorSpace_ = {})
-      :
-
-        Parent(StructureType::SpatialAnchorSpaceCreateInfoMSFT),
-
-        anchor{anchor_}, poseInAnchorSpace{poseInAnchorSpace_} {}
-  operator const XrSpatialAnchorSpaceCreateInfoMSFT &() const {
-    return *reinterpret_cast<const XrSpatialAnchorSpaceCreateInfoMSFT *>(this);
-  }
-  operator XrSpatialAnchorSpaceCreateInfoMSFT &() {
-    return *reinterpret_cast<XrSpatialAnchorSpaceCreateInfoMSFT *>(this);
-  }
-
-  // member decl
-  SpatialAnchorMSFT anchor;
-  Posef poseInAnchorSpace;
-};
-static_assert(sizeof(SpatialAnchorSpaceCreateInfoMSFT) ==
-                  sizeof(XrSpatialAnchorSpaceCreateInfoMSFT),
-              "struct and wrapper have different size!");
-
-//! @brief Free function accessor for SpatialAnchorSpaceCreateInfoMSFT as a raw
-//! XrSpatialAnchorSpaceCreateInfoMSFT
-//! @relates SpatialAnchorSpaceCreateInfoMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT const *
-get(SpatialAnchorSpaceCreateInfoMSFT const &h) {
-  return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT const &());
-}
-
-//! @brief Free function accessor for passing SpatialAnchorSpaceCreateInfoMSFT
-//! as the address of a raw XrSpatialAnchorSpaceCreateInfoMSFT
-//! @relates SpatialAnchorSpaceCreateInfoMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT *
-put(SpatialAnchorSpaceCreateInfoMSFT &h) {
-  return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT &());
-}
-
-} // namespace OPENXR_HPP_NAMESPACE
-
-namespace OPENXR_HPP_NAMESPACE {
-
-/*!
- * @brief Dispatch class for OpenXR that looks up all functions using a provided
- * or statically-available xrGetInstanceProcAddr function and the optional
- * Instance.
- *
- * This is safer to use, especially in large/multi-module applications, than
- * DispatchLoaderStatic, and is thus recommended.
- *
- * By default, it is lazy-populating: only populating a function pointer when it
- * is attempted to be called (if this object is not const). You can
- * early-populate it using the createFullyPopulated() factory method, providing
- * an Instance and optionally a xrGetInstanceProcAddr function pointer.
- *
- * This class stores all function pointers as type-erased PFN_xrVoidFunction,
- * casting at time of call. This allows the same memory representation to be
- * used across translation units that may not share the same platform defines.
- * Only the member function trampolines containing the casts are conditional on
- * platform defines.
- *
- * @ingroup dispatch
- */
-class DispatchLoaderDynamic {
-public:
-  /*!
-   * @name Constuctor/Factory functions
-   * @{
-   */
-  /*!
-   * @brief Create a lazy-populating dispatch table.
-   *
-   * If getInstanceProcAddr is not supplied, the static ::xrGetInstanceProcAddr
-   * will be used.
-   */
-  explicit DispatchLoaderDynamic(
-      Instance instance = nullptr,
-      PFN_xrGetInstanceProcAddr getInstanceProcAddr = nullptr)
-      : m_instance(instance),
-        pfnGetInstanceProcAddr(
-            reinterpret_cast<PFN_xrVoidFunction>(getInstanceProcAddr)) {
-    if (pfnGetInstanceProcAddr == nullptr) {
-      pfnGetInstanceProcAddr =
-          reinterpret_cast<PFN_xrVoidFunction>(&::xrGetInstanceProcAddr);
-    }
-  }
-
-  /*!
-   * @brief Create a fully-populated dispatch table given a non-null XrInstance
-   * and an optional getInstanceProcAddr.
-   *
-   * If getInstanceProcAddr is not supplied, the static ::xrGetInstanceProcAddr
-   * will be used.
-   */
-  static DispatchLoaderDynamic createFullyPopulated(
-      Instance instance,
-      PFN_xrGetInstanceProcAddr getInstanceProcAddr = nullptr) {
-    OPENXR_HPP_ASSERT(instance != nullptr);
-    DispatchLoaderDynamic dispatch{instance, getInstanceProcAddr};
-    dispatch.populate_("xrGetInstanceProcAddr",
-                       dispatch.pfnGetInstanceProcAddr);
-    dispatch.populate_("xrEnumerateApiLayerProperties",
-                       dispatch.pfnEnumerateApiLayerProperties);
-    dispatch.populate_("xrEnumerateInstanceExtensionProperties",
-                       dispatch.pfnEnumerateInstanceExtensionProperties);
-    dispatch.populate_("xrCreateInstance", dispatch.pfnCreateInstance);
-    dispatch.populate_("xrDestroyInstance", dispatch.pfnDestroyInstance);
-    dispatch.populate_("xrGetInstanceProperties",
-                       dispatch.pfnGetInstanceProperties);
-    dispatch.populate_("xrPollEvent", dispatch.pfnPollEvent);
-    dispatch.populate_("xrResultToString", dispatch.pfnResultToString);
-    dispatch.populate_("xrStructureTypeToString",
-                       dispatch.pfnStructureTypeToString);
-    dispatch.populate_("xrGetSystem", dispatch.pfnGetSystem);
-    dispatch.populate_("xrGetSystemProperties",
-                       dispatch.pfnGetSystemProperties);
-    dispatch.populate_("xrEnumerateEnvironmentBlendModes",
-                       dispatch.pfnEnumerateEnvironmentBlendModes);
-    dispatch.populate_("xrCreateSession", dispatch.pfnCreateSession);
-    dispatch.populate_("xrDestroySession", dispatch.pfnDestroySession);
-    dispatch.populate_("xrEnumerateReferenceSpaces",
-                       dispatch.pfnEnumerateReferenceSpaces);
-    dispatch.populate_("xrCreateReferenceSpace",
-                       dispatch.pfnCreateReferenceSpace);
-    dispatch.populate_("xrGetReferenceSpaceBoundsRect",
-                       dispatch.pfnGetReferenceSpaceBoundsRect);
-    dispatch.populate_("xrCreateActionSpace", dispatch.pfnCreateActionSpace);
-    dispatch.populate_("xrLocateSpace", dispatch.pfnLocateSpace);
-    dispatch.populate_("xrDestroySpace", dispatch.pfnDestroySpace);
-    dispatch.populate_("xrEnumerateViewConfigurations",
-                       dispatch.pfnEnumerateViewConfigurations);
-    dispatch.populate_("xrGetViewConfigurationProperties",
-                       dispatch.pfnGetViewConfigurationProperties);
-    dispatch.populate_("xrEnumerateViewConfigurationViews",
-                       dispatch.pfnEnumerateViewConfigurationViews);
-    dispatch.populate_("xrEnumerateSwapchainFormats",
-                       dispatch.pfnEnumerateSwapchainFormats);
-    dispatch.populate_("xrCreateSwapchain", dispatch.pfnCreateSwapchain);
-    dispatch.populate_("xrDestroySwapchain", dispatch.pfnDestroySwapchain);
-    dispatch.populate_("xrEnumerateSwapchainImages",
-                       dispatch.pfnEnumerateSwapchainImages);
-    dispatch.populate_("xrAcquireSwapchainImage",
-                       dispatch.pfnAcquireSwapchainImage);
-    dispatch.populate_("xrWaitSwapchainImage", dispatch.pfnWaitSwapchainImage);
-    dispatch.populate_("xrReleaseSwapchainImage",
-                       dispatch.pfnReleaseSwapchainImage);
-    dispatch.populate_("xrBeginSession", dispatch.pfnBeginSession);
-    dispatch.populate_("xrEndSession", dispatch.pfnEndSession);
-    dispatch.populate_("xrRequestExitSession", dispatch.pfnRequestExitSession);
-    dispatch.populate_("xrWaitFrame", dispatch.pfnWaitFrame);
-    dispatch.populate_("xrBeginFrame", dispatch.pfnBeginFrame);
-    dispatch.populate_("xrEndFrame", dispatch.pfnEndFrame);
-    dispatch.populate_("xrLocateViews", dispatch.pfnLocateViews);
-    dispatch.populate_("xrStringToPath", dispatch.pfnStringToPath);
-    dispatch.populate_("xrPathToString", dispatch.pfnPathToString);
-    dispatch.populate_("xrCreateActionSet", dispatch.pfnCreateActionSet);
-    dispatch.populate_("xrDestroyActionSet", dispatch.pfnDestroyActionSet);
-    dispatch.populate_("xrCreateAction", dispatch.pfnCreateAction);
-    dispatch.populate_("xrDestroyAction", dispatch.pfnDestroyAction);
-    dispatch.populate_("xrSuggestInteractionProfileBindings",
-                       dispatch.pfnSuggestInteractionProfileBindings);
-    dispatch.populate_("xrAttachSessionActionSets",
-                       dispatch.pfnAttachSessionActionSets);
-    dispatch.populate_("xrGetCurrentInteractionProfile",
-                       dispatch.pfnGetCurrentInteractionProfile);
-    dispatch.populate_("xrGetActionStateBoolean",
-                       dispatch.pfnGetActionStateBoolean);
-    dispatch.populate_("xrGetActionStateFloat",
-                       dispatch.pfnGetActionStateFloat);
-    dispatch.populate_("xrGetActionStateVector2f",
-                       dispatch.pfnGetActionStateVector2f);
-    dispatch.populate_("xrGetActionStatePose", dispatch.pfnGetActionStatePose);
-    dispatch.populate_("xrSyncActions", dispatch.pfnSyncActions);
-    dispatch.populate_("xrEnumerateBoundSourcesForAction",
-                       dispatch.pfnEnumerateBoundSourcesForAction);
-    dispatch.populate_("xrGetInputSourceLocalizedName",
-                       dispatch.pfnGetInputSourceLocalizedName);
-    dispatch.populate_("xrApplyHapticFeedback",
-                       dispatch.pfnApplyHapticFeedback);
-    dispatch.populate_("xrStopHapticFeedback", dispatch.pfnStopHapticFeedback);
-    dispatch.populate_("xrSetAndroidApplicationThreadKHR",
-                       dispatch.pfnSetAndroidApplicationThreadKHR);
-    dispatch.populate_("xrCreateSwapchainAndroidSurfaceKHR",
-                       dispatch.pfnCreateSwapchainAndroidSurfaceKHR);
-    dispatch.populate_("xrGetOpenGLGraphicsRequirementsKHR",
-                       dispatch.pfnGetOpenGLGraphicsRequirementsKHR);
-    dispatch.populate_("xrGetOpenGLESGraphicsRequirementsKHR",
-                       dispatch.pfnGetOpenGLESGraphicsRequirementsKHR);
-    dispatch.populate_("xrGetVulkanInstanceExtensionsKHR",
-                       dispatch.pfnGetVulkanInstanceExtensionsKHR);
-    dispatch.populate_("xrGetVulkanDeviceExtensionsKHR",
-                       dispatch.pfnGetVulkanDeviceExtensionsKHR);
-    dispatch.populate_("xrGetVulkanGraphicsDeviceKHR",
-                       dispatch.pfnGetVulkanGraphicsDeviceKHR);
-    dispatch.populate_("xrGetVulkanGraphicsRequirementsKHR",
-                       dispatch.pfnGetVulkanGraphicsRequirementsKHR);
-    dispatch.populate_("xrGetD3D11GraphicsRequirementsKHR",
-                       dispatch.pfnGetD3D11GraphicsRequirementsKHR);
-    dispatch.populate_("xrGetD3D12GraphicsRequirementsKHR",
-                       dispatch.pfnGetD3D12GraphicsRequirementsKHR);
-    dispatch.populate_("xrGetVisibilityMaskKHR",
-                       dispatch.pfnGetVisibilityMaskKHR);
-    dispatch.populate_("xrConvertWin32PerformanceCounterToTimeKHR",
-                       dispatch.pfnConvertWin32PerformanceCounterToTimeKHR);
-    dispatch.populate_("xrConvertTimeToWin32PerformanceCounterKHR",
-                       dispatch.pfnConvertTimeToWin32PerformanceCounterKHR);
-    dispatch.populate_("xrConvertTimespecTimeToTimeKHR",
-                       dispatch.pfnConvertTimespecTimeToTimeKHR);
-    dispatch.populate_("xrConvertTimeToTimespecTimeKHR",
-                       dispatch.pfnConvertTimeToTimespecTimeKHR);
-    dispatch.populate_("xrPerfSettingsSetPerformanceLevelEXT",
-                       dispatch.pfnPerfSettingsSetPerformanceLevelEXT);
-    dispatch.populate_("xrThermalGetTemperatureTrendEXT",
-                       dispatch.pfnThermalGetTemperatureTrendEXT);
-    dispatch.populate_("xrSetDebugUtilsObjectNameEXT",
-                       dispatch.pfnSetDebugUtilsObjectNameEXT);
-    dispatch.populate_("xrCreateDebugUtilsMessengerEXT",
-                       dispatch.pfnCreateDebugUtilsMessengerEXT);
-    dispatch.populate_("xrDestroyDebugUtilsMessengerEXT",
-                       dispatch.pfnDestroyDebugUtilsMessengerEXT);
-    dispatch.populate_("xrSubmitDebugUtilsMessageEXT",
-                       dispatch.pfnSubmitDebugUtilsMessageEXT);
-    dispatch.populate_("xrSessionBeginDebugUtilsLabelRegionEXT",
-                       dispatch.pfnSessionBeginDebugUtilsLabelRegionEXT);
-    dispatch.populate_("xrSessionEndDebugUtilsLabelRegionEXT",
-                       dispatch.pfnSessionEndDebugUtilsLabelRegionEXT);
-    dispatch.populate_("xrSessionInsertDebugUtilsLabelEXT",
-                       dispatch.pfnSessionInsertDebugUtilsLabelEXT);
-    dispatch.populate_("xrCreateSpatialAnchorMSFT",
-                       dispatch.pfnCreateSpatialAnchorMSFT);
-    dispatch.populate_("xrCreateSpatialAnchorSpaceMSFT",
-                       dispatch.pfnCreateSpatialAnchorSpaceMSFT);
-    dispatch.populate_("xrDestroySpatialAnchorMSFT",
-                       dispatch.pfnDestroySpatialAnchorMSFT);
-    return dispatch;
-  }
-
-  //! @}
-
-  /*!
-   * @name Entry points
-   * @brief These populate the function pointer (if required and non-const),
-   * then cast it and call it.
-   *
-   * We store everything as PFN_xrVoidFunction to allow us to have the same
-   * representation all over, despite containing function pointers that might
-   * not be accessible without some platform defines. Thus, only our accessor
-   * methods differ between different includes of this header, not our data
-   * members.
-   *
-   * @{
-   */
-
-  //! @brief Call xrGetInstanceProcAddr, populating function pointer if
-  //! required.
-  XrResult xrGetInstanceProcAddr(XrInstance instance, const char *name,
-                                 PFN_xrVoidFunction *function) {
-
-    XrResult result =
-        populate_("xrGetInstanceProcAddr", pfnGetInstanceProcAddr);
-    if (XR_FAILED(result)) {
-      return result;
-    }
-
-    return (reinterpret_cast<PFN_xrGetInstanceProcAddr>(
-        pfnGetInstanceProcAddr))(instance, name, function);
-  }
-
-  //! @brief Call xrGetInstanceProcAddr (const overload - does not populate
-  //! function pointer)
-  XrResult xrGetInstanceProcAddr(XrInstance instance, const char *name,
-                                 PFN_xrVoidFunction *function) const {
-
-    return (reinterpret_cast<PFN_xrGetInstanceProcAddr>(
-        pfnGetInstanceProcAddr))(instance, name, function);
-  }
-
-  //! @brief Call xrEnumerateApiLayerProperties, populating function pointer if
-  //! required.
-  XrResult xrEnumerateApiLayerProperties(uint32_t propertyCapacityInput,
-                                         uint32_t *propertyCountOutput,
-                                         XrApiLayerProperties *properties) {
-
-    XrResult result = populate_("xrEnumerateApiLayerProperties",
-                                pfnEnumerateApiLayerProperties);
-    if (XR_FAILED(result)) {
-      return result;
-    }
-
-    return (reinterpret_cast<PFN_xrEnumerateApiLayerProperties>(
-        pfnEnumerateApiLayerProperties))(propertyCapacityInput,
-                                         propertyCountOutput, properties);
-  }
-
-  //! @brief Call xrEnumerateApiLayerProperties (const overload - does not
-  //! populate function pointer)
-  XrResult
-  xrEnumerateApiLayerProperties(uint32_t propertyCapacityInput,
-                                uint32_t *propertyCountOutput,
-                                XrApiLayerProperties *properties) const {
-
-    return (reinterpret_cast<PFN_xrEnumerateApiLayerProperties>(
-        pfnEnumerateApiLayerProperties))(propertyCapacityInput,
-                                         propertyCountOutput, properties);
-  }
-
-  //! @brief Call xrEnumerateInstanceExtensionProperties, populating function
-  //! pointer if required.
-  XrResult xrEnumerateInstanceExtensionProperties(
-      const char *layerName, uint32_t propertyCapacityInput,
-      uint32_t *propertyCountOutput, XrExtensionProperties *properties) {
-
-    XrResult result = populate_("xrEnumerateInstanceExtensionProperties",
-                                pfnEnumerateInstanceExtensionProperties);
-    if (XR_FAILED(result)) {
-      return result;
-    }
-
-    return (reinterpret_cast<PFN_xrEnumerateInstanceExtensionProperties>(
-        pfnEnumerateInstanceExtensionProperties))(
-        layerName, propertyCapacityInput, propertyCountOutput, properties);
-  }
-
-  //! @brief Call xrEnumerateInstanceExtensionProperties (const overload - does
-  //! not populate function pointer)
-  XrResult xrEnumerateInstanceExtensionProperties(
-      const char *layerName, uint32_t propertyCapacityInput,
-      uint32_t *propertyCountOutput, XrExtensionProperties *properties) const {
-
-    return (reinterpret_cast<PFN_xrEnumerateInstanceExtensionProperties>(
-        pfnEnumerateInstanceExtensionProperties))(
-        layerName, propertyCapacityInput, propertyCountOutput, properties);
-  }
-
-  //! @brief Call xrCreateInstance, populating function pointer if required.
-  XrResult xrCreateInstance(const XrInstanceCreateInfo *createInfo,
-                            XrInstance *instance) {
-
-    XrResult result = populate_("xrCreateInstance", pfnCreateInstance);
-    if (XR_FAILED(result)) {
-      return result;
-    }
-
-    return (reinterpret_cast<PFN_xrCreateInstance>(pfnCreateInstance))(
-        createInfo, instance);
-  }
-
-  //! @brief Call xrCreateInstance (const overload - does not populate function
-  //! pointer)
-  XrResult xrCreateInstance(const XrInstanceCreateInfo *createInfo,
-                            XrInstance *instance) const {
-
-    return (reinterpret_cast<PFN_xrCreateInstance>(pfnCreateInstance))(
-        createInfo, instance);
-  }
 
     template <typename Type>
     class TypedStructTraits {
@@ -13016,8 +7899,6 @@ public:
 struct HapticBaseHeader {
     StructureType type;
     const void* next;
-    operator const XrHapticBaseHeader&() const { return *reinterpret_cast<const XrHapticBaseHeader*>(this); }
-    operator XrHapticBaseHeader&() { return *reinterpret_cast<XrHapticBaseHeader*>(this); }
 };
 static_assert(sizeof(HapticBaseHeader) == sizeof(XrHapticBaseHeader), "struct and wrapper have different size!");
 
@@ -13027,7 +7908,8 @@ struct CompositionLayerBaseHeader {
     CompositionLayerFlags layerFlags;
     Space space;
 };
-static_assert(sizeof(CompositionLayerBaseHeader) == sizeof(XrCompositionLayerBaseHeader), "struct and wrapper have different size!");
+static_assert(sizeof(CompositionLayerBaseHeader) == sizeof(XrCompositionLayerBaseHeader),
+    "struct and wrapper have different size!");
 
 struct ApiLayerProperties : public traits::TypedStructTraits<ApiLayerProperties> {
 private:
@@ -13039,8 +7921,12 @@ public:
         : Parent(StructureType::ApiLayerProperties)
     {
     }
+
     operator const XrApiLayerProperties&() const { return *reinterpret_cast<const XrApiLayerProperties*>(this); }
-    operator XrApiLayerProperties&() { return *reinterpret_cast<XrApiLayerProperties*>(this); }
+    operator XrApiLayerProperties&()
+    {
+        return *reinterpret_cast<XrApiLayerProperties*>(this);
+    }
 
     // member decl
     char layerName[XR_MAX_API_LAYER_NAME_SIZE];
@@ -13049,6 +7935,17 @@ public:
     char description[XR_MAX_API_LAYER_DESCRIPTION_SIZE];
 };
 static_assert(sizeof(ApiLayerProperties) == sizeof(XrApiLayerProperties), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ApiLayerProperties const reference as a raw XrApiLayerProperties const pointer
+//! @relates ApiLayerProperties
+OPENXR_HPP_INLINE XrApiLayerProperties const* get(ApiLayerProperties const& h)
+{
+    return &(h.operator XrApiLayerProperties const&());
+}
+
+//! @brief Free function accessor for passing ApiLayerProperties as the address of a raw XrApiLayerProperties
+//! @relates ApiLayerProperties
+OPENXR_HPP_INLINE XrApiLayerProperties* put(ApiLayerProperties& h) { return &(h.operator XrApiLayerProperties&()); }
 
 struct ExtensionProperties : public traits::TypedStructTraits<ExtensionProperties> {
 private:
@@ -13060,14 +7957,29 @@ public:
         : Parent(StructureType::ExtensionProperties)
     {
     }
+
     operator const XrExtensionProperties&() const { return *reinterpret_cast<const XrExtensionProperties*>(this); }
-    operator XrExtensionProperties&() { return *reinterpret_cast<XrExtensionProperties*>(this); }
+    operator XrExtensionProperties&()
+    {
+        return *reinterpret_cast<XrExtensionProperties*>(this);
+    }
 
     // member decl
     char extensionName[XR_MAX_EXTENSION_NAME_SIZE];
     uint32_t extensionVersion;
 };
 static_assert(sizeof(ExtensionProperties) == sizeof(XrExtensionProperties), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ExtensionProperties const reference as a raw XrExtensionProperties const pointer
+//! @relates ExtensionProperties
+OPENXR_HPP_INLINE XrExtensionProperties const* get(ExtensionProperties const& h)
+{
+    return &(h.operator XrExtensionProperties const&());
+}
+
+//! @brief Free function accessor for passing ExtensionProperties as the address of a raw XrExtensionProperties
+//! @relates ExtensionProperties
+OPENXR_HPP_INLINE XrExtensionProperties* put(ExtensionProperties& h) { return &(h.operator XrExtensionProperties&()); }
 
 struct ApplicationInfo {
     // ctor
@@ -13077,7 +7989,9 @@ struct ApplicationInfo {
         const char* engineName_ = nullptr,
         uint32_t engineVersion_ = 0,
         const Version& apiVersion_ = {})
-        : applicationVersion { applicationVersion_ }
+        :
+
+        applicationVersion { applicationVersion_ }
         , engineVersion { engineVersion_ }
         , apiVersion { apiVersion_ }
     {
@@ -13091,7 +8005,10 @@ struct ApplicationInfo {
         }
     }
     operator const XrApplicationInfo&() const { return *reinterpret_cast<const XrApplicationInfo*>(this); }
-    operator XrApplicationInfo&() { return *reinterpret_cast<XrApplicationInfo*>(this); }
+    operator XrApplicationInfo&()
+    {
+        return *reinterpret_cast<XrApplicationInfo*>(this);
+    }
 
     // member decl
     char applicationName[XR_MAX_APPLICATION_NAME_SIZE];
@@ -13101,6 +8018,17 @@ struct ApplicationInfo {
     Version apiVersion;
 };
 static_assert(sizeof(ApplicationInfo) == sizeof(XrApplicationInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ApplicationInfo const reference as a raw XrApplicationInfo const pointer
+//! @relates ApplicationInfo
+OPENXR_HPP_INLINE XrApplicationInfo const* get(ApplicationInfo const& h)
+{
+    return &(h.operator XrApplicationInfo const&());
+}
+
+//! @brief Free function accessor for passing ApplicationInfo as the address of a raw XrApplicationInfo
+//! @relates ApplicationInfo
+OPENXR_HPP_INLINE XrApplicationInfo* put(ApplicationInfo& h) { return &(h.operator XrApplicationInfo&()); }
 
 struct InstanceCreateInfo : public traits::TypedStructTraits<InstanceCreateInfo> {
 private:
@@ -13115,8 +8043,12 @@ public:
         const char* const* enabledApiLayerNames_ = nullptr,
         uint32_t enabledExtensionCount_ = 0,
         const char* const* enabledExtensionNames_ = nullptr)
-        : Parent(StructureType::InstanceCreateInfo)
-        , createFlags { createFlags_ }
+        :
+
+        Parent(StructureType::InstanceCreateInfo)
+        ,
+
+        createFlags { createFlags_ }
         , applicationInfo { applicationInfo_ }
         , enabledApiLayerCount { enabledApiLayerCount_ }
         , enabledApiLayerNames { enabledApiLayerNames_ }
@@ -13125,7 +8057,10 @@ public:
     {
     }
     operator const XrInstanceCreateInfo&() const { return *reinterpret_cast<const XrInstanceCreateInfo*>(this); }
-    operator XrInstanceCreateInfo&() { return *reinterpret_cast<XrInstanceCreateInfo*>(this); }
+    operator XrInstanceCreateInfo&()
+    {
+        return *reinterpret_cast<XrInstanceCreateInfo*>(this);
+    }
 
     // member decl
     InstanceCreateFlags createFlags;
@@ -13137,6 +8072,17 @@ public:
 };
 static_assert(sizeof(InstanceCreateInfo) == sizeof(XrInstanceCreateInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for InstanceCreateInfo const reference as a raw XrInstanceCreateInfo const pointer
+//! @relates InstanceCreateInfo
+OPENXR_HPP_INLINE XrInstanceCreateInfo const* get(InstanceCreateInfo const& h)
+{
+    return &(h.operator XrInstanceCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing InstanceCreateInfo as the address of a raw XrInstanceCreateInfo
+//! @relates InstanceCreateInfo
+OPENXR_HPP_INLINE XrInstanceCreateInfo* put(InstanceCreateInfo& h) { return &(h.operator XrInstanceCreateInfo&()); }
+
 struct InstanceProperties : public traits::TypedStructTraits<InstanceProperties> {
 private:
     using Parent = traits::TypedStructTraits<InstanceProperties>;
@@ -13147,14 +8093,29 @@ public:
         : Parent(StructureType::InstanceProperties)
     {
     }
+
     operator const XrInstanceProperties&() const { return *reinterpret_cast<const XrInstanceProperties*>(this); }
-    operator XrInstanceProperties&() { return *reinterpret_cast<XrInstanceProperties*>(this); }
+    operator XrInstanceProperties&()
+    {
+        return *reinterpret_cast<XrInstanceProperties*>(this);
+    }
 
     // member decl
     Version runtimeVersion;
     char runtimeName[XR_MAX_RUNTIME_NAME_SIZE];
 };
 static_assert(sizeof(InstanceProperties) == sizeof(XrInstanceProperties), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InstanceProperties const reference as a raw XrInstanceProperties const pointer
+//! @relates InstanceProperties
+OPENXR_HPP_INLINE XrInstanceProperties const* get(InstanceProperties const& h)
+{
+    return &(h.operator XrInstanceProperties const&());
+}
+
+//! @brief Free function accessor for passing InstanceProperties as the address of a raw XrInstanceProperties
+//! @relates InstanceProperties
+OPENXR_HPP_INLINE XrInstanceProperties* put(InstanceProperties& h) { return &(h.operator XrInstanceProperties&()); }
 
 struct EventDataBuffer : public traits::TypedStructTraits<EventDataBuffer> {
 private:
@@ -13166,13 +8127,28 @@ public:
         : Parent(StructureType::EventDataBuffer)
     {
     }
+
     operator const XrEventDataBuffer&() const { return *reinterpret_cast<const XrEventDataBuffer*>(this); }
-    operator XrEventDataBuffer&() { return *reinterpret_cast<XrEventDataBuffer*>(this); }
+    operator XrEventDataBuffer&()
+    {
+        return *reinterpret_cast<XrEventDataBuffer*>(this);
+    }
 
     // member decl
     uint8_t varying[4000];
 };
 static_assert(sizeof(EventDataBuffer) == sizeof(XrEventDataBuffer), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataBuffer const reference as a raw XrEventDataBuffer const pointer
+//! @relates EventDataBuffer
+OPENXR_HPP_INLINE XrEventDataBuffer const* get(EventDataBuffer const& h)
+{
+    return &(h.operator XrEventDataBuffer const&());
+}
+
+//! @brief Free function accessor for passing EventDataBuffer as the address of a raw XrEventDataBuffer
+//! @relates EventDataBuffer
+OPENXR_HPP_INLINE XrEventDataBuffer* put(EventDataBuffer& h) { return &(h.operator XrEventDataBuffer&()); }
 
 struct SystemGetInfo : public traits::TypedStructTraits<SystemGetInfo> {
 private:
@@ -13182,17 +8158,35 @@ public:
     // ctor
     SystemGetInfo(
         const FormFactor& formFactor_ = {})
-        : Parent(StructureType::SystemGetInfo)
-        , formFactor { formFactor_ }
+        :
+
+        Parent(StructureType::SystemGetInfo)
+        ,
+
+        formFactor { formFactor_ }
     {
     }
     operator const XrSystemGetInfo&() const { return *reinterpret_cast<const XrSystemGetInfo*>(this); }
-    operator XrSystemGetInfo&() { return *reinterpret_cast<XrSystemGetInfo*>(this); }
+    operator XrSystemGetInfo&()
+    {
+        return *reinterpret_cast<XrSystemGetInfo*>(this);
+    }
 
     // member decl
     FormFactor formFactor;
 };
 static_assert(sizeof(SystemGetInfo) == sizeof(XrSystemGetInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SystemGetInfo const reference as a raw XrSystemGetInfo const pointer
+//! @relates SystemGetInfo
+OPENXR_HPP_INLINE XrSystemGetInfo const* get(SystemGetInfo const& h)
+{
+    return &(h.operator XrSystemGetInfo const&());
+}
+
+//! @brief Free function accessor for passing SystemGetInfo as the address of a raw XrSystemGetInfo
+//! @relates SystemGetInfo
+OPENXR_HPP_INLINE XrSystemGetInfo* put(SystemGetInfo& h) { return &(h.operator XrSystemGetInfo&()); }
 
 struct SystemGraphicsProperties {
     // ctor
@@ -13200,13 +8194,18 @@ struct SystemGraphicsProperties {
         uint32_t maxSwapchainImageHeight_ = 0,
         uint32_t maxSwapchainImageWidth_ = 0,
         uint32_t maxLayerCount_ = 0)
-        : maxSwapchainImageHeight { maxSwapchainImageHeight_ }
+        :
+
+        maxSwapchainImageHeight { maxSwapchainImageHeight_ }
         , maxSwapchainImageWidth { maxSwapchainImageWidth_ }
         , maxLayerCount { maxLayerCount_ }
     {
     }
     operator const XrSystemGraphicsProperties&() const { return *reinterpret_cast<const XrSystemGraphicsProperties*>(this); }
-    operator XrSystemGraphicsProperties&() { return *reinterpret_cast<XrSystemGraphicsProperties*>(this); }
+    operator XrSystemGraphicsProperties&()
+    {
+        return *reinterpret_cast<XrSystemGraphicsProperties*>(this);
+    }
 
     // member decl
     uint32_t maxSwapchainImageHeight;
@@ -13215,23 +8214,50 @@ struct SystemGraphicsProperties {
 };
 static_assert(sizeof(SystemGraphicsProperties) == sizeof(XrSystemGraphicsProperties), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SystemGraphicsProperties const reference as a raw XrSystemGraphicsProperties const pointer
+//! @relates SystemGraphicsProperties
+OPENXR_HPP_INLINE XrSystemGraphicsProperties const* get(SystemGraphicsProperties const& h)
+{
+    return &(h.operator XrSystemGraphicsProperties const&());
+}
+
+//! @brief Free function accessor for passing SystemGraphicsProperties as the address of a raw XrSystemGraphicsProperties
+//! @relates SystemGraphicsProperties
+OPENXR_HPP_INLINE XrSystemGraphicsProperties* put(SystemGraphicsProperties& h) { return &(h.operator XrSystemGraphicsProperties&()); }
+
 struct SystemTrackingProperties {
     // ctor
     SystemTrackingProperties(
         const Bool32& orientationTracking_ = XR_FALSE,
         const Bool32& positionTracking_ = XR_FALSE)
-        : orientationTracking { orientationTracking_ }
+        :
+
+        orientationTracking { orientationTracking_ }
         , positionTracking { positionTracking_ }
     {
     }
     operator const XrSystemTrackingProperties&() const { return *reinterpret_cast<const XrSystemTrackingProperties*>(this); }
-    operator XrSystemTrackingProperties&() { return *reinterpret_cast<XrSystemTrackingProperties*>(this); }
+    operator XrSystemTrackingProperties&()
+    {
+        return *reinterpret_cast<XrSystemTrackingProperties*>(this);
+    }
 
     // member decl
     Bool32 orientationTracking;
     Bool32 positionTracking;
 };
 static_assert(sizeof(SystemTrackingProperties) == sizeof(XrSystemTrackingProperties), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SystemTrackingProperties const reference as a raw XrSystemTrackingProperties const pointer
+//! @relates SystemTrackingProperties
+OPENXR_HPP_INLINE XrSystemTrackingProperties const* get(SystemTrackingProperties const& h)
+{
+    return &(h.operator XrSystemTrackingProperties const&());
+}
+
+//! @brief Free function accessor for passing SystemTrackingProperties as the address of a raw XrSystemTrackingProperties
+//! @relates SystemTrackingProperties
+OPENXR_HPP_INLINE XrSystemTrackingProperties* put(SystemTrackingProperties& h) { return &(h.operator XrSystemTrackingProperties&()); }
 
 struct SystemProperties : public traits::TypedStructTraits<SystemProperties> {
 private:
@@ -13243,8 +8269,12 @@ public:
         : Parent(StructureType::SystemProperties)
     {
     }
+
     operator const XrSystemProperties&() const { return *reinterpret_cast<const XrSystemProperties*>(this); }
-    operator XrSystemProperties&() { return *reinterpret_cast<XrSystemProperties*>(this); }
+    operator XrSystemProperties&()
+    {
+        return *reinterpret_cast<XrSystemProperties*>(this);
+    }
 
     // member decl
     SystemId systemId;
@@ -13255,6 +8285,17 @@ public:
 };
 static_assert(sizeof(SystemProperties) == sizeof(XrSystemProperties), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SystemProperties const reference as a raw XrSystemProperties const pointer
+//! @relates SystemProperties
+OPENXR_HPP_INLINE XrSystemProperties const* get(SystemProperties const& h)
+{
+    return &(h.operator XrSystemProperties const&());
+}
+
+//! @brief Free function accessor for passing SystemProperties as the address of a raw XrSystemProperties
+//! @relates SystemProperties
+OPENXR_HPP_INLINE XrSystemProperties* put(SystemProperties& h) { return &(h.operator XrSystemProperties&()); }
+
 struct SessionCreateInfo : public traits::TypedStructTraits<SessionCreateInfo> {
 private:
     using Parent = traits::TypedStructTraits<SessionCreateInfo>;
@@ -13264,13 +8305,20 @@ public:
     SessionCreateInfo(
         const SessionCreateFlags& createFlags_ = {},
         const SystemId& systemId_ = {})
-        : Parent(StructureType::SessionCreateInfo)
-        , createFlags { createFlags_ }
+        :
+
+        Parent(StructureType::SessionCreateInfo)
+        ,
+
+        createFlags { createFlags_ }
         , systemId { systemId_ }
     {
     }
     operator const XrSessionCreateInfo&() const { return *reinterpret_cast<const XrSessionCreateInfo*>(this); }
-    operator XrSessionCreateInfo&() { return *reinterpret_cast<XrSessionCreateInfo*>(this); }
+    operator XrSessionCreateInfo&()
+    {
+        return *reinterpret_cast<XrSessionCreateInfo*>(this);
+    }
 
     // member decl
     SessionCreateFlags createFlags;
@@ -13278,19 +8326,35 @@ public:
 };
 static_assert(sizeof(SessionCreateInfo) == sizeof(XrSessionCreateInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SessionCreateInfo const reference as a raw XrSessionCreateInfo const pointer
+//! @relates SessionCreateInfo
+OPENXR_HPP_INLINE XrSessionCreateInfo const* get(SessionCreateInfo const& h)
+{
+    return &(h.operator XrSessionCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing SessionCreateInfo as the address of a raw XrSessionCreateInfo
+//! @relates SessionCreateInfo
+OPENXR_HPP_INLINE XrSessionCreateInfo* put(SessionCreateInfo& h) { return &(h.operator XrSessionCreateInfo&()); }
+
 struct Vector3f {
     // ctor
     Vector3f(
         float x_ = 0.0f,
         float y_ = 0.0f,
         float z_ = 0.0f)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
         , z { z_ }
     {
     }
     operator const XrVector3f&() const { return *reinterpret_cast<const XrVector3f*>(this); }
-    operator XrVector3f&() { return *reinterpret_cast<XrVector3f*>(this); }
+    operator XrVector3f&()
+    {
+        return *reinterpret_cast<XrVector3f*>(this);
+    }
 
     // member decl
     float x;
@@ -13298,6 +8362,17 @@ struct Vector3f {
     float z;
 };
 static_assert(sizeof(Vector3f) == sizeof(XrVector3f), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Vector3f const reference as a raw XrVector3f const pointer
+//! @relates Vector3f
+OPENXR_HPP_INLINE XrVector3f const* get(Vector3f const& h)
+{
+    return &(h.operator XrVector3f const&());
+}
+
+//! @brief Free function accessor for passing Vector3f as the address of a raw XrVector3f
+//! @relates Vector3f
+OPENXR_HPP_INLINE XrVector3f* put(Vector3f& h) { return &(h.operator XrVector3f&()); }
 
 struct SpaceVelocity : public traits::TypedStructTraits<SpaceVelocity> {
 private:
@@ -13309,14 +8384,21 @@ public:
         const SpaceVelocityFlags& velocityFlags_ = {},
         const Vector3f& linearVelocity_ = {},
         const Vector3f& angularVelocity_ = {})
-        : Parent(StructureType::SpaceVelocity)
-        , velocityFlags { velocityFlags_ }
+        :
+
+        Parent(StructureType::SpaceVelocity)
+        ,
+
+        velocityFlags { velocityFlags_ }
         , linearVelocity { linearVelocity_ }
         , angularVelocity { angularVelocity_ }
     {
     }
     operator const XrSpaceVelocity&() const { return *reinterpret_cast<const XrSpaceVelocity*>(this); }
-    operator XrSpaceVelocity&() { return *reinterpret_cast<XrSpaceVelocity*>(this); }
+    operator XrSpaceVelocity&()
+    {
+        return *reinterpret_cast<XrSpaceVelocity*>(this);
+    }
 
     // member decl
     SpaceVelocityFlags velocityFlags;
@@ -13325,6 +8407,17 @@ public:
 };
 static_assert(sizeof(SpaceVelocity) == sizeof(XrSpaceVelocity), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SpaceVelocity const reference as a raw XrSpaceVelocity const pointer
+//! @relates SpaceVelocity
+OPENXR_HPP_INLINE XrSpaceVelocity const* get(SpaceVelocity const& h)
+{
+    return &(h.operator XrSpaceVelocity const&());
+}
+
+//! @brief Free function accessor for passing SpaceVelocity as the address of a raw XrSpaceVelocity
+//! @relates SpaceVelocity
+OPENXR_HPP_INLINE XrSpaceVelocity* put(SpaceVelocity& h) { return &(h.operator XrSpaceVelocity&()); }
+
 struct Quaternionf {
     // ctor
     Quaternionf(
@@ -13332,14 +8425,19 @@ struct Quaternionf {
         float y_ = 0.0f,
         float z_ = 0.0f,
         float w_ = 1.0f)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
         , z { z_ }
         , w { w_ }
     {
     }
     operator const XrQuaternionf&() const { return *reinterpret_cast<const XrQuaternionf*>(this); }
-    operator XrQuaternionf&() { return *reinterpret_cast<XrQuaternionf*>(this); }
+    operator XrQuaternionf&()
+    {
+        return *reinterpret_cast<XrQuaternionf*>(this);
+    }
 
     // member decl
     float x;
@@ -13349,23 +8447,50 @@ struct Quaternionf {
 };
 static_assert(sizeof(Quaternionf) == sizeof(XrQuaternionf), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Quaternionf const reference as a raw XrQuaternionf const pointer
+//! @relates Quaternionf
+OPENXR_HPP_INLINE XrQuaternionf const* get(Quaternionf const& h)
+{
+    return &(h.operator XrQuaternionf const&());
+}
+
+//! @brief Free function accessor for passing Quaternionf as the address of a raw XrQuaternionf
+//! @relates Quaternionf
+OPENXR_HPP_INLINE XrQuaternionf* put(Quaternionf& h) { return &(h.operator XrQuaternionf&()); }
+
 struct Posef {
     // ctor
     Posef(
         const Quaternionf& orientation_ = {},
         const Vector3f& position_ = {})
-        : orientation { orientation_ }
+        :
+
+        orientation { orientation_ }
         , position { position_ }
     {
     }
     operator const XrPosef&() const { return *reinterpret_cast<const XrPosef*>(this); }
-    operator XrPosef&() { return *reinterpret_cast<XrPosef*>(this); }
+    operator XrPosef&()
+    {
+        return *reinterpret_cast<XrPosef*>(this);
+    }
 
     // member decl
     Quaternionf orientation;
     Vector3f position;
 };
 static_assert(sizeof(Posef) == sizeof(XrPosef), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Posef const reference as a raw XrPosef const pointer
+//! @relates Posef
+OPENXR_HPP_INLINE XrPosef const* get(Posef const& h)
+{
+    return &(h.operator XrPosef const&());
+}
+
+//! @brief Free function accessor for passing Posef as the address of a raw XrPosef
+//! @relates Posef
+OPENXR_HPP_INLINE XrPosef* put(Posef& h) { return &(h.operator XrPosef&()); }
 
 struct ReferenceSpaceCreateInfo : public traits::TypedStructTraits<ReferenceSpaceCreateInfo> {
 private:
@@ -13376,13 +8501,20 @@ public:
     ReferenceSpaceCreateInfo(
         const ReferenceSpaceType& referenceSpaceType_ = {},
         const Posef& poseInReferenceSpace_ = {})
-        : Parent(StructureType::ReferenceSpaceCreateInfo)
-        , referenceSpaceType { referenceSpaceType_ }
+        :
+
+        Parent(StructureType::ReferenceSpaceCreateInfo)
+        ,
+
+        referenceSpaceType { referenceSpaceType_ }
         , poseInReferenceSpace { poseInReferenceSpace_ }
     {
     }
     operator const XrReferenceSpaceCreateInfo&() const { return *reinterpret_cast<const XrReferenceSpaceCreateInfo*>(this); }
-    operator XrReferenceSpaceCreateInfo&() { return *reinterpret_cast<XrReferenceSpaceCreateInfo*>(this); }
+    operator XrReferenceSpaceCreateInfo&()
+    {
+        return *reinterpret_cast<XrReferenceSpaceCreateInfo*>(this);
+    }
 
     // member decl
     ReferenceSpaceType referenceSpaceType;
@@ -13390,23 +8522,50 @@ public:
 };
 static_assert(sizeof(ReferenceSpaceCreateInfo) == sizeof(XrReferenceSpaceCreateInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ReferenceSpaceCreateInfo const reference as a raw XrReferenceSpaceCreateInfo const pointer
+//! @relates ReferenceSpaceCreateInfo
+OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo const* get(ReferenceSpaceCreateInfo const& h)
+{
+    return &(h.operator XrReferenceSpaceCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing ReferenceSpaceCreateInfo as the address of a raw XrReferenceSpaceCreateInfo
+//! @relates ReferenceSpaceCreateInfo
+OPENXR_HPP_INLINE XrReferenceSpaceCreateInfo* put(ReferenceSpaceCreateInfo& h) { return &(h.operator XrReferenceSpaceCreateInfo&()); }
+
 struct Extent2Df {
     // ctor
     Extent2Df(
         float width_ = 0.0f,
         float height_ = 0.0f)
-        : width { width_ }
+        :
+
+        width { width_ }
         , height { height_ }
     {
     }
     operator const XrExtent2Df&() const { return *reinterpret_cast<const XrExtent2Df*>(this); }
-    operator XrExtent2Df&() { return *reinterpret_cast<XrExtent2Df*>(this); }
+    operator XrExtent2Df&()
+    {
+        return *reinterpret_cast<XrExtent2Df*>(this);
+    }
 
     // member decl
     float width;
     float height;
 };
 static_assert(sizeof(Extent2Df) == sizeof(XrExtent2Df), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Extent2Df const reference as a raw XrExtent2Df const pointer
+//! @relates Extent2Df
+OPENXR_HPP_INLINE XrExtent2Df const* get(Extent2Df const& h)
+{
+    return &(h.operator XrExtent2Df const&());
+}
+
+//! @brief Free function accessor for passing Extent2Df as the address of a raw XrExtent2Df
+//! @relates Extent2Df
+OPENXR_HPP_INLINE XrExtent2Df* put(Extent2Df& h) { return &(h.operator XrExtent2Df&()); }
 
 struct ActionSpaceCreateInfo : public traits::TypedStructTraits<ActionSpaceCreateInfo> {
 private:
@@ -13418,14 +8577,21 @@ public:
         const Action& action_ = {},
         const Path& subactionPath_ = {},
         const Posef& poseInActionSpace_ = {})
-        : Parent(StructureType::ActionSpaceCreateInfo)
-        , action { action_ }
+        :
+
+        Parent(StructureType::ActionSpaceCreateInfo)
+        ,
+
+        action { action_ }
         , subactionPath { subactionPath_ }
         , poseInActionSpace { poseInActionSpace_ }
     {
     }
     operator const XrActionSpaceCreateInfo&() const { return *reinterpret_cast<const XrActionSpaceCreateInfo*>(this); }
-    operator XrActionSpaceCreateInfo&() { return *reinterpret_cast<XrActionSpaceCreateInfo*>(this); }
+    operator XrActionSpaceCreateInfo&()
+    {
+        return *reinterpret_cast<XrActionSpaceCreateInfo*>(this);
+    }
 
     // member decl
     Action action;
@@ -13433,6 +8599,17 @@ public:
     Posef poseInActionSpace;
 };
 static_assert(sizeof(ActionSpaceCreateInfo) == sizeof(XrActionSpaceCreateInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionSpaceCreateInfo const reference as a raw XrActionSpaceCreateInfo const pointer
+//! @relates ActionSpaceCreateInfo
+OPENXR_HPP_INLINE XrActionSpaceCreateInfo const* get(ActionSpaceCreateInfo const& h)
+{
+    return &(h.operator XrActionSpaceCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing ActionSpaceCreateInfo as the address of a raw XrActionSpaceCreateInfo
+//! @relates ActionSpaceCreateInfo
+OPENXR_HPP_INLINE XrActionSpaceCreateInfo* put(ActionSpaceCreateInfo& h) { return &(h.operator XrActionSpaceCreateInfo&()); }
 
 struct SpaceLocation : public traits::TypedStructTraits<SpaceLocation> {
 private:
@@ -13443,19 +8620,37 @@ public:
     SpaceLocation(
         const SpaceLocationFlags& locationFlags_ = {},
         const Posef& pose_ = {})
-        : Parent(StructureType::SpaceLocation)
-        , locationFlags { locationFlags_ }
+        :
+
+        Parent(StructureType::SpaceLocation)
+        ,
+
+        locationFlags { locationFlags_ }
         , pose { pose_ }
     {
     }
     operator const XrSpaceLocation&() const { return *reinterpret_cast<const XrSpaceLocation*>(this); }
-    operator XrSpaceLocation&() { return *reinterpret_cast<XrSpaceLocation*>(this); }
+    operator XrSpaceLocation&()
+    {
+        return *reinterpret_cast<XrSpaceLocation*>(this);
+    }
 
     // member decl
     SpaceLocationFlags locationFlags;
     Posef pose;
 };
 static_assert(sizeof(SpaceLocation) == sizeof(XrSpaceLocation), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SpaceLocation const reference as a raw XrSpaceLocation const pointer
+//! @relates SpaceLocation
+OPENXR_HPP_INLINE XrSpaceLocation const* get(SpaceLocation const& h)
+{
+    return &(h.operator XrSpaceLocation const&());
+}
+
+//! @brief Free function accessor for passing SpaceLocation as the address of a raw XrSpaceLocation
+//! @relates SpaceLocation
+OPENXR_HPP_INLINE XrSpaceLocation* put(SpaceLocation& h) { return &(h.operator XrSpaceLocation&()); }
 
 struct ViewConfigurationProperties : public traits::TypedStructTraits<ViewConfigurationProperties> {
 private:
@@ -13466,19 +8661,37 @@ public:
     ViewConfigurationProperties(
         const ViewConfigurationType& viewConfigurationType_ = {},
         const Bool32& fovMutable_ = XR_FALSE)
-        : Parent(StructureType::ViewConfigurationProperties)
-        , viewConfigurationType { viewConfigurationType_ }
+        :
+
+        Parent(StructureType::ViewConfigurationProperties)
+        ,
+
+        viewConfigurationType { viewConfigurationType_ }
         , fovMutable { fovMutable_ }
     {
     }
     operator const XrViewConfigurationProperties&() const { return *reinterpret_cast<const XrViewConfigurationProperties*>(this); }
-    operator XrViewConfigurationProperties&() { return *reinterpret_cast<XrViewConfigurationProperties*>(this); }
+    operator XrViewConfigurationProperties&()
+    {
+        return *reinterpret_cast<XrViewConfigurationProperties*>(this);
+    }
 
     // member decl
     ViewConfigurationType viewConfigurationType;
     Bool32 fovMutable;
 };
 static_assert(sizeof(ViewConfigurationProperties) == sizeof(XrViewConfigurationProperties), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ViewConfigurationProperties const reference as a raw XrViewConfigurationProperties const pointer
+//! @relates ViewConfigurationProperties
+OPENXR_HPP_INLINE XrViewConfigurationProperties const* get(ViewConfigurationProperties const& h)
+{
+    return &(h.operator XrViewConfigurationProperties const&());
+}
+
+//! @brief Free function accessor for passing ViewConfigurationProperties as the address of a raw XrViewConfigurationProperties
+//! @relates ViewConfigurationProperties
+OPENXR_HPP_INLINE XrViewConfigurationProperties* put(ViewConfigurationProperties& h) { return &(h.operator XrViewConfigurationProperties&()); }
 
 struct ViewConfigurationView : public traits::TypedStructTraits<ViewConfigurationView> {
 private:
@@ -13493,8 +8706,12 @@ public:
         uint32_t maxImageRectHeight_ = 0,
         uint32_t recommendedSwapchainSampleCount_ = 0,
         uint32_t maxSwapchainSampleCount_ = 0)
-        : Parent(StructureType::ViewConfigurationView)
-        , recommendedImageRectWidth { recommendedImageRectWidth_ }
+        :
+
+        Parent(StructureType::ViewConfigurationView)
+        ,
+
+        recommendedImageRectWidth { recommendedImageRectWidth_ }
         , maxImageRectWidth { maxImageRectWidth_ }
         , recommendedImageRectHeight { recommendedImageRectHeight_ }
         , maxImageRectHeight { maxImageRectHeight_ }
@@ -13503,7 +8720,10 @@ public:
     {
     }
     operator const XrViewConfigurationView&() const { return *reinterpret_cast<const XrViewConfigurationView*>(this); }
-    operator XrViewConfigurationView&() { return *reinterpret_cast<XrViewConfigurationView*>(this); }
+    operator XrViewConfigurationView&()
+    {
+        return *reinterpret_cast<XrViewConfigurationView*>(this);
+    }
 
     // member decl
     uint32_t recommendedImageRectWidth;
@@ -13514,6 +8734,17 @@ public:
     uint32_t maxSwapchainSampleCount;
 };
 static_assert(sizeof(ViewConfigurationView) == sizeof(XrViewConfigurationView), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ViewConfigurationView const reference as a raw XrViewConfigurationView const pointer
+//! @relates ViewConfigurationView
+OPENXR_HPP_INLINE XrViewConfigurationView const* get(ViewConfigurationView const& h)
+{
+    return &(h.operator XrViewConfigurationView const&());
+}
+
+//! @brief Free function accessor for passing ViewConfigurationView as the address of a raw XrViewConfigurationView
+//! @relates ViewConfigurationView
+OPENXR_HPP_INLINE XrViewConfigurationView* put(ViewConfigurationView& h) { return &(h.operator XrViewConfigurationView&()); }
 
 struct SwapchainCreateInfo : public traits::TypedStructTraits<SwapchainCreateInfo> {
 private:
@@ -13531,8 +8762,12 @@ public:
         uint32_t faceCount_ = 0,
         uint32_t arraySize_ = 0,
         uint32_t mipCount_ = 0)
-        : Parent(StructureType::SwapchainCreateInfo)
-        , createFlags { createFlags_ }
+        :
+
+        Parent(StructureType::SwapchainCreateInfo)
+        ,
+
+        createFlags { createFlags_ }
         , usageFlags { usageFlags_ }
         , format { format_ }
         , sampleCount { sampleCount_ }
@@ -13544,7 +8779,10 @@ public:
     {
     }
     operator const XrSwapchainCreateInfo&() const { return *reinterpret_cast<const XrSwapchainCreateInfo*>(this); }
-    operator XrSwapchainCreateInfo&() { return *reinterpret_cast<XrSwapchainCreateInfo*>(this); }
+    operator XrSwapchainCreateInfo&()
+    {
+        return *reinterpret_cast<XrSwapchainCreateInfo*>(this);
+    }
 
     // member decl
     SwapchainCreateFlags createFlags;
@@ -13559,6 +8797,17 @@ public:
 };
 static_assert(sizeof(SwapchainCreateInfo) == sizeof(XrSwapchainCreateInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for SwapchainCreateInfo const reference as a raw XrSwapchainCreateInfo const pointer
+//! @relates SwapchainCreateInfo
+OPENXR_HPP_INLINE XrSwapchainCreateInfo const* get(SwapchainCreateInfo const& h)
+{
+    return &(h.operator XrSwapchainCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing SwapchainCreateInfo as the address of a raw XrSwapchainCreateInfo
+//! @relates SwapchainCreateInfo
+OPENXR_HPP_INLINE XrSwapchainCreateInfo* put(SwapchainCreateInfo& h) { return &(h.operator XrSwapchainCreateInfo&()); }
+
 struct SwapchainImageAcquireInfo : public traits::TypedStructTraits<SwapchainImageAcquireInfo> {
 private:
     using Parent = traits::TypedStructTraits<SwapchainImageAcquireInfo>;
@@ -13566,15 +8815,32 @@ private:
 public:
     // ctor
     SwapchainImageAcquireInfo()
-        : Parent(StructureType::SwapchainImageAcquireInfo)
+        :
+
+        Parent(StructureType::SwapchainImageAcquireInfo)
+
     {
     }
     operator const XrSwapchainImageAcquireInfo&() const { return *reinterpret_cast<const XrSwapchainImageAcquireInfo*>(this); }
-    operator XrSwapchainImageAcquireInfo&() { return *reinterpret_cast<XrSwapchainImageAcquireInfo*>(this); }
+    operator XrSwapchainImageAcquireInfo&()
+    {
+        return *reinterpret_cast<XrSwapchainImageAcquireInfo*>(this);
+    }
 
     // member decl
 };
 static_assert(sizeof(SwapchainImageAcquireInfo) == sizeof(XrSwapchainImageAcquireInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageAcquireInfo const reference as a raw XrSwapchainImageAcquireInfo const pointer
+//! @relates SwapchainImageAcquireInfo
+OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo const* get(SwapchainImageAcquireInfo const& h)
+{
+    return &(h.operator XrSwapchainImageAcquireInfo const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageAcquireInfo as the address of a raw XrSwapchainImageAcquireInfo
+//! @relates SwapchainImageAcquireInfo
+OPENXR_HPP_INLINE XrSwapchainImageAcquireInfo* put(SwapchainImageAcquireInfo& h) { return &(h.operator XrSwapchainImageAcquireInfo&()); }
 
 struct SwapchainImageWaitInfo : public traits::TypedStructTraits<SwapchainImageWaitInfo> {
 private:
@@ -13584,17 +8850,35 @@ public:
     // ctor
     SwapchainImageWaitInfo(
         const Duration& timeout_ = {})
-        : Parent(StructureType::SwapchainImageWaitInfo)
-        , timeout { timeout_ }
+        :
+
+        Parent(StructureType::SwapchainImageWaitInfo)
+        ,
+
+        timeout { timeout_ }
     {
     }
     operator const XrSwapchainImageWaitInfo&() const { return *reinterpret_cast<const XrSwapchainImageWaitInfo*>(this); }
-    operator XrSwapchainImageWaitInfo&() { return *reinterpret_cast<XrSwapchainImageWaitInfo*>(this); }
+    operator XrSwapchainImageWaitInfo&()
+    {
+        return *reinterpret_cast<XrSwapchainImageWaitInfo*>(this);
+    }
 
     // member decl
     Duration timeout;
 };
 static_assert(sizeof(SwapchainImageWaitInfo) == sizeof(XrSwapchainImageWaitInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageWaitInfo const reference as a raw XrSwapchainImageWaitInfo const pointer
+//! @relates SwapchainImageWaitInfo
+OPENXR_HPP_INLINE XrSwapchainImageWaitInfo const* get(SwapchainImageWaitInfo const& h)
+{
+    return &(h.operator XrSwapchainImageWaitInfo const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageWaitInfo as the address of a raw XrSwapchainImageWaitInfo
+//! @relates SwapchainImageWaitInfo
+OPENXR_HPP_INLINE XrSwapchainImageWaitInfo* put(SwapchainImageWaitInfo& h) { return &(h.operator XrSwapchainImageWaitInfo&()); }
 
 struct SwapchainImageReleaseInfo : public traits::TypedStructTraits<SwapchainImageReleaseInfo> {
 private:
@@ -13603,15 +8887,32 @@ private:
 public:
     // ctor
     SwapchainImageReleaseInfo()
-        : Parent(StructureType::SwapchainImageReleaseInfo)
+        :
+
+        Parent(StructureType::SwapchainImageReleaseInfo)
+
     {
     }
     operator const XrSwapchainImageReleaseInfo&() const { return *reinterpret_cast<const XrSwapchainImageReleaseInfo*>(this); }
-    operator XrSwapchainImageReleaseInfo&() { return *reinterpret_cast<XrSwapchainImageReleaseInfo*>(this); }
+    operator XrSwapchainImageReleaseInfo&()
+    {
+        return *reinterpret_cast<XrSwapchainImageReleaseInfo*>(this);
+    }
 
     // member decl
 };
 static_assert(sizeof(SwapchainImageReleaseInfo) == sizeof(XrSwapchainImageReleaseInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageReleaseInfo const reference as a raw XrSwapchainImageReleaseInfo const pointer
+//! @relates SwapchainImageReleaseInfo
+OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo const* get(SwapchainImageReleaseInfo const& h)
+{
+    return &(h.operator XrSwapchainImageReleaseInfo const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageReleaseInfo as the address of a raw XrSwapchainImageReleaseInfo
+//! @relates SwapchainImageReleaseInfo
+OPENXR_HPP_INLINE XrSwapchainImageReleaseInfo* put(SwapchainImageReleaseInfo& h) { return &(h.operator XrSwapchainImageReleaseInfo&()); }
 
 struct SessionBeginInfo : public traits::TypedStructTraits<SessionBeginInfo> {
 private:
@@ -13621,17 +8922,35 @@ public:
     // ctor
     SessionBeginInfo(
         const ViewConfigurationType& primaryViewConfigurationType_ = {})
-        : Parent(StructureType::SessionBeginInfo)
-        , primaryViewConfigurationType { primaryViewConfigurationType_ }
+        :
+
+        Parent(StructureType::SessionBeginInfo)
+        ,
+
+        primaryViewConfigurationType { primaryViewConfigurationType_ }
     {
     }
     operator const XrSessionBeginInfo&() const { return *reinterpret_cast<const XrSessionBeginInfo*>(this); }
-    operator XrSessionBeginInfo&() { return *reinterpret_cast<XrSessionBeginInfo*>(this); }
+    operator XrSessionBeginInfo&()
+    {
+        return *reinterpret_cast<XrSessionBeginInfo*>(this);
+    }
 
     // member decl
     ViewConfigurationType primaryViewConfigurationType;
 };
 static_assert(sizeof(SessionBeginInfo) == sizeof(XrSessionBeginInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SessionBeginInfo const reference as a raw XrSessionBeginInfo const pointer
+//! @relates SessionBeginInfo
+OPENXR_HPP_INLINE XrSessionBeginInfo const* get(SessionBeginInfo const& h)
+{
+    return &(h.operator XrSessionBeginInfo const&());
+}
+
+//! @brief Free function accessor for passing SessionBeginInfo as the address of a raw XrSessionBeginInfo
+//! @relates SessionBeginInfo
+OPENXR_HPP_INLINE XrSessionBeginInfo* put(SessionBeginInfo& h) { return &(h.operator XrSessionBeginInfo&()); }
 
 struct FrameWaitInfo : public traits::TypedStructTraits<FrameWaitInfo> {
 private:
@@ -13640,15 +8959,32 @@ private:
 public:
     // ctor
     FrameWaitInfo()
-        : Parent(StructureType::FrameWaitInfo)
+        :
+
+        Parent(StructureType::FrameWaitInfo)
+
     {
     }
     operator const XrFrameWaitInfo&() const { return *reinterpret_cast<const XrFrameWaitInfo*>(this); }
-    operator XrFrameWaitInfo&() { return *reinterpret_cast<XrFrameWaitInfo*>(this); }
+    operator XrFrameWaitInfo&()
+    {
+        return *reinterpret_cast<XrFrameWaitInfo*>(this);
+    }
 
     // member decl
 };
 static_assert(sizeof(FrameWaitInfo) == sizeof(XrFrameWaitInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for FrameWaitInfo const reference as a raw XrFrameWaitInfo const pointer
+//! @relates FrameWaitInfo
+OPENXR_HPP_INLINE XrFrameWaitInfo const* get(FrameWaitInfo const& h)
+{
+    return &(h.operator XrFrameWaitInfo const&());
+}
+
+//! @brief Free function accessor for passing FrameWaitInfo as the address of a raw XrFrameWaitInfo
+//! @relates FrameWaitInfo
+OPENXR_HPP_INLINE XrFrameWaitInfo* put(FrameWaitInfo& h) { return &(h.operator XrFrameWaitInfo&()); }
 
 struct FrameState : public traits::TypedStructTraits<FrameState> {
 private:
@@ -13660,14 +8996,21 @@ public:
         const Time& predictedDisplayTime_ = {},
         const Duration& predictedDisplayPeriod_ = {},
         const Bool32& shouldRender_ = XR_FALSE)
-        : Parent(StructureType::FrameState)
-        , predictedDisplayTime { predictedDisplayTime_ }
+        :
+
+        Parent(StructureType::FrameState)
+        ,
+
+        predictedDisplayTime { predictedDisplayTime_ }
         , predictedDisplayPeriod { predictedDisplayPeriod_ }
         , shouldRender { shouldRender_ }
     {
     }
     operator const XrFrameState&() const { return *reinterpret_cast<const XrFrameState*>(this); }
-    operator XrFrameState&() { return *reinterpret_cast<XrFrameState*>(this); }
+    operator XrFrameState&()
+    {
+        return *reinterpret_cast<XrFrameState*>(this);
+    }
 
     // member decl
     Time predictedDisplayTime;
@@ -13676,6 +9019,17 @@ public:
 };
 static_assert(sizeof(FrameState) == sizeof(XrFrameState), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for FrameState const reference as a raw XrFrameState const pointer
+//! @relates FrameState
+OPENXR_HPP_INLINE XrFrameState const* get(FrameState const& h)
+{
+    return &(h.operator XrFrameState const&());
+}
+
+//! @brief Free function accessor for passing FrameState as the address of a raw XrFrameState
+//! @relates FrameState
+OPENXR_HPP_INLINE XrFrameState* put(FrameState& h) { return &(h.operator XrFrameState&()); }
+
 struct FrameBeginInfo : public traits::TypedStructTraits<FrameBeginInfo> {
 private:
     using Parent = traits::TypedStructTraits<FrameBeginInfo>;
@@ -13683,15 +9037,32 @@ private:
 public:
     // ctor
     FrameBeginInfo()
-        : Parent(StructureType::FrameBeginInfo)
+        :
+
+        Parent(StructureType::FrameBeginInfo)
+
     {
     }
     operator const XrFrameBeginInfo&() const { return *reinterpret_cast<const XrFrameBeginInfo*>(this); }
-    operator XrFrameBeginInfo&() { return *reinterpret_cast<XrFrameBeginInfo*>(this); }
+    operator XrFrameBeginInfo&()
+    {
+        return *reinterpret_cast<XrFrameBeginInfo*>(this);
+    }
 
     // member decl
 };
 static_assert(sizeof(FrameBeginInfo) == sizeof(XrFrameBeginInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for FrameBeginInfo const reference as a raw XrFrameBeginInfo const pointer
+//! @relates FrameBeginInfo
+OPENXR_HPP_INLINE XrFrameBeginInfo const* get(FrameBeginInfo const& h)
+{
+    return &(h.operator XrFrameBeginInfo const&());
+}
+
+//! @brief Free function accessor for passing FrameBeginInfo as the address of a raw XrFrameBeginInfo
+//! @relates FrameBeginInfo
+OPENXR_HPP_INLINE XrFrameBeginInfo* put(FrameBeginInfo& h) { return &(h.operator XrFrameBeginInfo&()); }
 
 struct FrameEndInfo : public traits::TypedStructTraits<FrameEndInfo> {
 private:
@@ -13704,15 +9075,22 @@ public:
         const EnvironmentBlendMode& environmentBlendMode_ = {},
         uint32_t layerCount_ = 0,
         const CompositionLayerBaseHeader* const* layers_ = nullptr)
-        : Parent(StructureType::FrameEndInfo)
-        , displayTime { displayTime_ }
+        :
+
+        Parent(StructureType::FrameEndInfo)
+        ,
+
+        displayTime { displayTime_ }
         , environmentBlendMode { environmentBlendMode_ }
         , layerCount { layerCount_ }
         , layers { layers_ }
     {
     }
     operator const XrFrameEndInfo&() const { return *reinterpret_cast<const XrFrameEndInfo*>(this); }
-    operator XrFrameEndInfo&() { return *reinterpret_cast<XrFrameEndInfo*>(this); }
+    operator XrFrameEndInfo&()
+    {
+        return *reinterpret_cast<XrFrameEndInfo*>(this);
+    }
 
     // member decl
     Time displayTime;
@@ -13721,6 +9099,17 @@ public:
     const CompositionLayerBaseHeader* const* layers;
 };
 static_assert(sizeof(FrameEndInfo) == sizeof(XrFrameEndInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for FrameEndInfo const reference as a raw XrFrameEndInfo const pointer
+//! @relates FrameEndInfo
+OPENXR_HPP_INLINE XrFrameEndInfo const* get(FrameEndInfo const& h)
+{
+    return &(h.operator XrFrameEndInfo const&());
+}
+
+//! @brief Free function accessor for passing FrameEndInfo as the address of a raw XrFrameEndInfo
+//! @relates FrameEndInfo
+OPENXR_HPP_INLINE XrFrameEndInfo* put(FrameEndInfo& h) { return &(h.operator XrFrameEndInfo&()); }
 
 struct ViewLocateInfo : public traits::TypedStructTraits<ViewLocateInfo> {
 private:
@@ -13732,14 +9121,21 @@ public:
         const ViewConfigurationType& viewConfigurationType_ = {},
         const Time& displayTime_ = {},
         const Space& space_ = {})
-        : Parent(StructureType::ViewLocateInfo)
-        , viewConfigurationType { viewConfigurationType_ }
+        :
+
+        Parent(StructureType::ViewLocateInfo)
+        ,
+
+        viewConfigurationType { viewConfigurationType_ }
         , displayTime { displayTime_ }
         , space { space_ }
     {
     }
     operator const XrViewLocateInfo&() const { return *reinterpret_cast<const XrViewLocateInfo*>(this); }
-    operator XrViewLocateInfo&() { return *reinterpret_cast<XrViewLocateInfo*>(this); }
+    operator XrViewLocateInfo&()
+    {
+        return *reinterpret_cast<XrViewLocateInfo*>(this);
+    }
 
     // member decl
     ViewConfigurationType viewConfigurationType;
@@ -13747,6 +9143,17 @@ public:
     Space space;
 };
 static_assert(sizeof(ViewLocateInfo) == sizeof(XrViewLocateInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ViewLocateInfo const reference as a raw XrViewLocateInfo const pointer
+//! @relates ViewLocateInfo
+OPENXR_HPP_INLINE XrViewLocateInfo const* get(ViewLocateInfo const& h)
+{
+    return &(h.operator XrViewLocateInfo const&());
+}
+
+//! @brief Free function accessor for passing ViewLocateInfo as the address of a raw XrViewLocateInfo
+//! @relates ViewLocateInfo
+OPENXR_HPP_INLINE XrViewLocateInfo* put(ViewLocateInfo& h) { return &(h.operator XrViewLocateInfo&()); }
 
 struct ViewState : public traits::TypedStructTraits<ViewState> {
 private:
@@ -13756,17 +9163,35 @@ public:
     // ctor
     ViewState(
         const ViewStateFlags& viewStateFlags_ = {})
-        : Parent(StructureType::ViewState)
-        , viewStateFlags { viewStateFlags_ }
+        :
+
+        Parent(StructureType::ViewState)
+        ,
+
+        viewStateFlags { viewStateFlags_ }
     {
     }
     operator const XrViewState&() const { return *reinterpret_cast<const XrViewState*>(this); }
-    operator XrViewState&() { return *reinterpret_cast<XrViewState*>(this); }
+    operator XrViewState&()
+    {
+        return *reinterpret_cast<XrViewState*>(this);
+    }
 
     // member decl
     ViewStateFlags viewStateFlags;
 };
 static_assert(sizeof(ViewState) == sizeof(XrViewState), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ViewState const reference as a raw XrViewState const pointer
+//! @relates ViewState
+OPENXR_HPP_INLINE XrViewState const* get(ViewState const& h)
+{
+    return &(h.operator XrViewState const&());
+}
+
+//! @brief Free function accessor for passing ViewState as the address of a raw XrViewState
+//! @relates ViewState
+OPENXR_HPP_INLINE XrViewState* put(ViewState& h) { return &(h.operator XrViewState&()); }
 
 struct Fovf {
     // ctor
@@ -13775,14 +9200,19 @@ struct Fovf {
         float angleRight_ = 0.0f,
         float angleUp_ = 0.0f,
         float angleDown_ = 0.0f)
-        : angleLeft { angleLeft_ }
+        :
+
+        angleLeft { angleLeft_ }
         , angleRight { angleRight_ }
         , angleUp { angleUp_ }
         , angleDown { angleDown_ }
     {
     }
     operator const XrFovf&() const { return *reinterpret_cast<const XrFovf*>(this); }
-    operator XrFovf&() { return *reinterpret_cast<XrFovf*>(this); }
+    operator XrFovf&()
+    {
+        return *reinterpret_cast<XrFovf*>(this);
+    }
 
     // member decl
     float angleLeft;
@@ -13791,6 +9221,17 @@ struct Fovf {
     float angleDown;
 };
 static_assert(sizeof(Fovf) == sizeof(XrFovf), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Fovf const reference as a raw XrFovf const pointer
+//! @relates Fovf
+OPENXR_HPP_INLINE XrFovf const* get(Fovf const& h)
+{
+    return &(h.operator XrFovf const&());
+}
+
+//! @brief Free function accessor for passing Fovf as the address of a raw XrFovf
+//! @relates Fovf
+OPENXR_HPP_INLINE XrFovf* put(Fovf& h) { return &(h.operator XrFovf&()); }
 
 struct View : public traits::TypedStructTraits<View> {
 private:
@@ -13801,19 +9242,37 @@ public:
     View(
         const Posef& pose_ = {},
         const Fovf& fov_ = {})
-        : Parent(StructureType::View)
-        , pose { pose_ }
+        :
+
+        Parent(StructureType::View)
+        ,
+
+        pose { pose_ }
         , fov { fov_ }
     {
     }
     operator const XrView&() const { return *reinterpret_cast<const XrView*>(this); }
-    operator XrView&() { return *reinterpret_cast<XrView*>(this); }
+    operator XrView&()
+    {
+        return *reinterpret_cast<XrView*>(this);
+    }
 
     // member decl
     Posef pose;
     Fovf fov;
 };
 static_assert(sizeof(View) == sizeof(XrView), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for View const reference as a raw XrView const pointer
+//! @relates View
+OPENXR_HPP_INLINE XrView const* get(View const& h)
+{
+    return &(h.operator XrView const&());
+}
+
+//! @brief Free function accessor for passing View as the address of a raw XrView
+//! @relates View
+OPENXR_HPP_INLINE XrView* put(View& h) { return &(h.operator XrView&()); }
 
 struct ActionSetCreateInfo : public traits::TypedStructTraits<ActionSetCreateInfo> {
 private:
@@ -13825,8 +9284,12 @@ public:
         const char* actionSetName_ = nullptr,
         const char* localizedActionSetName_ = nullptr,
         uint32_t priority_ = 0)
-        : Parent(StructureType::ActionSetCreateInfo)
-        , priority { priority_ }
+        :
+
+        Parent(StructureType::ActionSetCreateInfo)
+        ,
+
+        priority { priority_ }
     {
         if (nullptr != actionSetName_) {
             // FIXME what is the safe way to do this?
@@ -13838,7 +9301,10 @@ public:
         }
     }
     operator const XrActionSetCreateInfo&() const { return *reinterpret_cast<const XrActionSetCreateInfo*>(this); }
-    operator XrActionSetCreateInfo&() { return *reinterpret_cast<XrActionSetCreateInfo*>(this); }
+    operator XrActionSetCreateInfo&()
+    {
+        return *reinterpret_cast<XrActionSetCreateInfo*>(this);
+    }
 
     // member decl
     char actionSetName[XR_MAX_ACTION_SET_NAME_SIZE];
@@ -13846,6 +9312,17 @@ public:
     uint32_t priority;
 };
 static_assert(sizeof(ActionSetCreateInfo) == sizeof(XrActionSetCreateInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionSetCreateInfo const reference as a raw XrActionSetCreateInfo const pointer
+//! @relates ActionSetCreateInfo
+OPENXR_HPP_INLINE XrActionSetCreateInfo const* get(ActionSetCreateInfo const& h)
+{
+    return &(h.operator XrActionSetCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing ActionSetCreateInfo as the address of a raw XrActionSetCreateInfo
+//! @relates ActionSetCreateInfo
+OPENXR_HPP_INLINE XrActionSetCreateInfo* put(ActionSetCreateInfo& h) { return &(h.operator XrActionSetCreateInfo&()); }
 
 struct ActionCreateInfo : public traits::TypedStructTraits<ActionCreateInfo> {
 private:
@@ -13859,8 +9336,12 @@ public:
         uint32_t countSubactionPaths_ = 0,
         const Path* subactionPaths_ = nullptr,
         const char* localizedActionName_ = nullptr)
-        : Parent(StructureType::ActionCreateInfo)
-        , actionType { actionType_ }
+        :
+
+        Parent(StructureType::ActionCreateInfo)
+        ,
+
+        actionType { actionType_ }
         , countSubactionPaths { countSubactionPaths_ }
         , subactionPaths { subactionPaths_ }
     {
@@ -13874,7 +9355,10 @@ public:
         }
     }
     operator const XrActionCreateInfo&() const { return *reinterpret_cast<const XrActionCreateInfo*>(this); }
-    operator XrActionCreateInfo&() { return *reinterpret_cast<XrActionCreateInfo*>(this); }
+    operator XrActionCreateInfo&()
+    {
+        return *reinterpret_cast<XrActionCreateInfo*>(this);
+    }
 
     // member decl
     char actionName[XR_MAX_ACTION_NAME_SIZE];
@@ -13885,23 +9369,50 @@ public:
 };
 static_assert(sizeof(ActionCreateInfo) == sizeof(XrActionCreateInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionCreateInfo const reference as a raw XrActionCreateInfo const pointer
+//! @relates ActionCreateInfo
+OPENXR_HPP_INLINE XrActionCreateInfo const* get(ActionCreateInfo const& h)
+{
+    return &(h.operator XrActionCreateInfo const&());
+}
+
+//! @brief Free function accessor for passing ActionCreateInfo as the address of a raw XrActionCreateInfo
+//! @relates ActionCreateInfo
+OPENXR_HPP_INLINE XrActionCreateInfo* put(ActionCreateInfo& h) { return &(h.operator XrActionCreateInfo&()); }
+
 struct ActionSuggestedBinding {
     // ctor
     ActionSuggestedBinding(
         const Action& action_ = {},
         const Path& binding_ = {})
-        : action { action_ }
+        :
+
+        action { action_ }
         , binding { binding_ }
     {
     }
     operator const XrActionSuggestedBinding&() const { return *reinterpret_cast<const XrActionSuggestedBinding*>(this); }
-    operator XrActionSuggestedBinding&() { return *reinterpret_cast<XrActionSuggestedBinding*>(this); }
+    operator XrActionSuggestedBinding&()
+    {
+        return *reinterpret_cast<XrActionSuggestedBinding*>(this);
+    }
 
     // member decl
     Action action;
     Path binding;
 };
 static_assert(sizeof(ActionSuggestedBinding) == sizeof(XrActionSuggestedBinding), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionSuggestedBinding const reference as a raw XrActionSuggestedBinding const pointer
+//! @relates ActionSuggestedBinding
+OPENXR_HPP_INLINE XrActionSuggestedBinding const* get(ActionSuggestedBinding const& h)
+{
+    return &(h.operator XrActionSuggestedBinding const&());
+}
+
+//! @brief Free function accessor for passing ActionSuggestedBinding as the address of a raw XrActionSuggestedBinding
+//! @relates ActionSuggestedBinding
+OPENXR_HPP_INLINE XrActionSuggestedBinding* put(ActionSuggestedBinding& h) { return &(h.operator XrActionSuggestedBinding&()); }
 
 struct InteractionProfileSuggestedBinding : public traits::TypedStructTraits<InteractionProfileSuggestedBinding> {
 private:
@@ -13913,14 +9424,21 @@ public:
         const Path& interactionProfile_ = {},
         uint32_t countSuggestedBindings_ = 0,
         const ActionSuggestedBinding* suggestedBindings_ = nullptr)
-        : Parent(StructureType::InteractionProfileSuggestedBinding)
-        , interactionProfile { interactionProfile_ }
+        :
+
+        Parent(StructureType::InteractionProfileSuggestedBinding)
+        ,
+
+        interactionProfile { interactionProfile_ }
         , countSuggestedBindings { countSuggestedBindings_ }
         , suggestedBindings { suggestedBindings_ }
     {
     }
     operator const XrInteractionProfileSuggestedBinding&() const { return *reinterpret_cast<const XrInteractionProfileSuggestedBinding*>(this); }
-    operator XrInteractionProfileSuggestedBinding&() { return *reinterpret_cast<XrInteractionProfileSuggestedBinding*>(this); }
+    operator XrInteractionProfileSuggestedBinding&()
+    {
+        return *reinterpret_cast<XrInteractionProfileSuggestedBinding*>(this);
+    }
 
     // member decl
     Path interactionProfile;
@@ -13928,6 +9446,17 @@ public:
     const ActionSuggestedBinding* suggestedBindings;
 };
 static_assert(sizeof(InteractionProfileSuggestedBinding) == sizeof(XrInteractionProfileSuggestedBinding), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InteractionProfileSuggestedBinding const reference as a raw XrInteractionProfileSuggestedBinding const pointer
+//! @relates InteractionProfileSuggestedBinding
+OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding const* get(InteractionProfileSuggestedBinding const& h)
+{
+    return &(h.operator XrInteractionProfileSuggestedBinding const&());
+}
+
+//! @brief Free function accessor for passing InteractionProfileSuggestedBinding as the address of a raw XrInteractionProfileSuggestedBinding
+//! @relates InteractionProfileSuggestedBinding
+OPENXR_HPP_INLINE XrInteractionProfileSuggestedBinding* put(InteractionProfileSuggestedBinding& h) { return &(h.operator XrInteractionProfileSuggestedBinding&()); }
 
 struct SessionActionSetsAttachInfo : public traits::TypedStructTraits<SessionActionSetsAttachInfo> {
 private:
@@ -13938,19 +9467,37 @@ public:
     SessionActionSetsAttachInfo(
         uint32_t countActionSets_ = 0,
         const ActionSet* actionSets_ = nullptr)
-        : Parent(StructureType::SessionActionSetsAttachInfo)
-        , countActionSets { countActionSets_ }
+        :
+
+        Parent(StructureType::SessionActionSetsAttachInfo)
+        ,
+
+        countActionSets { countActionSets_ }
         , actionSets { actionSets_ }
     {
     }
     operator const XrSessionActionSetsAttachInfo&() const { return *reinterpret_cast<const XrSessionActionSetsAttachInfo*>(this); }
-    operator XrSessionActionSetsAttachInfo&() { return *reinterpret_cast<XrSessionActionSetsAttachInfo*>(this); }
+    operator XrSessionActionSetsAttachInfo&()
+    {
+        return *reinterpret_cast<XrSessionActionSetsAttachInfo*>(this);
+    }
 
     // member decl
     uint32_t countActionSets;
     const ActionSet* actionSets;
 };
 static_assert(sizeof(SessionActionSetsAttachInfo) == sizeof(XrSessionActionSetsAttachInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SessionActionSetsAttachInfo const reference as a raw XrSessionActionSetsAttachInfo const pointer
+//! @relates SessionActionSetsAttachInfo
+OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo const* get(SessionActionSetsAttachInfo const& h)
+{
+    return &(h.operator XrSessionActionSetsAttachInfo const&());
+}
+
+//! @brief Free function accessor for passing SessionActionSetsAttachInfo as the address of a raw XrSessionActionSetsAttachInfo
+//! @relates SessionActionSetsAttachInfo
+OPENXR_HPP_INLINE XrSessionActionSetsAttachInfo* put(SessionActionSetsAttachInfo& h) { return &(h.operator XrSessionActionSetsAttachInfo&()); }
 
 struct InteractionProfileState : public traits::TypedStructTraits<InteractionProfileState> {
 private:
@@ -13960,17 +9507,35 @@ public:
     // ctor
     InteractionProfileState(
         const Path& interactionProfile_ = {})
-        : Parent(StructureType::InteractionProfileState)
-        , interactionProfile { interactionProfile_ }
+        :
+
+        Parent(StructureType::InteractionProfileState)
+        ,
+
+        interactionProfile { interactionProfile_ }
     {
     }
     operator const XrInteractionProfileState&() const { return *reinterpret_cast<const XrInteractionProfileState*>(this); }
-    operator XrInteractionProfileState&() { return *reinterpret_cast<XrInteractionProfileState*>(this); }
+    operator XrInteractionProfileState&()
+    {
+        return *reinterpret_cast<XrInteractionProfileState*>(this);
+    }
 
     // member decl
     Path interactionProfile;
 };
 static_assert(sizeof(InteractionProfileState) == sizeof(XrInteractionProfileState), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InteractionProfileState const reference as a raw XrInteractionProfileState const pointer
+//! @relates InteractionProfileState
+OPENXR_HPP_INLINE XrInteractionProfileState const* get(InteractionProfileState const& h)
+{
+    return &(h.operator XrInteractionProfileState const&());
+}
+
+//! @brief Free function accessor for passing InteractionProfileState as the address of a raw XrInteractionProfileState
+//! @relates InteractionProfileState
+OPENXR_HPP_INLINE XrInteractionProfileState* put(InteractionProfileState& h) { return &(h.operator XrInteractionProfileState&()); }
 
 struct ActionStateGetInfo : public traits::TypedStructTraits<ActionStateGetInfo> {
 private:
@@ -13981,19 +9546,37 @@ public:
     ActionStateGetInfo(
         const Action& action_ = {},
         const Path& subactionPath_ = {})
-        : Parent(StructureType::ActionStateGetInfo)
-        , action { action_ }
+        :
+
+        Parent(StructureType::ActionStateGetInfo)
+        ,
+
+        action { action_ }
         , subactionPath { subactionPath_ }
     {
     }
     operator const XrActionStateGetInfo&() const { return *reinterpret_cast<const XrActionStateGetInfo*>(this); }
-    operator XrActionStateGetInfo&() { return *reinterpret_cast<XrActionStateGetInfo*>(this); }
+    operator XrActionStateGetInfo&()
+    {
+        return *reinterpret_cast<XrActionStateGetInfo*>(this);
+    }
 
     // member decl
     Action action;
     Path subactionPath;
 };
 static_assert(sizeof(ActionStateGetInfo) == sizeof(XrActionStateGetInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionStateGetInfo const reference as a raw XrActionStateGetInfo const pointer
+//! @relates ActionStateGetInfo
+OPENXR_HPP_INLINE XrActionStateGetInfo const* get(ActionStateGetInfo const& h)
+{
+    return &(h.operator XrActionStateGetInfo const&());
+}
+
+//! @brief Free function accessor for passing ActionStateGetInfo as the address of a raw XrActionStateGetInfo
+//! @relates ActionStateGetInfo
+OPENXR_HPP_INLINE XrActionStateGetInfo* put(ActionStateGetInfo& h) { return &(h.operator XrActionStateGetInfo&()); }
 
 struct ActionStateBoolean : public traits::TypedStructTraits<ActionStateBoolean> {
 private:
@@ -14006,15 +9589,22 @@ public:
         const Bool32& changedSinceLastSync_ = XR_FALSE,
         const Time& lastChangeTime_ = {},
         const Bool32& isActive_ = XR_FALSE)
-        : Parent(StructureType::ActionStateBoolean)
-        , currentState { currentState_ }
+        :
+
+        Parent(StructureType::ActionStateBoolean)
+        ,
+
+        currentState { currentState_ }
         , changedSinceLastSync { changedSinceLastSync_ }
         , lastChangeTime { lastChangeTime_ }
         , isActive { isActive_ }
     {
     }
     operator const XrActionStateBoolean&() const { return *reinterpret_cast<const XrActionStateBoolean*>(this); }
-    operator XrActionStateBoolean&() { return *reinterpret_cast<XrActionStateBoolean*>(this); }
+    operator XrActionStateBoolean&()
+    {
+        return *reinterpret_cast<XrActionStateBoolean*>(this);
+    }
 
     // member decl
     Bool32 currentState;
@@ -14023,6 +9613,17 @@ public:
     Bool32 isActive;
 };
 static_assert(sizeof(ActionStateBoolean) == sizeof(XrActionStateBoolean), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionStateBoolean const reference as a raw XrActionStateBoolean const pointer
+//! @relates ActionStateBoolean
+OPENXR_HPP_INLINE XrActionStateBoolean const* get(ActionStateBoolean const& h)
+{
+    return &(h.operator XrActionStateBoolean const&());
+}
+
+//! @brief Free function accessor for passing ActionStateBoolean as the address of a raw XrActionStateBoolean
+//! @relates ActionStateBoolean
+OPENXR_HPP_INLINE XrActionStateBoolean* put(ActionStateBoolean& h) { return &(h.operator XrActionStateBoolean&()); }
 
 struct ActionStateFloat : public traits::TypedStructTraits<ActionStateFloat> {
 private:
@@ -14035,15 +9636,22 @@ public:
         const Bool32& changedSinceLastSync_ = XR_FALSE,
         const Time& lastChangeTime_ = {},
         const Bool32& isActive_ = XR_FALSE)
-        : Parent(StructureType::ActionStateFloat)
-        , currentState { currentState_ }
+        :
+
+        Parent(StructureType::ActionStateFloat)
+        ,
+
+        currentState { currentState_ }
         , changedSinceLastSync { changedSinceLastSync_ }
         , lastChangeTime { lastChangeTime_ }
         , isActive { isActive_ }
     {
     }
     operator const XrActionStateFloat&() const { return *reinterpret_cast<const XrActionStateFloat*>(this); }
-    operator XrActionStateFloat&() { return *reinterpret_cast<XrActionStateFloat*>(this); }
+    operator XrActionStateFloat&()
+    {
+        return *reinterpret_cast<XrActionStateFloat*>(this);
+    }
 
     // member decl
     float currentState;
@@ -14053,23 +9661,50 @@ public:
 };
 static_assert(sizeof(ActionStateFloat) == sizeof(XrActionStateFloat), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStateFloat const reference as a raw XrActionStateFloat const pointer
+//! @relates ActionStateFloat
+OPENXR_HPP_INLINE XrActionStateFloat const* get(ActionStateFloat const& h)
+{
+    return &(h.operator XrActionStateFloat const&());
+}
+
+//! @brief Free function accessor for passing ActionStateFloat as the address of a raw XrActionStateFloat
+//! @relates ActionStateFloat
+OPENXR_HPP_INLINE XrActionStateFloat* put(ActionStateFloat& h) { return &(h.operator XrActionStateFloat&()); }
+
 struct Vector2f {
     // ctor
     Vector2f(
         float x_ = 0.0f,
         float y_ = 0.0f)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
     {
     }
     operator const XrVector2f&() const { return *reinterpret_cast<const XrVector2f*>(this); }
-    operator XrVector2f&() { return *reinterpret_cast<XrVector2f*>(this); }
+    operator XrVector2f&()
+    {
+        return *reinterpret_cast<XrVector2f*>(this);
+    }
 
     // member decl
     float x;
     float y;
 };
 static_assert(sizeof(Vector2f) == sizeof(XrVector2f), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Vector2f const reference as a raw XrVector2f const pointer
+//! @relates Vector2f
+OPENXR_HPP_INLINE XrVector2f const* get(Vector2f const& h)
+{
+    return &(h.operator XrVector2f const&());
+}
+
+//! @brief Free function accessor for passing Vector2f as the address of a raw XrVector2f
+//! @relates Vector2f
+OPENXR_HPP_INLINE XrVector2f* put(Vector2f& h) { return &(h.operator XrVector2f&()); }
 
 struct ActionStateVector2f : public traits::TypedStructTraits<ActionStateVector2f> {
 private:
@@ -14082,15 +9717,22 @@ public:
         const Bool32& changedSinceLastSync_ = XR_FALSE,
         const Time& lastChangeTime_ = {},
         const Bool32& isActive_ = XR_FALSE)
-        : Parent(StructureType::ActionStateVector2F)
-        , currentState { currentState_ }
+        :
+
+        Parent(StructureType::ActionStateVector2F)
+        ,
+
+        currentState { currentState_ }
         , changedSinceLastSync { changedSinceLastSync_ }
         , lastChangeTime { lastChangeTime_ }
         , isActive { isActive_ }
     {
     }
     operator const XrActionStateVector2f&() const { return *reinterpret_cast<const XrActionStateVector2f*>(this); }
-    operator XrActionStateVector2f&() { return *reinterpret_cast<XrActionStateVector2f*>(this); }
+    operator XrActionStateVector2f&()
+    {
+        return *reinterpret_cast<XrActionStateVector2f*>(this);
+    }
 
     // member decl
     Vector2f currentState;
@@ -14100,6 +9742,17 @@ public:
 };
 static_assert(sizeof(ActionStateVector2f) == sizeof(XrActionStateVector2f), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStateVector2f const reference as a raw XrActionStateVector2f const pointer
+//! @relates ActionStateVector2f
+OPENXR_HPP_INLINE XrActionStateVector2f const* get(ActionStateVector2f const& h)
+{
+    return &(h.operator XrActionStateVector2f const&());
+}
+
+//! @brief Free function accessor for passing ActionStateVector2f as the address of a raw XrActionStateVector2f
+//! @relates ActionStateVector2f
+OPENXR_HPP_INLINE XrActionStateVector2f* put(ActionStateVector2f& h) { return &(h.operator XrActionStateVector2f&()); }
+
 struct ActionStatePose : public traits::TypedStructTraits<ActionStatePose> {
 private:
     using Parent = traits::TypedStructTraits<ActionStatePose>;
@@ -14108,35 +9761,69 @@ public:
     // ctor
     ActionStatePose(
         const Bool32& isActive_ = XR_FALSE)
-        : Parent(StructureType::ActionStatePose)
-        , isActive { isActive_ }
+        :
+
+        Parent(StructureType::ActionStatePose)
+        ,
+
+        isActive { isActive_ }
     {
     }
     operator const XrActionStatePose&() const { return *reinterpret_cast<const XrActionStatePose*>(this); }
-    operator XrActionStatePose&() { return *reinterpret_cast<XrActionStatePose*>(this); }
+    operator XrActionStatePose&()
+    {
+        return *reinterpret_cast<XrActionStatePose*>(this);
+    }
 
     // member decl
     Bool32 isActive;
 };
 static_assert(sizeof(ActionStatePose) == sizeof(XrActionStatePose), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for ActionStatePose const reference as a raw XrActionStatePose const pointer
+//! @relates ActionStatePose
+OPENXR_HPP_INLINE XrActionStatePose const* get(ActionStatePose const& h)
+{
+    return &(h.operator XrActionStatePose const&());
+}
+
+//! @brief Free function accessor for passing ActionStatePose as the address of a raw XrActionStatePose
+//! @relates ActionStatePose
+OPENXR_HPP_INLINE XrActionStatePose* put(ActionStatePose& h) { return &(h.operator XrActionStatePose&()); }
+
 struct ActiveActionSet {
     // ctor
     ActiveActionSet(
         const ActionSet& actionSet_ = {},
         const Path& subactionPath_ = {})
-        : actionSet { actionSet_ }
+        :
+
+        actionSet { actionSet_ }
         , subactionPath { subactionPath_ }
     {
     }
     operator const XrActiveActionSet&() const { return *reinterpret_cast<const XrActiveActionSet*>(this); }
-    operator XrActiveActionSet&() { return *reinterpret_cast<XrActiveActionSet*>(this); }
+    operator XrActiveActionSet&()
+    {
+        return *reinterpret_cast<XrActiveActionSet*>(this);
+    }
 
     // member decl
     ActionSet actionSet;
     Path subactionPath;
 };
 static_assert(sizeof(ActiveActionSet) == sizeof(XrActiveActionSet), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActiveActionSet const reference as a raw XrActiveActionSet const pointer
+//! @relates ActiveActionSet
+OPENXR_HPP_INLINE XrActiveActionSet const* get(ActiveActionSet const& h)
+{
+    return &(h.operator XrActiveActionSet const&());
+}
+
+//! @brief Free function accessor for passing ActiveActionSet as the address of a raw XrActiveActionSet
+//! @relates ActiveActionSet
+OPENXR_HPP_INLINE XrActiveActionSet* put(ActiveActionSet& h) { return &(h.operator XrActiveActionSet&()); }
 
 struct ActionsSyncInfo : public traits::TypedStructTraits<ActionsSyncInfo> {
 private:
@@ -14147,19 +9834,37 @@ public:
     ActionsSyncInfo(
         uint32_t countActiveActionSets_ = 0,
         const ActiveActionSet* activeActionSets_ = nullptr)
-        : Parent(StructureType::ActionsSyncInfo)
-        , countActiveActionSets { countActiveActionSets_ }
+        :
+
+        Parent(StructureType::ActionsSyncInfo)
+        ,
+
+        countActiveActionSets { countActiveActionSets_ }
         , activeActionSets { activeActionSets_ }
     {
     }
     operator const XrActionsSyncInfo&() const { return *reinterpret_cast<const XrActionsSyncInfo*>(this); }
-    operator XrActionsSyncInfo&() { return *reinterpret_cast<XrActionsSyncInfo*>(this); }
+    operator XrActionsSyncInfo&()
+    {
+        return *reinterpret_cast<XrActionsSyncInfo*>(this);
+    }
 
     // member decl
     uint32_t countActiveActionSets;
     const ActiveActionSet* activeActionSets;
 };
 static_assert(sizeof(ActionsSyncInfo) == sizeof(XrActionsSyncInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for ActionsSyncInfo const reference as a raw XrActionsSyncInfo const pointer
+//! @relates ActionsSyncInfo
+OPENXR_HPP_INLINE XrActionsSyncInfo const* get(ActionsSyncInfo const& h)
+{
+    return &(h.operator XrActionsSyncInfo const&());
+}
+
+//! @brief Free function accessor for passing ActionsSyncInfo as the address of a raw XrActionsSyncInfo
+//! @relates ActionsSyncInfo
+OPENXR_HPP_INLINE XrActionsSyncInfo* put(ActionsSyncInfo& h) { return &(h.operator XrActionsSyncInfo&()); }
 
 struct BoundSourcesForActionEnumerateInfo : public traits::TypedStructTraits<BoundSourcesForActionEnumerateInfo> {
 private:
@@ -14169,17 +9874,35 @@ public:
     // ctor
     BoundSourcesForActionEnumerateInfo(
         const Action& action_ = {})
-        : Parent(StructureType::BoundSourcesForActionEnumerateInfo)
-        , action { action_ }
+        :
+
+        Parent(StructureType::BoundSourcesForActionEnumerateInfo)
+        ,
+
+        action { action_ }
     {
     }
     operator const XrBoundSourcesForActionEnumerateInfo&() const { return *reinterpret_cast<const XrBoundSourcesForActionEnumerateInfo*>(this); }
-    operator XrBoundSourcesForActionEnumerateInfo&() { return *reinterpret_cast<XrBoundSourcesForActionEnumerateInfo*>(this); }
+    operator XrBoundSourcesForActionEnumerateInfo&()
+    {
+        return *reinterpret_cast<XrBoundSourcesForActionEnumerateInfo*>(this);
+    }
 
     // member decl
     Action action;
 };
 static_assert(sizeof(BoundSourcesForActionEnumerateInfo) == sizeof(XrBoundSourcesForActionEnumerateInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for BoundSourcesForActionEnumerateInfo const reference as a raw XrBoundSourcesForActionEnumerateInfo const pointer
+//! @relates BoundSourcesForActionEnumerateInfo
+OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo const* get(BoundSourcesForActionEnumerateInfo const& h)
+{
+    return &(h.operator XrBoundSourcesForActionEnumerateInfo const&());
+}
+
+//! @brief Free function accessor for passing BoundSourcesForActionEnumerateInfo as the address of a raw XrBoundSourcesForActionEnumerateInfo
+//! @relates BoundSourcesForActionEnumerateInfo
+OPENXR_HPP_INLINE XrBoundSourcesForActionEnumerateInfo* put(BoundSourcesForActionEnumerateInfo& h) { return &(h.operator XrBoundSourcesForActionEnumerateInfo&()); }
 
 struct InputSourceLocalizedNameGetInfo : public traits::TypedStructTraits<InputSourceLocalizedNameGetInfo> {
 private:
@@ -14190,19 +9913,37 @@ public:
     InputSourceLocalizedNameGetInfo(
         const Path& sourcePath_ = {},
         const InputSourceLocalizedNameFlags& whichComponents_ = {})
-        : Parent(StructureType::InputSourceLocalizedNameGetInfo)
-        , sourcePath { sourcePath_ }
+        :
+
+        Parent(StructureType::InputSourceLocalizedNameGetInfo)
+        ,
+
+        sourcePath { sourcePath_ }
         , whichComponents { whichComponents_ }
     {
     }
     operator const XrInputSourceLocalizedNameGetInfo&() const { return *reinterpret_cast<const XrInputSourceLocalizedNameGetInfo*>(this); }
-    operator XrInputSourceLocalizedNameGetInfo&() { return *reinterpret_cast<XrInputSourceLocalizedNameGetInfo*>(this); }
+    operator XrInputSourceLocalizedNameGetInfo&()
+    {
+        return *reinterpret_cast<XrInputSourceLocalizedNameGetInfo*>(this);
+    }
 
     // member decl
     Path sourcePath;
     InputSourceLocalizedNameFlags whichComponents;
 };
 static_assert(sizeof(InputSourceLocalizedNameGetInfo) == sizeof(XrInputSourceLocalizedNameGetInfo), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InputSourceLocalizedNameGetInfo const reference as a raw XrInputSourceLocalizedNameGetInfo const pointer
+//! @relates InputSourceLocalizedNameGetInfo
+OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo const* get(InputSourceLocalizedNameGetInfo const& h)
+{
+    return &(h.operator XrInputSourceLocalizedNameGetInfo const&());
+}
+
+//! @brief Free function accessor for passing InputSourceLocalizedNameGetInfo as the address of a raw XrInputSourceLocalizedNameGetInfo
+//! @relates InputSourceLocalizedNameGetInfo
+OPENXR_HPP_INLINE XrInputSourceLocalizedNameGetInfo* put(InputSourceLocalizedNameGetInfo& h) { return &(h.operator XrInputSourceLocalizedNameGetInfo&()); }
 
 struct HapticActionInfo : public traits::TypedStructTraits<HapticActionInfo> {
 private:
@@ -14213,13 +9954,20 @@ public:
     HapticActionInfo(
         const Action& action_ = {},
         const Path& subactionPath_ = {})
-        : Parent(StructureType::HapticActionInfo)
-        , action { action_ }
+        :
+
+        Parent(StructureType::HapticActionInfo)
+        ,
+
+        action { action_ }
         , subactionPath { subactionPath_ }
     {
     }
     operator const XrHapticActionInfo&() const { return *reinterpret_cast<const XrHapticActionInfo*>(this); }
-    operator XrHapticActionInfo&() { return *reinterpret_cast<XrHapticActionInfo*>(this); }
+    operator XrHapticActionInfo&()
+    {
+        return *reinterpret_cast<XrHapticActionInfo*>(this);
+    }
 
     // member decl
     Action action;
@@ -14227,17 +9975,33 @@ public:
 };
 static_assert(sizeof(HapticActionInfo) == sizeof(XrHapticActionInfo), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for HapticActionInfo const reference as a raw XrHapticActionInfo const pointer
+//! @relates HapticActionInfo
+OPENXR_HPP_INLINE XrHapticActionInfo const* get(HapticActionInfo const& h)
+{
+    return &(h.operator XrHapticActionInfo const&());
+}
+
+//! @brief Free function accessor for passing HapticActionInfo as the address of a raw XrHapticActionInfo
+//! @relates HapticActionInfo
+OPENXR_HPP_INLINE XrHapticActionInfo* put(HapticActionInfo& h) { return &(h.operator XrHapticActionInfo&()); }
+
 struct Offset2Di {
     // ctor
     Offset2Di(
         int32_t x_ = 0,
         int32_t y_ = 0)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
     {
     }
     operator const XrOffset2Di&() const { return *reinterpret_cast<const XrOffset2Di*>(this); }
-    operator XrOffset2Di&() { return *reinterpret_cast<XrOffset2Di*>(this); }
+    operator XrOffset2Di&()
+    {
+        return *reinterpret_cast<XrOffset2Di*>(this);
+    }
 
     // member decl
     int32_t x;
@@ -14245,17 +10009,33 @@ struct Offset2Di {
 };
 static_assert(sizeof(Offset2Di) == sizeof(XrOffset2Di), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Offset2Di const reference as a raw XrOffset2Di const pointer
+//! @relates Offset2Di
+OPENXR_HPP_INLINE XrOffset2Di const* get(Offset2Di const& h)
+{
+    return &(h.operator XrOffset2Di const&());
+}
+
+//! @brief Free function accessor for passing Offset2Di as the address of a raw XrOffset2Di
+//! @relates Offset2Di
+OPENXR_HPP_INLINE XrOffset2Di* put(Offset2Di& h) { return &(h.operator XrOffset2Di&()); }
+
 struct Extent2Di {
     // ctor
     Extent2Di(
         int32_t width_ = 0,
         int32_t height_ = 0)
-        : width { width_ }
+        :
+
+        width { width_ }
         , height { height_ }
     {
     }
     operator const XrExtent2Di&() const { return *reinterpret_cast<const XrExtent2Di*>(this); }
-    operator XrExtent2Di&() { return *reinterpret_cast<XrExtent2Di*>(this); }
+    operator XrExtent2Di&()
+    {
+        return *reinterpret_cast<XrExtent2Di*>(this);
+    }
 
     // member decl
     int32_t width;
@@ -14263,17 +10043,33 @@ struct Extent2Di {
 };
 static_assert(sizeof(Extent2Di) == sizeof(XrExtent2Di), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Extent2Di const reference as a raw XrExtent2Di const pointer
+//! @relates Extent2Di
+OPENXR_HPP_INLINE XrExtent2Di const* get(Extent2Di const& h)
+{
+    return &(h.operator XrExtent2Di const&());
+}
+
+//! @brief Free function accessor for passing Extent2Di as the address of a raw XrExtent2Di
+//! @relates Extent2Di
+OPENXR_HPP_INLINE XrExtent2Di* put(Extent2Di& h) { return &(h.operator XrExtent2Di&()); }
+
 struct Rect2Di {
     // ctor
     Rect2Di(
         const Offset2Di& offset_ = {},
         const Extent2Di& extent_ = {})
-        : offset { offset_ }
+        :
+
+        offset { offset_ }
         , extent { extent_ }
     {
     }
     operator const XrRect2Di&() const { return *reinterpret_cast<const XrRect2Di*>(this); }
-    operator XrRect2Di&() { return *reinterpret_cast<XrRect2Di*>(this); }
+    operator XrRect2Di&()
+    {
+        return *reinterpret_cast<XrRect2Di*>(this);
+    }
 
     // member decl
     Offset2Di offset;
@@ -14281,19 +10077,35 @@ struct Rect2Di {
 };
 static_assert(sizeof(Rect2Di) == sizeof(XrRect2Di), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Rect2Di const reference as a raw XrRect2Di const pointer
+//! @relates Rect2Di
+OPENXR_HPP_INLINE XrRect2Di const* get(Rect2Di const& h)
+{
+    return &(h.operator XrRect2Di const&());
+}
+
+//! @brief Free function accessor for passing Rect2Di as the address of a raw XrRect2Di
+//! @relates Rect2Di
+OPENXR_HPP_INLINE XrRect2Di* put(Rect2Di& h) { return &(h.operator XrRect2Di&()); }
+
 struct SwapchainSubImage {
     // ctor
     SwapchainSubImage(
         const Swapchain& swapchain_ = {},
         const Rect2Di& imageRect_ = {},
         uint32_t imageArrayIndex_ = 0)
-        : swapchain { swapchain_ }
+        :
+
+        swapchain { swapchain_ }
         , imageRect { imageRect_ }
         , imageArrayIndex { imageArrayIndex_ }
     {
     }
     operator const XrSwapchainSubImage&() const { return *reinterpret_cast<const XrSwapchainSubImage*>(this); }
-    operator XrSwapchainSubImage&() { return *reinterpret_cast<XrSwapchainSubImage*>(this); }
+    operator XrSwapchainSubImage&()
+    {
+        return *reinterpret_cast<XrSwapchainSubImage*>(this);
+    }
 
     // member decl
     Swapchain swapchain;
@@ -14301,6 +10113,17 @@ struct SwapchainSubImage {
     uint32_t imageArrayIndex;
 };
 static_assert(sizeof(SwapchainSubImage) == sizeof(XrSwapchainSubImage), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainSubImage const reference as a raw XrSwapchainSubImage const pointer
+//! @relates SwapchainSubImage
+OPENXR_HPP_INLINE XrSwapchainSubImage const* get(SwapchainSubImage const& h)
+{
+    return &(h.operator XrSwapchainSubImage const&());
+}
+
+//! @brief Free function accessor for passing SwapchainSubImage as the address of a raw XrSwapchainSubImage
+//! @relates SwapchainSubImage
+OPENXR_HPP_INLINE XrSwapchainSubImage* put(SwapchainSubImage& h) { return &(h.operator XrSwapchainSubImage&()); }
 
 struct CompositionLayerProjectionView : public traits::TypedStructTraits<CompositionLayerProjectionView> {
 private:
@@ -14312,14 +10135,21 @@ public:
         const Posef& pose_ = {},
         const Fovf& fov_ = {},
         const SwapchainSubImage& subImage_ = {})
-        : Parent(StructureType::CompositionLayerProjectionView)
-        , pose { pose_ }
+        :
+
+        Parent(StructureType::CompositionLayerProjectionView)
+        ,
+
+        pose { pose_ }
         , fov { fov_ }
         , subImage { subImage_ }
     {
     }
     operator const XrCompositionLayerProjectionView&() const { return *reinterpret_cast<const XrCompositionLayerProjectionView*>(this); }
-    operator XrCompositionLayerProjectionView&() { return *reinterpret_cast<XrCompositionLayerProjectionView*>(this); }
+    operator XrCompositionLayerProjectionView&()
+    {
+        return *reinterpret_cast<XrCompositionLayerProjectionView*>(this);
+    }
 
     // member decl
     Posef pose;
@@ -14327,6 +10157,17 @@ public:
     SwapchainSubImage subImage;
 };
 static_assert(sizeof(CompositionLayerProjectionView) == sizeof(XrCompositionLayerProjectionView), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerProjectionView const reference as a raw XrCompositionLayerProjectionView const pointer
+//! @relates CompositionLayerProjectionView
+OPENXR_HPP_INLINE XrCompositionLayerProjectionView const* get(CompositionLayerProjectionView const& h)
+{
+    return &(h.operator XrCompositionLayerProjectionView const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerProjectionView as the address of a raw XrCompositionLayerProjectionView
+//! @relates CompositionLayerProjectionView
+OPENXR_HPP_INLINE XrCompositionLayerProjectionView* put(CompositionLayerProjectionView& h) { return &(h.operator XrCompositionLayerProjectionView&()); }
 
 struct CompositionLayerProjection : public traits::TypedStructTraits<CompositionLayerProjection> {
 private:
@@ -14339,15 +10180,22 @@ public:
         const Space& space_ = {},
         uint32_t viewCount_ = 0,
         const CompositionLayerProjectionView* views_ = nullptr)
-        : Parent(StructureType::CompositionLayerProjection)
-        , layerFlags { layerFlags_ }
+        :
+
+        Parent(StructureType::CompositionLayerProjection)
+        ,
+
+        layerFlags { layerFlags_ }
         , space { space_ }
         , viewCount { viewCount_ }
         , views { views_ }
     {
     }
     operator const XrCompositionLayerProjection&() const { return *reinterpret_cast<const XrCompositionLayerProjection*>(this); }
-    operator XrCompositionLayerProjection&() { return *reinterpret_cast<XrCompositionLayerProjection*>(this); }
+    operator XrCompositionLayerProjection&()
+    {
+        return *reinterpret_cast<XrCompositionLayerProjection*>(this);
+    }
 
     // member decl
     CompositionLayerFlags layerFlags;
@@ -14356,6 +10204,17 @@ public:
     const CompositionLayerProjectionView* views;
 };
 static_assert(sizeof(CompositionLayerProjection) == sizeof(XrCompositionLayerProjection), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerProjection const reference as a raw XrCompositionLayerProjection const pointer
+//! @relates CompositionLayerProjection
+OPENXR_HPP_INLINE XrCompositionLayerProjection const* get(CompositionLayerProjection const& h)
+{
+    return &(h.operator XrCompositionLayerProjection const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerProjection as the address of a raw XrCompositionLayerProjection
+//! @relates CompositionLayerProjection
+OPENXR_HPP_INLINE XrCompositionLayerProjection* put(CompositionLayerProjection& h) { return &(h.operator XrCompositionLayerProjection&()); }
 
 struct CompositionLayerQuad : public traits::TypedStructTraits<CompositionLayerQuad> {
 private:
@@ -14370,8 +10229,12 @@ public:
         const SwapchainSubImage& subImage_ = {},
         const Posef& pose_ = {},
         const Extent2Df& size_ = {})
-        : Parent(StructureType::CompositionLayerQuad)
-        , layerFlags { layerFlags_ }
+        :
+
+        Parent(StructureType::CompositionLayerQuad)
+        ,
+
+        layerFlags { layerFlags_ }
         , space { space_ }
         , eyeVisibility { eyeVisibility_ }
         , subImage { subImage_ }
@@ -14380,7 +10243,10 @@ public:
     {
     }
     operator const XrCompositionLayerQuad&() const { return *reinterpret_cast<const XrCompositionLayerQuad*>(this); }
-    operator XrCompositionLayerQuad&() { return *reinterpret_cast<XrCompositionLayerQuad*>(this); }
+    operator XrCompositionLayerQuad&()
+    {
+        return *reinterpret_cast<XrCompositionLayerQuad*>(this);
+    }
 
     // member decl
     CompositionLayerFlags layerFlags;
@@ -14392,6 +10258,17 @@ public:
 };
 static_assert(sizeof(CompositionLayerQuad) == sizeof(XrCompositionLayerQuad), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerQuad const reference as a raw XrCompositionLayerQuad const pointer
+//! @relates CompositionLayerQuad
+OPENXR_HPP_INLINE XrCompositionLayerQuad const* get(CompositionLayerQuad const& h)
+{
+    return &(h.operator XrCompositionLayerQuad const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerQuad as the address of a raw XrCompositionLayerQuad
+//! @relates CompositionLayerQuad
+OPENXR_HPP_INLINE XrCompositionLayerQuad* put(CompositionLayerQuad& h) { return &(h.operator XrCompositionLayerQuad&()); }
+
 struct EventDataEventsLost : public traits::TypedStructTraits<EventDataEventsLost> {
 private:
     using Parent = traits::TypedStructTraits<EventDataEventsLost>;
@@ -14400,17 +10277,35 @@ public:
     // ctor
     EventDataEventsLost(
         uint32_t lostEventCount_ = 0)
-        : Parent(StructureType::EventDataEventsLost)
-        , lostEventCount { lostEventCount_ }
+        :
+
+        Parent(StructureType::EventDataEventsLost)
+        ,
+
+        lostEventCount { lostEventCount_ }
     {
     }
     operator const XrEventDataEventsLost&() const { return *reinterpret_cast<const XrEventDataEventsLost*>(this); }
-    operator XrEventDataEventsLost&() { return *reinterpret_cast<XrEventDataEventsLost*>(this); }
+    operator XrEventDataEventsLost&()
+    {
+        return *reinterpret_cast<XrEventDataEventsLost*>(this);
+    }
 
     // member decl
     uint32_t lostEventCount;
 };
 static_assert(sizeof(EventDataEventsLost) == sizeof(XrEventDataEventsLost), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataEventsLost const reference as a raw XrEventDataEventsLost const pointer
+//! @relates EventDataEventsLost
+OPENXR_HPP_INLINE XrEventDataEventsLost const* get(EventDataEventsLost const& h)
+{
+    return &(h.operator XrEventDataEventsLost const&());
+}
+
+//! @brief Free function accessor for passing EventDataEventsLost as the address of a raw XrEventDataEventsLost
+//! @relates EventDataEventsLost
+OPENXR_HPP_INLINE XrEventDataEventsLost* put(EventDataEventsLost& h) { return &(h.operator XrEventDataEventsLost&()); }
 
 struct EventDataInstanceLossPending : public traits::TypedStructTraits<EventDataInstanceLossPending> {
 private:
@@ -14420,17 +10315,35 @@ public:
     // ctor
     EventDataInstanceLossPending(
         const Time& lossTime_ = {})
-        : Parent(StructureType::EventDataInstanceLossPending)
-        , lossTime { lossTime_ }
+        :
+
+        Parent(StructureType::EventDataInstanceLossPending)
+        ,
+
+        lossTime { lossTime_ }
     {
     }
     operator const XrEventDataInstanceLossPending&() const { return *reinterpret_cast<const XrEventDataInstanceLossPending*>(this); }
-    operator XrEventDataInstanceLossPending&() { return *reinterpret_cast<XrEventDataInstanceLossPending*>(this); }
+    operator XrEventDataInstanceLossPending&()
+    {
+        return *reinterpret_cast<XrEventDataInstanceLossPending*>(this);
+    }
 
     // member decl
     Time lossTime;
 };
 static_assert(sizeof(EventDataInstanceLossPending) == sizeof(XrEventDataInstanceLossPending), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataInstanceLossPending const reference as a raw XrEventDataInstanceLossPending const pointer
+//! @relates EventDataInstanceLossPending
+OPENXR_HPP_INLINE XrEventDataInstanceLossPending const* get(EventDataInstanceLossPending const& h)
+{
+    return &(h.operator XrEventDataInstanceLossPending const&());
+}
+
+//! @brief Free function accessor for passing EventDataInstanceLossPending as the address of a raw XrEventDataInstanceLossPending
+//! @relates EventDataInstanceLossPending
+OPENXR_HPP_INLINE XrEventDataInstanceLossPending* put(EventDataInstanceLossPending& h) { return &(h.operator XrEventDataInstanceLossPending&()); }
 
 struct EventDataSessionStateChanged : public traits::TypedStructTraits<EventDataSessionStateChanged> {
 private:
@@ -14442,14 +10355,21 @@ public:
         const Session& session_ = {},
         const SessionState& state_ = {},
         const Time& time_ = {})
-        : Parent(StructureType::EventDataSessionStateChanged)
-        , session { session_ }
+        :
+
+        Parent(StructureType::EventDataSessionStateChanged)
+        ,
+
+        session { session_ }
         , state { state_ }
         , time { time_ }
     {
     }
     operator const XrEventDataSessionStateChanged&() const { return *reinterpret_cast<const XrEventDataSessionStateChanged*>(this); }
-    operator XrEventDataSessionStateChanged&() { return *reinterpret_cast<XrEventDataSessionStateChanged*>(this); }
+    operator XrEventDataSessionStateChanged&()
+    {
+        return *reinterpret_cast<XrEventDataSessionStateChanged*>(this);
+    }
 
     // member decl
     Session session;
@@ -14457,6 +10377,17 @@ public:
     Time time;
 };
 static_assert(sizeof(EventDataSessionStateChanged) == sizeof(XrEventDataSessionStateChanged), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataSessionStateChanged const reference as a raw XrEventDataSessionStateChanged const pointer
+//! @relates EventDataSessionStateChanged
+OPENXR_HPP_INLINE XrEventDataSessionStateChanged const* get(EventDataSessionStateChanged const& h)
+{
+    return &(h.operator XrEventDataSessionStateChanged const&());
+}
+
+//! @brief Free function accessor for passing EventDataSessionStateChanged as the address of a raw XrEventDataSessionStateChanged
+//! @relates EventDataSessionStateChanged
+OPENXR_HPP_INLINE XrEventDataSessionStateChanged* put(EventDataSessionStateChanged& h) { return &(h.operator XrEventDataSessionStateChanged&()); }
 
 struct EventDataReferenceSpaceChangePending : public traits::TypedStructTraits<EventDataReferenceSpaceChangePending> {
 private:
@@ -14470,8 +10401,12 @@ public:
         const Time& changeTime_ = {},
         const Bool32& poseValid_ = XR_FALSE,
         const Posef& poseInPreviousSpace_ = {})
-        : Parent(StructureType::EventDataReferenceSpaceChangePending)
-        , session { session_ }
+        :
+
+        Parent(StructureType::EventDataReferenceSpaceChangePending)
+        ,
+
+        session { session_ }
         , referenceSpaceType { referenceSpaceType_ }
         , changeTime { changeTime_ }
         , poseValid { poseValid_ }
@@ -14479,7 +10414,10 @@ public:
     {
     }
     operator const XrEventDataReferenceSpaceChangePending&() const { return *reinterpret_cast<const XrEventDataReferenceSpaceChangePending*>(this); }
-    operator XrEventDataReferenceSpaceChangePending&() { return *reinterpret_cast<XrEventDataReferenceSpaceChangePending*>(this); }
+    operator XrEventDataReferenceSpaceChangePending&()
+    {
+        return *reinterpret_cast<XrEventDataReferenceSpaceChangePending*>(this);
+    }
 
     // member decl
     Session session;
@@ -14490,6 +10428,17 @@ public:
 };
 static_assert(sizeof(EventDataReferenceSpaceChangePending) == sizeof(XrEventDataReferenceSpaceChangePending), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for EventDataReferenceSpaceChangePending const reference as a raw XrEventDataReferenceSpaceChangePending const pointer
+//! @relates EventDataReferenceSpaceChangePending
+OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending const* get(EventDataReferenceSpaceChangePending const& h)
+{
+    return &(h.operator XrEventDataReferenceSpaceChangePending const&());
+}
+
+//! @brief Free function accessor for passing EventDataReferenceSpaceChangePending as the address of a raw XrEventDataReferenceSpaceChangePending
+//! @relates EventDataReferenceSpaceChangePending
+OPENXR_HPP_INLINE XrEventDataReferenceSpaceChangePending* put(EventDataReferenceSpaceChangePending& h) { return &(h.operator XrEventDataReferenceSpaceChangePending&()); }
+
 struct EventDataInteractionProfileChanged : public traits::TypedStructTraits<EventDataInteractionProfileChanged> {
 private:
     using Parent = traits::TypedStructTraits<EventDataInteractionProfileChanged>;
@@ -14498,17 +10447,35 @@ public:
     // ctor
     EventDataInteractionProfileChanged(
         const Session& session_ = {})
-        : Parent(StructureType::EventDataInteractionProfileChanged)
-        , session { session_ }
+        :
+
+        Parent(StructureType::EventDataInteractionProfileChanged)
+        ,
+
+        session { session_ }
     {
     }
     operator const XrEventDataInteractionProfileChanged&() const { return *reinterpret_cast<const XrEventDataInteractionProfileChanged*>(this); }
-    operator XrEventDataInteractionProfileChanged&() { return *reinterpret_cast<XrEventDataInteractionProfileChanged*>(this); }
+    operator XrEventDataInteractionProfileChanged&()
+    {
+        return *reinterpret_cast<XrEventDataInteractionProfileChanged*>(this);
+    }
 
     // member decl
     Session session;
 };
 static_assert(sizeof(EventDataInteractionProfileChanged) == sizeof(XrEventDataInteractionProfileChanged), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataInteractionProfileChanged const reference as a raw XrEventDataInteractionProfileChanged const pointer
+//! @relates EventDataInteractionProfileChanged
+OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged const* get(EventDataInteractionProfileChanged const& h)
+{
+    return &(h.operator XrEventDataInteractionProfileChanged const&());
+}
+
+//! @brief Free function accessor for passing EventDataInteractionProfileChanged as the address of a raw XrEventDataInteractionProfileChanged
+//! @relates EventDataInteractionProfileChanged
+OPENXR_HPP_INLINE XrEventDataInteractionProfileChanged* put(EventDataInteractionProfileChanged& h) { return &(h.operator XrEventDataInteractionProfileChanged&()); }
 
 struct HapticVibration : public traits::TypedStructTraits<HapticVibration> {
 private:
@@ -14520,14 +10487,21 @@ public:
         const Duration& duration_ = {},
         float frequency_ = 0.0f,
         float amplitude_ = 0.0f)
-        : Parent(StructureType::HapticVibration)
-        , duration { duration_ }
+        :
+
+        Parent(StructureType::HapticVibration)
+        ,
+
+        duration { duration_ }
         , frequency { frequency_ }
         , amplitude { amplitude_ }
     {
     }
     operator const XrHapticVibration&() const { return *reinterpret_cast<const XrHapticVibration*>(this); }
-    operator XrHapticVibration&() { return *reinterpret_cast<XrHapticVibration*>(this); }
+    operator XrHapticVibration&()
+    {
+        return *reinterpret_cast<XrHapticVibration*>(this);
+    }
 
     // member decl
     Duration duration;
@@ -14536,17 +10510,33 @@ public:
 };
 static_assert(sizeof(HapticVibration) == sizeof(XrHapticVibration), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for HapticVibration const reference as a raw XrHapticVibration const pointer
+//! @relates HapticVibration
+OPENXR_HPP_INLINE XrHapticVibration const* get(HapticVibration const& h)
+{
+    return &(h.operator XrHapticVibration const&());
+}
+
+//! @brief Free function accessor for passing HapticVibration as the address of a raw XrHapticVibration
+//! @relates HapticVibration
+OPENXR_HPP_INLINE XrHapticVibration* put(HapticVibration& h) { return &(h.operator XrHapticVibration&()); }
+
 struct Offset2Df {
     // ctor
     Offset2Df(
         float x_ = 0.0f,
         float y_ = 0.0f)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
     {
     }
     operator const XrOffset2Df&() const { return *reinterpret_cast<const XrOffset2Df*>(this); }
-    operator XrOffset2Df&() { return *reinterpret_cast<XrOffset2Df*>(this); }
+    operator XrOffset2Df&()
+    {
+        return *reinterpret_cast<XrOffset2Df*>(this);
+    }
 
     // member decl
     float x;
@@ -14554,23 +10544,50 @@ struct Offset2Df {
 };
 static_assert(sizeof(Offset2Df) == sizeof(XrOffset2Df), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Offset2Df const reference as a raw XrOffset2Df const pointer
+//! @relates Offset2Df
+OPENXR_HPP_INLINE XrOffset2Df const* get(Offset2Df const& h)
+{
+    return &(h.operator XrOffset2Df const&());
+}
+
+//! @brief Free function accessor for passing Offset2Df as the address of a raw XrOffset2Df
+//! @relates Offset2Df
+OPENXR_HPP_INLINE XrOffset2Df* put(Offset2Df& h) { return &(h.operator XrOffset2Df&()); }
+
 struct Rect2Df {
     // ctor
     Rect2Df(
         const Offset2Df& offset_ = {},
         const Extent2Df& extent_ = {})
-        : offset { offset_ }
+        :
+
+        offset { offset_ }
         , extent { extent_ }
     {
     }
     operator const XrRect2Df&() const { return *reinterpret_cast<const XrRect2Df*>(this); }
-    operator XrRect2Df&() { return *reinterpret_cast<XrRect2Df*>(this); }
+    operator XrRect2Df&()
+    {
+        return *reinterpret_cast<XrRect2Df*>(this);
+    }
 
     // member decl
     Offset2Df offset;
     Extent2Df extent;
 };
 static_assert(sizeof(Rect2Df) == sizeof(XrRect2Df), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Rect2Df const reference as a raw XrRect2Df const pointer
+//! @relates Rect2Df
+OPENXR_HPP_INLINE XrRect2Df const* get(Rect2Df const& h)
+{
+    return &(h.operator XrRect2Df const&());
+}
+
+//! @brief Free function accessor for passing Rect2Df as the address of a raw XrRect2Df
+//! @relates Rect2Df
+OPENXR_HPP_INLINE XrRect2Df* put(Rect2Df& h) { return &(h.operator XrRect2Df&()); }
 
 struct Vector4f {
     // ctor
@@ -14579,14 +10596,19 @@ struct Vector4f {
         float y_ = 0.0f,
         float z_ = 0.0f,
         float w_ = 0.0f)
-        : x { x_ }
+        :
+
+        x { x_ }
         , y { y_ }
         , z { z_ }
         , w { w_ }
     {
     }
     operator const XrVector4f&() const { return *reinterpret_cast<const XrVector4f*>(this); }
-    operator XrVector4f&() { return *reinterpret_cast<XrVector4f*>(this); }
+    operator XrVector4f&()
+    {
+        return *reinterpret_cast<XrVector4f*>(this);
+    }
 
     // member decl
     float x;
@@ -14596,6 +10618,17 @@ struct Vector4f {
 };
 static_assert(sizeof(Vector4f) == sizeof(XrVector4f), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for Vector4f const reference as a raw XrVector4f const pointer
+//! @relates Vector4f
+OPENXR_HPP_INLINE XrVector4f const* get(Vector4f const& h)
+{
+    return &(h.operator XrVector4f const&());
+}
+
+//! @brief Free function accessor for passing Vector4f as the address of a raw XrVector4f
+//! @relates Vector4f
+OPENXR_HPP_INLINE XrVector4f* put(Vector4f& h) { return &(h.operator XrVector4f&()); }
+
 struct Color4f {
     // ctor
     Color4f(
@@ -14603,14 +10636,19 @@ struct Color4f {
         float g_ = 0.0f,
         float b_ = 0.0f,
         float a_ = 0.0f)
-        : r { r_ }
+        :
+
+        r { r_ }
         , g { g_ }
         , b { b_ }
         , a { a_ }
     {
     }
     operator const XrColor4f&() const { return *reinterpret_cast<const XrColor4f*>(this); }
-    operator XrColor4f&() { return *reinterpret_cast<XrColor4f*>(this); }
+    operator XrColor4f&()
+    {
+        return *reinterpret_cast<XrColor4f*>(this);
+    }
 
     // member decl
     float r;
@@ -14619,6 +10657,17 @@ struct Color4f {
     float a;
 };
 static_assert(sizeof(Color4f) == sizeof(XrColor4f), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for Color4f const reference as a raw XrColor4f const pointer
+//! @relates Color4f
+OPENXR_HPP_INLINE XrColor4f const* get(Color4f const& h)
+{
+    return &(h.operator XrColor4f const&());
+}
+
+//! @brief Free function accessor for passing Color4f as the address of a raw XrColor4f
+//! @relates Color4f
+OPENXR_HPP_INLINE XrColor4f* put(Color4f& h) { return &(h.operator XrColor4f&()); }
 
 struct CompositionLayerCubeKHR : public traits::TypedStructTraits<CompositionLayerCubeKHR> {
 private:
@@ -14633,8 +10682,12 @@ public:
         const Swapchain& swapchain_ = {},
         uint32_t imageArrayIndex_ = 0,
         const Quaternionf& orientation_ = {})
-        : Parent(StructureType::CompositionLayerCubeKHR)
-        , layerFlags { layerFlags_ }
+        :
+
+        Parent(StructureType::CompositionLayerCubeKHR)
+        ,
+
+        layerFlags { layerFlags_ }
         , space { space_ }
         , eyeVisibility { eyeVisibility_ }
         , swapchain { swapchain_ }
@@ -14643,7 +10696,10 @@ public:
     {
     }
     operator const XrCompositionLayerCubeKHR&() const { return *reinterpret_cast<const XrCompositionLayerCubeKHR*>(this); }
-    operator XrCompositionLayerCubeKHR&() { return *reinterpret_cast<XrCompositionLayerCubeKHR*>(this); }
+    operator XrCompositionLayerCubeKHR&()
+    {
+        return *reinterpret_cast<XrCompositionLayerCubeKHR*>(this);
+    }
 
     // member decl
     CompositionLayerFlags layerFlags;
@@ -14655,6 +10711,17 @@ public:
 };
 static_assert(sizeof(CompositionLayerCubeKHR) == sizeof(XrCompositionLayerCubeKHR), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerCubeKHR const reference as a raw XrCompositionLayerCubeKHR const pointer
+//! @relates CompositionLayerCubeKHR
+OPENXR_HPP_INLINE XrCompositionLayerCubeKHR const* get(CompositionLayerCubeKHR const& h)
+{
+    return &(h.operator XrCompositionLayerCubeKHR const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerCubeKHR as the address of a raw XrCompositionLayerCubeKHR
+//! @relates CompositionLayerCubeKHR
+OPENXR_HPP_INLINE XrCompositionLayerCubeKHR* put(CompositionLayerCubeKHR& h) { return &(h.operator XrCompositionLayerCubeKHR&()); }
+
 #if defined(XR_USE_PLATFORM_ANDROID)
 struct InstanceCreateInfoAndroidKHR : public traits::TypedStructTraits<InstanceCreateInfoAndroidKHR> {
 private:
@@ -14665,19 +10732,38 @@ public:
     InstanceCreateInfoAndroidKHR(
         void* XR_MAY_ALIAS applicationVM_ = nullptr,
         void* XR_MAY_ALIAS applicationActivity_ = nullptr)
-        : Parent(StructureType::InstanceCreateInfoAndroidKHR)
-        , applicationVM { applicationVM_ }
+        :
+
+        Parent(StructureType::InstanceCreateInfoAndroidKHR)
+        ,
+
+        applicationVM { applicationVM_ }
         , applicationActivity { applicationActivity_ }
     {
     }
     operator const XrInstanceCreateInfoAndroidKHR&() const { return *reinterpret_cast<const XrInstanceCreateInfoAndroidKHR*>(this); }
-    operator XrInstanceCreateInfoAndroidKHR&() { return *reinterpret_cast<XrInstanceCreateInfoAndroidKHR*>(this); }
+    operator XrInstanceCreateInfoAndroidKHR&()
+    {
+        return *reinterpret_cast<XrInstanceCreateInfoAndroidKHR*>(this);
+    }
 
     // member decl
     void* XR_MAY_ALIAS applicationVM;
     void* XR_MAY_ALIAS applicationActivity;
 };
 static_assert(sizeof(InstanceCreateInfoAndroidKHR) == sizeof(XrInstanceCreateInfoAndroidKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for InstanceCreateInfoAndroidKHR const reference as a raw XrInstanceCreateInfoAndroidKHR const pointer
+//! @relates InstanceCreateInfoAndroidKHR
+OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR const* get(InstanceCreateInfoAndroidKHR const& h)
+{
+    return &(h.operator XrInstanceCreateInfoAndroidKHR const&());
+}
+
+//! @brief Free function accessor for passing InstanceCreateInfoAndroidKHR as the address of a raw XrInstanceCreateInfoAndroidKHR
+//! @relates InstanceCreateInfoAndroidKHR
+OPENXR_HPP_INLINE XrInstanceCreateInfoAndroidKHR* put(InstanceCreateInfoAndroidKHR& h) { return &(h.operator XrInstanceCreateInfoAndroidKHR&()); }
+
 #endif // defined(XR_USE_PLATFORM_ANDROID)
 
 struct CompositionLayerDepthInfoKHR : public traits::TypedStructTraits<CompositionLayerDepthInfoKHR> {
@@ -14692,8 +10778,12 @@ public:
         float maxDepth_ = 0.0f,
         float nearZ_ = 0.0f,
         float farZ_ = 0.0f)
-        : Parent(StructureType::CompositionLayerDepthInfoKHR)
-        , subImage { subImage_ }
+        :
+
+        Parent(StructureType::CompositionLayerDepthInfoKHR)
+        ,
+
+        subImage { subImage_ }
         , minDepth { minDepth_ }
         , maxDepth { maxDepth_ }
         , nearZ { nearZ_ }
@@ -14701,7 +10791,10 @@ public:
     {
     }
     operator const XrCompositionLayerDepthInfoKHR&() const { return *reinterpret_cast<const XrCompositionLayerDepthInfoKHR*>(this); }
-    operator XrCompositionLayerDepthInfoKHR&() { return *reinterpret_cast<XrCompositionLayerDepthInfoKHR*>(this); }
+    operator XrCompositionLayerDepthInfoKHR&()
+    {
+        return *reinterpret_cast<XrCompositionLayerDepthInfoKHR*>(this);
+    }
 
     // member decl
     SwapchainSubImage subImage;
@@ -14711,6 +10804,17 @@ public:
     float farZ;
 };
 static_assert(sizeof(CompositionLayerDepthInfoKHR) == sizeof(XrCompositionLayerDepthInfoKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerDepthInfoKHR const reference as a raw XrCompositionLayerDepthInfoKHR const pointer
+//! @relates CompositionLayerDepthInfoKHR
+OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR const* get(CompositionLayerDepthInfoKHR const& h)
+{
+    return &(h.operator XrCompositionLayerDepthInfoKHR const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerDepthInfoKHR as the address of a raw XrCompositionLayerDepthInfoKHR
+//! @relates CompositionLayerDepthInfoKHR
+OPENXR_HPP_INLINE XrCompositionLayerDepthInfoKHR* put(CompositionLayerDepthInfoKHR& h) { return &(h.operator XrCompositionLayerDepthInfoKHR&()); }
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
 struct VulkanSwapchainFormatListCreateInfoKHR : public traits::TypedStructTraits<VulkanSwapchainFormatListCreateInfoKHR> {
@@ -14722,19 +10826,38 @@ public:
     VulkanSwapchainFormatListCreateInfoKHR(
         uint32_t viewFormatCount_ = 0,
         const VkFormat* viewFormats_ = nullptr)
-        : Parent(StructureType::VulkanSwapchainFormatListCreateInfoKHR)
-        , viewFormatCount { viewFormatCount_ }
+        :
+
+        Parent(StructureType::VulkanSwapchainFormatListCreateInfoKHR)
+        ,
+
+        viewFormatCount { viewFormatCount_ }
         , viewFormats { viewFormats_ }
     {
     }
     operator const XrVulkanSwapchainFormatListCreateInfoKHR&() const { return *reinterpret_cast<const XrVulkanSwapchainFormatListCreateInfoKHR*>(this); }
-    operator XrVulkanSwapchainFormatListCreateInfoKHR&() { return *reinterpret_cast<XrVulkanSwapchainFormatListCreateInfoKHR*>(this); }
+    operator XrVulkanSwapchainFormatListCreateInfoKHR&()
+    {
+        return *reinterpret_cast<XrVulkanSwapchainFormatListCreateInfoKHR*>(this);
+    }
 
     // member decl
     uint32_t viewFormatCount;
     const VkFormat* viewFormats;
 };
 static_assert(sizeof(VulkanSwapchainFormatListCreateInfoKHR) == sizeof(XrVulkanSwapchainFormatListCreateInfoKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for VulkanSwapchainFormatListCreateInfoKHR const reference as a raw XrVulkanSwapchainFormatListCreateInfoKHR const pointer
+//! @relates VulkanSwapchainFormatListCreateInfoKHR
+OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR const* get(VulkanSwapchainFormatListCreateInfoKHR const& h)
+{
+    return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR const&());
+}
+
+//! @brief Free function accessor for passing VulkanSwapchainFormatListCreateInfoKHR as the address of a raw XrVulkanSwapchainFormatListCreateInfoKHR
+//! @relates VulkanSwapchainFormatListCreateInfoKHR
+OPENXR_HPP_INLINE XrVulkanSwapchainFormatListCreateInfoKHR* put(VulkanSwapchainFormatListCreateInfoKHR& h) { return &(h.operator XrVulkanSwapchainFormatListCreateInfoKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 struct CompositionLayerCylinderKHR : public traits::TypedStructTraits<CompositionLayerCylinderKHR> {
@@ -14752,8 +10875,12 @@ public:
         float radius_ = 0.0f,
         float centralAngle_ = 0.0f,
         float aspectRatio_ = 0.0f)
-        : Parent(StructureType::CompositionLayerCylinderKHR)
-        , layerFlags { layerFlags_ }
+        :
+
+        Parent(StructureType::CompositionLayerCylinderKHR)
+        ,
+
+        layerFlags { layerFlags_ }
         , space { space_ }
         , eyeVisibility { eyeVisibility_ }
         , subImage { subImage_ }
@@ -14764,7 +10891,10 @@ public:
     {
     }
     operator const XrCompositionLayerCylinderKHR&() const { return *reinterpret_cast<const XrCompositionLayerCylinderKHR*>(this); }
-    operator XrCompositionLayerCylinderKHR&() { return *reinterpret_cast<XrCompositionLayerCylinderKHR*>(this); }
+    operator XrCompositionLayerCylinderKHR&()
+    {
+        return *reinterpret_cast<XrCompositionLayerCylinderKHR*>(this);
+    }
 
     // member decl
     CompositionLayerFlags layerFlags;
@@ -14777,6 +10907,17 @@ public:
     float aspectRatio;
 };
 static_assert(sizeof(CompositionLayerCylinderKHR) == sizeof(XrCompositionLayerCylinderKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for CompositionLayerCylinderKHR const reference as a raw XrCompositionLayerCylinderKHR const pointer
+//! @relates CompositionLayerCylinderKHR
+OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR const* get(CompositionLayerCylinderKHR const& h)
+{
+    return &(h.operator XrCompositionLayerCylinderKHR const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerCylinderKHR as the address of a raw XrCompositionLayerCylinderKHR
+//! @relates CompositionLayerCylinderKHR
+OPENXR_HPP_INLINE XrCompositionLayerCylinderKHR* put(CompositionLayerCylinderKHR& h) { return &(h.operator XrCompositionLayerCylinderKHR&()); }
 
 struct CompositionLayerEquirectKHR : public traits::TypedStructTraits<CompositionLayerEquirectKHR> {
 private:
@@ -14793,8 +10934,12 @@ public:
         float radius_ = 0.0f,
         const Vector2f& scale_ = {},
         const Vector2f& bias_ = {})
-        : Parent(StructureType::CompositionLayerEquirectKHR)
-        , layerFlags { layerFlags_ }
+        :
+
+        Parent(StructureType::CompositionLayerEquirectKHR)
+        ,
+
+        layerFlags { layerFlags_ }
         , space { space_ }
         , eyeVisibility { eyeVisibility_ }
         , subImage { subImage_ }
@@ -14805,7 +10950,10 @@ public:
     {
     }
     operator const XrCompositionLayerEquirectKHR&() const { return *reinterpret_cast<const XrCompositionLayerEquirectKHR*>(this); }
-    operator XrCompositionLayerEquirectKHR&() { return *reinterpret_cast<XrCompositionLayerEquirectKHR*>(this); }
+    operator XrCompositionLayerEquirectKHR&()
+    {
+        return *reinterpret_cast<XrCompositionLayerEquirectKHR*>(this);
+    }
 
     // member decl
     CompositionLayerFlags layerFlags;
@@ -14819,6 +10967,17 @@ public:
 };
 static_assert(sizeof(CompositionLayerEquirectKHR) == sizeof(XrCompositionLayerEquirectKHR), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for CompositionLayerEquirectKHR const reference as a raw XrCompositionLayerEquirectKHR const pointer
+//! @relates CompositionLayerEquirectKHR
+OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR const* get(CompositionLayerEquirectKHR const& h)
+{
+    return &(h.operator XrCompositionLayerEquirectKHR const&());
+}
+
+//! @brief Free function accessor for passing CompositionLayerEquirectKHR as the address of a raw XrCompositionLayerEquirectKHR
+//! @relates CompositionLayerEquirectKHR
+OPENXR_HPP_INLINE XrCompositionLayerEquirectKHR* put(CompositionLayerEquirectKHR& h) { return &(h.operator XrCompositionLayerEquirectKHR&()); }
+
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
 struct GraphicsBindingOpenGLWin32KHR : public traits::TypedStructTraits<GraphicsBindingOpenGLWin32KHR> {
 private:
@@ -14829,19 +10988,38 @@ public:
     GraphicsBindingOpenGLWin32KHR(
         HDC hDC_ = {},
         HGLRC hGLRC_ = {})
-        : Parent(StructureType::GraphicsBindingOpenglWin32KHR)
-        , hDC { hDC_ }
+        :
+
+        Parent(StructureType::GraphicsBindingOpenglWin32KHR)
+        ,
+
+        hDC { hDC_ }
         , hGLRC { hGLRC_ }
     {
     }
     operator const XrGraphicsBindingOpenGLWin32KHR&() const { return *reinterpret_cast<const XrGraphicsBindingOpenGLWin32KHR*>(this); }
-    operator XrGraphicsBindingOpenGLWin32KHR&() { return *reinterpret_cast<XrGraphicsBindingOpenGLWin32KHR*>(this); }
+    operator XrGraphicsBindingOpenGLWin32KHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingOpenGLWin32KHR*>(this);
+    }
 
     // member decl
     HDC hDC;
     HGLRC hGLRC;
 };
 static_assert(sizeof(GraphicsBindingOpenGLWin32KHR) == sizeof(XrGraphicsBindingOpenGLWin32KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLWin32KHR const reference as a raw XrGraphicsBindingOpenGLWin32KHR const pointer
+//! @relates GraphicsBindingOpenGLWin32KHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR const* get(GraphicsBindingOpenGLWin32KHR const& h)
+{
+    return &(h.operator XrGraphicsBindingOpenGLWin32KHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLWin32KHR as the address of a raw XrGraphicsBindingOpenGLWin32KHR
+//! @relates GraphicsBindingOpenGLWin32KHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWin32KHR* put(GraphicsBindingOpenGLWin32KHR& h) { return &(h.operator XrGraphicsBindingOpenGLWin32KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WIN32)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
@@ -14857,8 +11035,12 @@ public:
         GLXFBConfig glxFBConfig_ = {},
         GLXDrawable glxDrawable_ = {},
         GLXContext glxContext_ = {})
-        : Parent(StructureType::GraphicsBindingOpenglXlibKHR)
-        , xDisplay { xDisplay_ }
+        :
+
+        Parent(StructureType::GraphicsBindingOpenglXlibKHR)
+        ,
+
+        xDisplay { xDisplay_ }
         , visualid { visualid_ }
         , glxFBConfig { glxFBConfig_ }
         , glxDrawable { glxDrawable_ }
@@ -14866,7 +11048,10 @@ public:
     {
     }
     operator const XrGraphicsBindingOpenGLXlibKHR&() const { return *reinterpret_cast<const XrGraphicsBindingOpenGLXlibKHR*>(this); }
-    operator XrGraphicsBindingOpenGLXlibKHR&() { return *reinterpret_cast<XrGraphicsBindingOpenGLXlibKHR*>(this); }
+    operator XrGraphicsBindingOpenGLXlibKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingOpenGLXlibKHR*>(this);
+    }
 
     // member decl
     Display* xDisplay;
@@ -14876,6 +11061,18 @@ public:
     GLXContext glxContext;
 };
 static_assert(sizeof(GraphicsBindingOpenGLXlibKHR) == sizeof(XrGraphicsBindingOpenGLXlibKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLXlibKHR const reference as a raw XrGraphicsBindingOpenGLXlibKHR const pointer
+//! @relates GraphicsBindingOpenGLXlibKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR const* get(GraphicsBindingOpenGLXlibKHR const& h)
+{
+    return &(h.operator XrGraphicsBindingOpenGLXlibKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLXlibKHR as the address of a raw XrGraphicsBindingOpenGLXlibKHR
+//! @relates GraphicsBindingOpenGLXlibKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXlibKHR* put(GraphicsBindingOpenGLXlibKHR& h) { return &(h.operator XrGraphicsBindingOpenGLXlibKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XLIB)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
@@ -14892,8 +11089,12 @@ public:
         xcb_visualid_t visualid_ = {},
         xcb_glx_drawable_t glxDrawable_ = {},
         xcb_glx_context_t glxContext_ = {})
-        : Parent(StructureType::GraphicsBindingOpenglXcbKHR)
-        , connection { connection_ }
+        :
+
+        Parent(StructureType::GraphicsBindingOpenglXcbKHR)
+        ,
+
+        connection { connection_ }
         , screenNumber { screenNumber_ }
         , fbconfigid { fbconfigid_ }
         , visualid { visualid_ }
@@ -14902,7 +11103,10 @@ public:
     {
     }
     operator const XrGraphicsBindingOpenGLXcbKHR&() const { return *reinterpret_cast<const XrGraphicsBindingOpenGLXcbKHR*>(this); }
-    operator XrGraphicsBindingOpenGLXcbKHR&() { return *reinterpret_cast<XrGraphicsBindingOpenGLXcbKHR*>(this); }
+    operator XrGraphicsBindingOpenGLXcbKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingOpenGLXcbKHR*>(this);
+    }
 
     // member decl
     xcb_connection_t* connection;
@@ -14913,6 +11117,18 @@ public:
     xcb_glx_context_t glxContext;
 };
 static_assert(sizeof(GraphicsBindingOpenGLXcbKHR) == sizeof(XrGraphicsBindingOpenGLXcbKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLXcbKHR const reference as a raw XrGraphicsBindingOpenGLXcbKHR const pointer
+//! @relates GraphicsBindingOpenGLXcbKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR const* get(GraphicsBindingOpenGLXcbKHR const& h)
+{
+    return &(h.operator XrGraphicsBindingOpenGLXcbKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLXcbKHR as the address of a raw XrGraphicsBindingOpenGLXcbKHR
+//! @relates GraphicsBindingOpenGLXcbKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLXcbKHR* put(GraphicsBindingOpenGLXcbKHR& h) { return &(h.operator XrGraphicsBindingOpenGLXcbKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_XCB)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WAYLAND)
@@ -14924,17 +11140,36 @@ public:
     // ctor
     GraphicsBindingOpenGLWaylandKHR(
         struct wl_display* display_ = {})
-        : Parent(StructureType::GraphicsBindingOpenglWaylandKHR)
-        , display { display_ }
+        :
+
+        Parent(StructureType::GraphicsBindingOpenglWaylandKHR)
+        ,
+
+        display { display_ }
     {
     }
     operator const XrGraphicsBindingOpenGLWaylandKHR&() const { return *reinterpret_cast<const XrGraphicsBindingOpenGLWaylandKHR*>(this); }
-    operator XrGraphicsBindingOpenGLWaylandKHR&() { return *reinterpret_cast<XrGraphicsBindingOpenGLWaylandKHR*>(this); }
+    operator XrGraphicsBindingOpenGLWaylandKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingOpenGLWaylandKHR*>(this);
+    }
 
     // member decl
     struct wl_display* display;
 };
 static_assert(sizeof(GraphicsBindingOpenGLWaylandKHR) == sizeof(XrGraphicsBindingOpenGLWaylandKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLWaylandKHR const reference as a raw XrGraphicsBindingOpenGLWaylandKHR const pointer
+//! @relates GraphicsBindingOpenGLWaylandKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR const* get(GraphicsBindingOpenGLWaylandKHR const& h)
+{
+    return &(h.operator XrGraphicsBindingOpenGLWaylandKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLWaylandKHR as the address of a raw XrGraphicsBindingOpenGLWaylandKHR
+//! @relates GraphicsBindingOpenGLWaylandKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLWaylandKHR* put(GraphicsBindingOpenGLWaylandKHR& h) { return &(h.operator XrGraphicsBindingOpenGLWaylandKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL) && defined(XR_USE_PLATFORM_WAYLAND)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL)
@@ -14946,17 +11181,36 @@ public:
     // ctor
     SwapchainImageOpenGLKHR(
         uint32_t image_ = 0)
-        : Parent(StructureType::SwapchainImageOpenglKHR)
-        , image { image_ }
+        :
+
+        Parent(StructureType::SwapchainImageOpenglKHR)
+        ,
+
+        image { image_ }
     {
     }
     operator const XrSwapchainImageOpenGLKHR&() const { return *reinterpret_cast<const XrSwapchainImageOpenGLKHR*>(this); }
-    operator XrSwapchainImageOpenGLKHR&() { return *reinterpret_cast<XrSwapchainImageOpenGLKHR*>(this); }
+    operator XrSwapchainImageOpenGLKHR&()
+    {
+        return *reinterpret_cast<XrSwapchainImageOpenGLKHR*>(this);
+    }
 
     // member decl
     uint32_t image;
 };
 static_assert(sizeof(SwapchainImageOpenGLKHR) == sizeof(XrSwapchainImageOpenGLKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageOpenGLKHR const reference as a raw XrSwapchainImageOpenGLKHR const pointer
+//! @relates SwapchainImageOpenGLKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR const* get(SwapchainImageOpenGLKHR const& h)
+{
+    return &(h.operator XrSwapchainImageOpenGLKHR const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageOpenGLKHR as the address of a raw XrSwapchainImageOpenGLKHR
+//! @relates SwapchainImageOpenGLKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLKHR* put(SwapchainImageOpenGLKHR& h) { return &(h.operator XrSwapchainImageOpenGLKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL)
@@ -14969,19 +11223,38 @@ public:
     GraphicsRequirementsOpenGLKHR(
         const Version& minApiVersionSupported_ = {},
         const Version& maxApiVersionSupported_ = {})
-        : Parent(StructureType::GraphicsRequirementsOpenglKHR)
-        , minApiVersionSupported { minApiVersionSupported_ }
+        :
+
+        Parent(StructureType::GraphicsRequirementsOpenglKHR)
+        ,
+
+        minApiVersionSupported { minApiVersionSupported_ }
         , maxApiVersionSupported { maxApiVersionSupported_ }
     {
     }
     operator const XrGraphicsRequirementsOpenGLKHR&() const { return *reinterpret_cast<const XrGraphicsRequirementsOpenGLKHR*>(this); }
-    operator XrGraphicsRequirementsOpenGLKHR&() { return *reinterpret_cast<XrGraphicsRequirementsOpenGLKHR*>(this); }
+    operator XrGraphicsRequirementsOpenGLKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsRequirementsOpenGLKHR*>(this);
+    }
 
     // member decl
     Version minApiVersionSupported;
     Version maxApiVersionSupported;
 };
 static_assert(sizeof(GraphicsRequirementsOpenGLKHR) == sizeof(XrGraphicsRequirementsOpenGLKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsOpenGLKHR const reference as a raw XrGraphicsRequirementsOpenGLKHR const pointer
+//! @relates GraphicsRequirementsOpenGLKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR const* get(GraphicsRequirementsOpenGLKHR const& h)
+{
+    return &(h.operator XrGraphicsRequirementsOpenGLKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsOpenGLKHR as the address of a raw XrGraphicsRequirementsOpenGLKHR
+//! @relates GraphicsRequirementsOpenGLKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLKHR* put(GraphicsRequirementsOpenGLKHR& h) { return &(h.operator XrGraphicsRequirementsOpenGLKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES) && defined(XR_USE_PLATFORM_ANDROID)
@@ -14995,14 +11268,21 @@ public:
         EGLDisplay display_ = {},
         EGLConfig config_ = {},
         EGLContext context_ = {})
-        : Parent(StructureType::GraphicsBindingOpenglEsAndroidKHR)
-        , display { display_ }
+        :
+
+        Parent(StructureType::GraphicsBindingOpenglEsAndroidKHR)
+        ,
+
+        display { display_ }
         , config { config_ }
         , context { context_ }
     {
     }
     operator const XrGraphicsBindingOpenGLESAndroidKHR&() const { return *reinterpret_cast<const XrGraphicsBindingOpenGLESAndroidKHR*>(this); }
-    operator XrGraphicsBindingOpenGLESAndroidKHR&() { return *reinterpret_cast<XrGraphicsBindingOpenGLESAndroidKHR*>(this); }
+    operator XrGraphicsBindingOpenGLESAndroidKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingOpenGLESAndroidKHR*>(this);
+    }
 
     // member decl
     EGLDisplay display;
@@ -15010,6 +11290,18 @@ public:
     EGLContext context;
 };
 static_assert(sizeof(GraphicsBindingOpenGLESAndroidKHR) == sizeof(XrGraphicsBindingOpenGLESAndroidKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingOpenGLESAndroidKHR const reference as a raw XrGraphicsBindingOpenGLESAndroidKHR const pointer
+//! @relates GraphicsBindingOpenGLESAndroidKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR const* get(GraphicsBindingOpenGLESAndroidKHR const& h)
+{
+    return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingOpenGLESAndroidKHR as the address of a raw XrGraphicsBindingOpenGLESAndroidKHR
+//! @relates GraphicsBindingOpenGLESAndroidKHR
+OPENXR_HPP_INLINE XrGraphicsBindingOpenGLESAndroidKHR* put(GraphicsBindingOpenGLESAndroidKHR& h) { return &(h.operator XrGraphicsBindingOpenGLESAndroidKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES) && defined(XR_USE_PLATFORM_ANDROID)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
@@ -15021,17 +11313,36 @@ public:
     // ctor
     SwapchainImageOpenGLESKHR(
         uint32_t image_ = 0)
-        : Parent(StructureType::SwapchainImageOpenglEsKHR)
-        , image { image_ }
+        :
+
+        Parent(StructureType::SwapchainImageOpenglEsKHR)
+        ,
+
+        image { image_ }
     {
     }
     operator const XrSwapchainImageOpenGLESKHR&() const { return *reinterpret_cast<const XrSwapchainImageOpenGLESKHR*>(this); }
-    operator XrSwapchainImageOpenGLESKHR&() { return *reinterpret_cast<XrSwapchainImageOpenGLESKHR*>(this); }
+    operator XrSwapchainImageOpenGLESKHR&()
+    {
+        return *reinterpret_cast<XrSwapchainImageOpenGLESKHR*>(this);
+    }
 
     // member decl
     uint32_t image;
 };
 static_assert(sizeof(SwapchainImageOpenGLESKHR) == sizeof(XrSwapchainImageOpenGLESKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageOpenGLESKHR const reference as a raw XrSwapchainImageOpenGLESKHR const pointer
+//! @relates SwapchainImageOpenGLESKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR const* get(SwapchainImageOpenGLESKHR const& h)
+{
+    return &(h.operator XrSwapchainImageOpenGLESKHR const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageOpenGLESKHR as the address of a raw XrSwapchainImageOpenGLESKHR
+//! @relates SwapchainImageOpenGLESKHR
+OPENXR_HPP_INLINE XrSwapchainImageOpenGLESKHR* put(SwapchainImageOpenGLESKHR& h) { return &(h.operator XrSwapchainImageOpenGLESKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
 #if defined(XR_USE_GRAPHICS_API_OPENGL_ES)
@@ -15044,19 +11355,38 @@ public:
     GraphicsRequirementsOpenGLESKHR(
         const Version& minApiVersionSupported_ = {},
         const Version& maxApiVersionSupported_ = {})
-        : Parent(StructureType::GraphicsRequirementsOpenglEsKHR)
-        , minApiVersionSupported { minApiVersionSupported_ }
+        :
+
+        Parent(StructureType::GraphicsRequirementsOpenglEsKHR)
+        ,
+
+        minApiVersionSupported { minApiVersionSupported_ }
         , maxApiVersionSupported { maxApiVersionSupported_ }
     {
     }
     operator const XrGraphicsRequirementsOpenGLESKHR&() const { return *reinterpret_cast<const XrGraphicsRequirementsOpenGLESKHR*>(this); }
-    operator XrGraphicsRequirementsOpenGLESKHR&() { return *reinterpret_cast<XrGraphicsRequirementsOpenGLESKHR*>(this); }
+    operator XrGraphicsRequirementsOpenGLESKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsRequirementsOpenGLESKHR*>(this);
+    }
 
     // member decl
     Version minApiVersionSupported;
     Version maxApiVersionSupported;
 };
 static_assert(sizeof(GraphicsRequirementsOpenGLESKHR) == sizeof(XrGraphicsRequirementsOpenGLESKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsOpenGLESKHR const reference as a raw XrGraphicsRequirementsOpenGLESKHR const pointer
+//! @relates GraphicsRequirementsOpenGLESKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR const* get(GraphicsRequirementsOpenGLESKHR const& h)
+{
+    return &(h.operator XrGraphicsRequirementsOpenGLESKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsOpenGLESKHR as the address of a raw XrGraphicsRequirementsOpenGLESKHR
+//! @relates GraphicsRequirementsOpenGLESKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsOpenGLESKHR* put(GraphicsRequirementsOpenGLESKHR& h) { return &(h.operator XrGraphicsRequirementsOpenGLESKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_OPENGL_ES)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -15072,8 +11402,12 @@ public:
         VkDevice device_ = {},
         uint32_t queueFamilyIndex_ = 0,
         uint32_t queueIndex_ = 0)
-        : Parent(StructureType::GraphicsBindingVulkanKHR)
-        , instance { instance_ }
+        :
+
+        Parent(StructureType::GraphicsBindingVulkanKHR)
+        ,
+
+        instance { instance_ }
         , physicalDevice { physicalDevice_ }
         , device { device_ }
         , queueFamilyIndex { queueFamilyIndex_ }
@@ -15081,7 +11415,10 @@ public:
     {
     }
     operator const XrGraphicsBindingVulkanKHR&() const { return *reinterpret_cast<const XrGraphicsBindingVulkanKHR*>(this); }
-    operator XrGraphicsBindingVulkanKHR&() { return *reinterpret_cast<XrGraphicsBindingVulkanKHR*>(this); }
+    operator XrGraphicsBindingVulkanKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingVulkanKHR*>(this);
+    }
 
     // member decl
     VkInstance instance;
@@ -15091,6 +11428,18 @@ public:
     uint32_t queueIndex;
 };
 static_assert(sizeof(GraphicsBindingVulkanKHR) == sizeof(XrGraphicsBindingVulkanKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingVulkanKHR const reference as a raw XrGraphicsBindingVulkanKHR const pointer
+//! @relates GraphicsBindingVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR const* get(GraphicsBindingVulkanKHR const& h)
+{
+    return &(h.operator XrGraphicsBindingVulkanKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingVulkanKHR as the address of a raw XrGraphicsBindingVulkanKHR
+//! @relates GraphicsBindingVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsBindingVulkanKHR* put(GraphicsBindingVulkanKHR& h) { return &(h.operator XrGraphicsBindingVulkanKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -15102,17 +11451,36 @@ public:
     // ctor
     SwapchainImageVulkanKHR(
         VkImage image_ = {})
-        : Parent(StructureType::SwapchainImageVulkanKHR)
-        , image { image_ }
+        :
+
+        Parent(StructureType::SwapchainImageVulkanKHR)
+        ,
+
+        image { image_ }
     {
     }
     operator const XrSwapchainImageVulkanKHR&() const { return *reinterpret_cast<const XrSwapchainImageVulkanKHR*>(this); }
-    operator XrSwapchainImageVulkanKHR&() { return *reinterpret_cast<XrSwapchainImageVulkanKHR*>(this); }
+    operator XrSwapchainImageVulkanKHR&()
+    {
+        return *reinterpret_cast<XrSwapchainImageVulkanKHR*>(this);
+    }
 
     // member decl
     VkImage image;
 };
 static_assert(sizeof(SwapchainImageVulkanKHR) == sizeof(XrSwapchainImageVulkanKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageVulkanKHR const reference as a raw XrSwapchainImageVulkanKHR const pointer
+//! @relates SwapchainImageVulkanKHR
+OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR const* get(SwapchainImageVulkanKHR const& h)
+{
+    return &(h.operator XrSwapchainImageVulkanKHR const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageVulkanKHR as the address of a raw XrSwapchainImageVulkanKHR
+//! @relates SwapchainImageVulkanKHR
+OPENXR_HPP_INLINE XrSwapchainImageVulkanKHR* put(SwapchainImageVulkanKHR& h) { return &(h.operator XrSwapchainImageVulkanKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_VULKAN)
@@ -15125,19 +11493,38 @@ public:
     GraphicsRequirementsVulkanKHR(
         const Version& minApiVersionSupported_ = {},
         const Version& maxApiVersionSupported_ = {})
-        : Parent(StructureType::GraphicsRequirementsVulkanKHR)
-        , minApiVersionSupported { minApiVersionSupported_ }
+        :
+
+        Parent(StructureType::GraphicsRequirementsVulkanKHR)
+        ,
+
+        minApiVersionSupported { minApiVersionSupported_ }
         , maxApiVersionSupported { maxApiVersionSupported_ }
     {
     }
     operator const XrGraphicsRequirementsVulkanKHR&() const { return *reinterpret_cast<const XrGraphicsRequirementsVulkanKHR*>(this); }
-    operator XrGraphicsRequirementsVulkanKHR&() { return *reinterpret_cast<XrGraphicsRequirementsVulkanKHR*>(this); }
+    operator XrGraphicsRequirementsVulkanKHR&()
+    {
+        return *reinterpret_cast<XrGraphicsRequirementsVulkanKHR*>(this);
+    }
 
     // member decl
     Version minApiVersionSupported;
     Version maxApiVersionSupported;
 };
 static_assert(sizeof(GraphicsRequirementsVulkanKHR) == sizeof(XrGraphicsRequirementsVulkanKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsVulkanKHR const reference as a raw XrGraphicsRequirementsVulkanKHR const pointer
+//! @relates GraphicsRequirementsVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR const* get(GraphicsRequirementsVulkanKHR const& h)
+{
+    return &(h.operator XrGraphicsRequirementsVulkanKHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsVulkanKHR as the address of a raw XrGraphicsRequirementsVulkanKHR
+//! @relates GraphicsRequirementsVulkanKHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsVulkanKHR* put(GraphicsRequirementsVulkanKHR& h) { return &(h.operator XrGraphicsRequirementsVulkanKHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_VULKAN)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -15149,17 +11536,36 @@ public:
     // ctor
     GraphicsBindingD3D11KHR(
         ID3D11Device* device_ = nullptr)
-        : Parent(StructureType::GraphicsBindingD3D11KHR)
-        , device { device_ }
+        :
+
+        Parent(StructureType::GraphicsBindingD3D11KHR)
+        ,
+
+        device { device_ }
     {
     }
     operator const XrGraphicsBindingD3D11KHR&() const { return *reinterpret_cast<const XrGraphicsBindingD3D11KHR*>(this); }
-    operator XrGraphicsBindingD3D11KHR&() { return *reinterpret_cast<XrGraphicsBindingD3D11KHR*>(this); }
+    operator XrGraphicsBindingD3D11KHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingD3D11KHR*>(this);
+    }
 
     // member decl
     ID3D11Device* device;
 };
 static_assert(sizeof(GraphicsBindingD3D11KHR) == sizeof(XrGraphicsBindingD3D11KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingD3D11KHR const reference as a raw XrGraphicsBindingD3D11KHR const pointer
+//! @relates GraphicsBindingD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR const* get(GraphicsBindingD3D11KHR const& h)
+{
+    return &(h.operator XrGraphicsBindingD3D11KHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingD3D11KHR as the address of a raw XrGraphicsBindingD3D11KHR
+//! @relates GraphicsBindingD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D11KHR* put(GraphicsBindingD3D11KHR& h) { return &(h.operator XrGraphicsBindingD3D11KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -15171,17 +11577,36 @@ public:
     // ctor
     SwapchainImageD3D11KHR(
         ID3D11Texture2D* texture_ = nullptr)
-        : Parent(StructureType::SwapchainImageD3D11KHR)
-        , texture { texture_ }
+        :
+
+        Parent(StructureType::SwapchainImageD3D11KHR)
+        ,
+
+        texture { texture_ }
     {
     }
     operator const XrSwapchainImageD3D11KHR&() const { return *reinterpret_cast<const XrSwapchainImageD3D11KHR*>(this); }
-    operator XrSwapchainImageD3D11KHR&() { return *reinterpret_cast<XrSwapchainImageD3D11KHR*>(this); }
+    operator XrSwapchainImageD3D11KHR&()
+    {
+        return *reinterpret_cast<XrSwapchainImageD3D11KHR*>(this);
+    }
 
     // member decl
     ID3D11Texture2D* texture;
 };
 static_assert(sizeof(SwapchainImageD3D11KHR) == sizeof(XrSwapchainImageD3D11KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageD3D11KHR const reference as a raw XrSwapchainImageD3D11KHR const pointer
+//! @relates SwapchainImageD3D11KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR const* get(SwapchainImageD3D11KHR const& h)
+{
+    return &(h.operator XrSwapchainImageD3D11KHR const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageD3D11KHR as the address of a raw XrSwapchainImageD3D11KHR
+//! @relates SwapchainImageD3D11KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D11KHR* put(SwapchainImageD3D11KHR& h) { return &(h.operator XrSwapchainImageD3D11KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D11)
@@ -15194,19 +11619,38 @@ public:
     GraphicsRequirementsD3D11KHR(
         LUID adapterLuid_ = {},
         D3D_FEATURE_LEVEL minFeatureLevel_ = {})
-        : Parent(StructureType::GraphicsRequirementsD3D11KHR)
-        , adapterLuid { adapterLuid_ }
+        :
+
+        Parent(StructureType::GraphicsRequirementsD3D11KHR)
+        ,
+
+        adapterLuid { adapterLuid_ }
         , minFeatureLevel { minFeatureLevel_ }
     {
     }
     operator const XrGraphicsRequirementsD3D11KHR&() const { return *reinterpret_cast<const XrGraphicsRequirementsD3D11KHR*>(this); }
-    operator XrGraphicsRequirementsD3D11KHR&() { return *reinterpret_cast<XrGraphicsRequirementsD3D11KHR*>(this); }
+    operator XrGraphicsRequirementsD3D11KHR&()
+    {
+        return *reinterpret_cast<XrGraphicsRequirementsD3D11KHR*>(this);
+    }
 
     // member decl
     LUID adapterLuid;
     D3D_FEATURE_LEVEL minFeatureLevel;
 };
 static_assert(sizeof(GraphicsRequirementsD3D11KHR) == sizeof(XrGraphicsRequirementsD3D11KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsD3D11KHR const reference as a raw XrGraphicsRequirementsD3D11KHR const pointer
+//! @relates GraphicsRequirementsD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR const* get(GraphicsRequirementsD3D11KHR const& h)
+{
+    return &(h.operator XrGraphicsRequirementsD3D11KHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsD3D11KHR as the address of a raw XrGraphicsRequirementsD3D11KHR
+//! @relates GraphicsRequirementsD3D11KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D11KHR* put(GraphicsRequirementsD3D11KHR& h) { return &(h.operator XrGraphicsRequirementsD3D11KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D11)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -15219,19 +11663,38 @@ public:
     GraphicsBindingD3D12KHR(
         ID3D12Device* device_ = nullptr,
         ID3D12CommandQueue* queue_ = nullptr)
-        : Parent(StructureType::GraphicsBindingD3D12KHR)
-        , device { device_ }
+        :
+
+        Parent(StructureType::GraphicsBindingD3D12KHR)
+        ,
+
+        device { device_ }
         , queue { queue_ }
     {
     }
     operator const XrGraphicsBindingD3D12KHR&() const { return *reinterpret_cast<const XrGraphicsBindingD3D12KHR*>(this); }
-    operator XrGraphicsBindingD3D12KHR&() { return *reinterpret_cast<XrGraphicsBindingD3D12KHR*>(this); }
+    operator XrGraphicsBindingD3D12KHR&()
+    {
+        return *reinterpret_cast<XrGraphicsBindingD3D12KHR*>(this);
+    }
 
     // member decl
     ID3D12Device* device;
     ID3D12CommandQueue* queue;
 };
 static_assert(sizeof(GraphicsBindingD3D12KHR) == sizeof(XrGraphicsBindingD3D12KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsBindingD3D12KHR const reference as a raw XrGraphicsBindingD3D12KHR const pointer
+//! @relates GraphicsBindingD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR const* get(GraphicsBindingD3D12KHR const& h)
+{
+    return &(h.operator XrGraphicsBindingD3D12KHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsBindingD3D12KHR as the address of a raw XrGraphicsBindingD3D12KHR
+//! @relates GraphicsBindingD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsBindingD3D12KHR* put(GraphicsBindingD3D12KHR& h) { return &(h.operator XrGraphicsBindingD3D12KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -15243,17 +11706,36 @@ public:
     // ctor
     SwapchainImageD3D12KHR(
         ID3D12Resource* texture_ = nullptr)
-        : Parent(StructureType::SwapchainImageD3D12KHR)
-        , texture { texture_ }
+        :
+
+        Parent(StructureType::SwapchainImageD3D12KHR)
+        ,
+
+        texture { texture_ }
     {
     }
     operator const XrSwapchainImageD3D12KHR&() const { return *reinterpret_cast<const XrSwapchainImageD3D12KHR*>(this); }
-    operator XrSwapchainImageD3D12KHR&() { return *reinterpret_cast<XrSwapchainImageD3D12KHR*>(this); }
+    operator XrSwapchainImageD3D12KHR&()
+    {
+        return *reinterpret_cast<XrSwapchainImageD3D12KHR*>(this);
+    }
 
     // member decl
     ID3D12Resource* texture;
 };
 static_assert(sizeof(SwapchainImageD3D12KHR) == sizeof(XrSwapchainImageD3D12KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SwapchainImageD3D12KHR const reference as a raw XrSwapchainImageD3D12KHR const pointer
+//! @relates SwapchainImageD3D12KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR const* get(SwapchainImageD3D12KHR const& h)
+{
+    return &(h.operator XrSwapchainImageD3D12KHR const&());
+}
+
+//! @brief Free function accessor for passing SwapchainImageD3D12KHR as the address of a raw XrSwapchainImageD3D12KHR
+//! @relates SwapchainImageD3D12KHR
+OPENXR_HPP_INLINE XrSwapchainImageD3D12KHR* put(SwapchainImageD3D12KHR& h) { return &(h.operator XrSwapchainImageD3D12KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
 #if defined(XR_USE_GRAPHICS_API_D3D12)
@@ -15266,19 +11748,38 @@ public:
     GraphicsRequirementsD3D12KHR(
         LUID adapterLuid_ = {},
         D3D_FEATURE_LEVEL minFeatureLevel_ = {})
-        : Parent(StructureType::GraphicsRequirementsD3D12KHR)
-        , adapterLuid { adapterLuid_ }
+        :
+
+        Parent(StructureType::GraphicsRequirementsD3D12KHR)
+        ,
+
+        adapterLuid { adapterLuid_ }
         , minFeatureLevel { minFeatureLevel_ }
     {
     }
     operator const XrGraphicsRequirementsD3D12KHR&() const { return *reinterpret_cast<const XrGraphicsRequirementsD3D12KHR*>(this); }
-    operator XrGraphicsRequirementsD3D12KHR&() { return *reinterpret_cast<XrGraphicsRequirementsD3D12KHR*>(this); }
+    operator XrGraphicsRequirementsD3D12KHR&()
+    {
+        return *reinterpret_cast<XrGraphicsRequirementsD3D12KHR*>(this);
+    }
 
     // member decl
     LUID adapterLuid;
     D3D_FEATURE_LEVEL minFeatureLevel;
 };
 static_assert(sizeof(GraphicsRequirementsD3D12KHR) == sizeof(XrGraphicsRequirementsD3D12KHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for GraphicsRequirementsD3D12KHR const reference as a raw XrGraphicsRequirementsD3D12KHR const pointer
+//! @relates GraphicsRequirementsD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR const* get(GraphicsRequirementsD3D12KHR const& h)
+{
+    return &(h.operator XrGraphicsRequirementsD3D12KHR const&());
+}
+
+//! @brief Free function accessor for passing GraphicsRequirementsD3D12KHR as the address of a raw XrGraphicsRequirementsD3D12KHR
+//! @relates GraphicsRequirementsD3D12KHR
+OPENXR_HPP_INLINE XrGraphicsRequirementsD3D12KHR* put(GraphicsRequirementsD3D12KHR& h) { return &(h.operator XrGraphicsRequirementsD3D12KHR&()); }
+
 #endif // defined(XR_USE_GRAPHICS_API_D3D12)
 
 struct VisibilityMaskKHR : public traits::TypedStructTraits<VisibilityMaskKHR> {
@@ -15294,8 +11795,12 @@ public:
         uint32_t indexCapacityInput_ = 0,
         uint32_t indexCountOutput_ = 0,
         uint32_t* indices_ = nullptr)
-        : Parent(StructureType::VisibilityMaskKHR)
-        , vertexCapacityInput { vertexCapacityInput_ }
+        :
+
+        Parent(StructureType::VisibilityMaskKHR)
+        ,
+
+        vertexCapacityInput { vertexCapacityInput_ }
         , vertexCountOutput { vertexCountOutput_ }
         , vertices { vertices_ }
         , indexCapacityInput { indexCapacityInput_ }
@@ -15304,7 +11809,10 @@ public:
     {
     }
     operator const XrVisibilityMaskKHR&() const { return *reinterpret_cast<const XrVisibilityMaskKHR*>(this); }
-    operator XrVisibilityMaskKHR&() { return *reinterpret_cast<XrVisibilityMaskKHR*>(this); }
+    operator XrVisibilityMaskKHR&()
+    {
+        return *reinterpret_cast<XrVisibilityMaskKHR*>(this);
+    }
 
     // member decl
     uint32_t vertexCapacityInput;
@@ -15316,6 +11824,17 @@ public:
 };
 static_assert(sizeof(VisibilityMaskKHR) == sizeof(XrVisibilityMaskKHR), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for VisibilityMaskKHR const reference as a raw XrVisibilityMaskKHR const pointer
+//! @relates VisibilityMaskKHR
+OPENXR_HPP_INLINE XrVisibilityMaskKHR const* get(VisibilityMaskKHR const& h)
+{
+    return &(h.operator XrVisibilityMaskKHR const&());
+}
+
+//! @brief Free function accessor for passing VisibilityMaskKHR as the address of a raw XrVisibilityMaskKHR
+//! @relates VisibilityMaskKHR
+OPENXR_HPP_INLINE XrVisibilityMaskKHR* put(VisibilityMaskKHR& h) { return &(h.operator XrVisibilityMaskKHR&()); }
+
 struct EventDataVisibilityMaskChangedKHR : public traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR> {
 private:
     using Parent = traits::TypedStructTraits<EventDataVisibilityMaskChangedKHR>;
@@ -15326,14 +11845,21 @@ public:
         const Session& session_ = {},
         const ViewConfigurationType& viewConfigurationType_ = {},
         uint32_t viewIndex_ = 0)
-        : Parent(StructureType::EventDataVisibilityMaskChangedKHR)
-        , session { session_ }
+        :
+
+        Parent(StructureType::EventDataVisibilityMaskChangedKHR)
+        ,
+
+        session { session_ }
         , viewConfigurationType { viewConfigurationType_ }
         , viewIndex { viewIndex_ }
     {
     }
     operator const XrEventDataVisibilityMaskChangedKHR&() const { return *reinterpret_cast<const XrEventDataVisibilityMaskChangedKHR*>(this); }
-    operator XrEventDataVisibilityMaskChangedKHR&() { return *reinterpret_cast<XrEventDataVisibilityMaskChangedKHR*>(this); }
+    operator XrEventDataVisibilityMaskChangedKHR&()
+    {
+        return *reinterpret_cast<XrEventDataVisibilityMaskChangedKHR*>(this);
+    }
 
     // member decl
     Session session;
@@ -15341,6 +11867,17 @@ public:
     uint32_t viewIndex;
 };
 static_assert(sizeof(EventDataVisibilityMaskChangedKHR) == sizeof(XrEventDataVisibilityMaskChangedKHR), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataVisibilityMaskChangedKHR const reference as a raw XrEventDataVisibilityMaskChangedKHR const pointer
+//! @relates EventDataVisibilityMaskChangedKHR
+OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR const* get(EventDataVisibilityMaskChangedKHR const& h)
+{
+    return &(h.operator XrEventDataVisibilityMaskChangedKHR const&());
+}
+
+//! @brief Free function accessor for passing EventDataVisibilityMaskChangedKHR as the address of a raw XrEventDataVisibilityMaskChangedKHR
+//! @relates EventDataVisibilityMaskChangedKHR
+OPENXR_HPP_INLINE XrEventDataVisibilityMaskChangedKHR* put(EventDataVisibilityMaskChangedKHR& h) { return &(h.operator XrEventDataVisibilityMaskChangedKHR&()); }
 
 struct EventDataPerfSettingsEXT : public traits::TypedStructTraits<EventDataPerfSettingsEXT> {
 private:
@@ -15353,15 +11890,22 @@ public:
         const PerfSettingsSubDomainEXT& subDomain_ = {},
         const PerfSettingsNotificationLevelEXT& fromLevel_ = {},
         const PerfSettingsNotificationLevelEXT& toLevel_ = {})
-        : Parent(StructureType::EventDataPerfSettingsEXT)
-        , domain { domain_ }
+        :
+
+        Parent(StructureType::EventDataPerfSettingsEXT)
+        ,
+
+        domain { domain_ }
         , subDomain { subDomain_ }
         , fromLevel { fromLevel_ }
         , toLevel { toLevel_ }
     {
     }
     operator const XrEventDataPerfSettingsEXT&() const { return *reinterpret_cast<const XrEventDataPerfSettingsEXT*>(this); }
-    operator XrEventDataPerfSettingsEXT&() { return *reinterpret_cast<XrEventDataPerfSettingsEXT*>(this); }
+    operator XrEventDataPerfSettingsEXT&()
+    {
+        return *reinterpret_cast<XrEventDataPerfSettingsEXT*>(this);
+    }
 
     // member decl
     PerfSettingsDomainEXT domain;
@@ -15370,6 +11914,17 @@ public:
     PerfSettingsNotificationLevelEXT toLevel;
 };
 static_assert(sizeof(EventDataPerfSettingsEXT) == sizeof(XrEventDataPerfSettingsEXT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for EventDataPerfSettingsEXT const reference as a raw XrEventDataPerfSettingsEXT const pointer
+//! @relates EventDataPerfSettingsEXT
+OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT const* get(EventDataPerfSettingsEXT const& h)
+{
+    return &(h.operator XrEventDataPerfSettingsEXT const&());
+}
+
+//! @brief Free function accessor for passing EventDataPerfSettingsEXT as the address of a raw XrEventDataPerfSettingsEXT
+//! @relates EventDataPerfSettingsEXT
+OPENXR_HPP_INLINE XrEventDataPerfSettingsEXT* put(EventDataPerfSettingsEXT& h) { return &(h.operator XrEventDataPerfSettingsEXT&()); }
 
 struct DebugUtilsObjectNameInfoEXT : public traits::TypedStructTraits<DebugUtilsObjectNameInfoEXT> {
 private:
@@ -15381,14 +11936,21 @@ public:
         const ObjectType& objectType_ = {},
         uint64_t objectHandle_ = 0,
         const char* objectName_ = nullptr)
-        : Parent(StructureType::DebugUtilsObjectNameInfoEXT)
-        , objectType { objectType_ }
+        :
+
+        Parent(StructureType::DebugUtilsObjectNameInfoEXT)
+        ,
+
+        objectType { objectType_ }
         , objectHandle { objectHandle_ }
         , objectName { objectName_ }
     {
     }
     operator const XrDebugUtilsObjectNameInfoEXT&() const { return *reinterpret_cast<const XrDebugUtilsObjectNameInfoEXT*>(this); }
-    operator XrDebugUtilsObjectNameInfoEXT&() { return *reinterpret_cast<XrDebugUtilsObjectNameInfoEXT*>(this); }
+    operator XrDebugUtilsObjectNameInfoEXT&()
+    {
+        return *reinterpret_cast<XrDebugUtilsObjectNameInfoEXT*>(this);
+    }
 
     // member decl
     ObjectType objectType;
@@ -15396,6 +11958,17 @@ public:
     const char* objectName;
 };
 static_assert(sizeof(DebugUtilsObjectNameInfoEXT) == sizeof(XrDebugUtilsObjectNameInfoEXT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for DebugUtilsObjectNameInfoEXT const reference as a raw XrDebugUtilsObjectNameInfoEXT const pointer
+//! @relates DebugUtilsObjectNameInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT const* get(DebugUtilsObjectNameInfoEXT const& h)
+{
+    return &(h.operator XrDebugUtilsObjectNameInfoEXT const&());
+}
+
+//! @brief Free function accessor for passing DebugUtilsObjectNameInfoEXT as the address of a raw XrDebugUtilsObjectNameInfoEXT
+//! @relates DebugUtilsObjectNameInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsObjectNameInfoEXT* put(DebugUtilsObjectNameInfoEXT& h) { return &(h.operator XrDebugUtilsObjectNameInfoEXT&()); }
 
 struct DebugUtilsLabelEXT : public traits::TypedStructTraits<DebugUtilsLabelEXT> {
 private:
@@ -15405,17 +11978,35 @@ public:
     // ctor
     DebugUtilsLabelEXT(
         const char* labelName_ = nullptr)
-        : Parent(StructureType::DebugUtilsLabelEXT)
-        , labelName { labelName_ }
+        :
+
+        Parent(StructureType::DebugUtilsLabelEXT)
+        ,
+
+        labelName { labelName_ }
     {
     }
     operator const XrDebugUtilsLabelEXT&() const { return *reinterpret_cast<const XrDebugUtilsLabelEXT*>(this); }
-    operator XrDebugUtilsLabelEXT&() { return *reinterpret_cast<XrDebugUtilsLabelEXT*>(this); }
+    operator XrDebugUtilsLabelEXT&()
+    {
+        return *reinterpret_cast<XrDebugUtilsLabelEXT*>(this);
+    }
 
     // member decl
     const char* labelName;
 };
 static_assert(sizeof(DebugUtilsLabelEXT) == sizeof(XrDebugUtilsLabelEXT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for DebugUtilsLabelEXT const reference as a raw XrDebugUtilsLabelEXT const pointer
+//! @relates DebugUtilsLabelEXT
+OPENXR_HPP_INLINE XrDebugUtilsLabelEXT const* get(DebugUtilsLabelEXT const& h)
+{
+    return &(h.operator XrDebugUtilsLabelEXT const&());
+}
+
+//! @brief Free function accessor for passing DebugUtilsLabelEXT as the address of a raw XrDebugUtilsLabelEXT
+//! @relates DebugUtilsLabelEXT
+OPENXR_HPP_INLINE XrDebugUtilsLabelEXT* put(DebugUtilsLabelEXT& h) { return &(h.operator XrDebugUtilsLabelEXT&()); }
 
 struct DebugUtilsMessengerCallbackDataEXT : public traits::TypedStructTraits<DebugUtilsMessengerCallbackDataEXT> {
 private:
@@ -15431,8 +12022,12 @@ public:
         DebugUtilsObjectNameInfoEXT* objects_ = nullptr,
         uint32_t sessionLabelCount_ = 0,
         DebugUtilsLabelEXT* sessionLabels_ = nullptr)
-        : Parent(StructureType::DebugUtilsMessengerCallbackDataEXT)
-        , messageId { messageId_ }
+        :
+
+        Parent(StructureType::DebugUtilsMessengerCallbackDataEXT)
+        ,
+
+        messageId { messageId_ }
         , functionName { functionName_ }
         , message { message_ }
         , objectCount { objectCount_ }
@@ -15442,7 +12037,10 @@ public:
     {
     }
     operator const XrDebugUtilsMessengerCallbackDataEXT&() const { return *reinterpret_cast<const XrDebugUtilsMessengerCallbackDataEXT*>(this); }
-    operator XrDebugUtilsMessengerCallbackDataEXT&() { return *reinterpret_cast<XrDebugUtilsMessengerCallbackDataEXT*>(this); }
+    operator XrDebugUtilsMessengerCallbackDataEXT&()
+    {
+        return *reinterpret_cast<XrDebugUtilsMessengerCallbackDataEXT*>(this);
+    }
 
     // member decl
     const char* messageId;
@@ -15455,6 +12053,17 @@ public:
 };
 static_assert(sizeof(DebugUtilsMessengerCallbackDataEXT) == sizeof(XrDebugUtilsMessengerCallbackDataEXT), "struct and wrapper have different size!");
 
+//! @brief Free function accessor for DebugUtilsMessengerCallbackDataEXT const reference as a raw XrDebugUtilsMessengerCallbackDataEXT const pointer
+//! @relates DebugUtilsMessengerCallbackDataEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT const* get(DebugUtilsMessengerCallbackDataEXT const& h)
+{
+    return &(h.operator XrDebugUtilsMessengerCallbackDataEXT const&());
+}
+
+//! @brief Free function accessor for passing DebugUtilsMessengerCallbackDataEXT as the address of a raw XrDebugUtilsMessengerCallbackDataEXT
+//! @relates DebugUtilsMessengerCallbackDataEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCallbackDataEXT* put(DebugUtilsMessengerCallbackDataEXT& h) { return &(h.operator XrDebugUtilsMessengerCallbackDataEXT&()); }
+
 struct DebugUtilsMessengerCreateInfoEXT : public traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT> {
 private:
     using Parent = traits::TypedStructTraits<DebugUtilsMessengerCreateInfoEXT>;
@@ -15466,15 +12075,22 @@ public:
         const DebugUtilsMessageTypeFlagsEXT& messageTypes_ = {},
         PFN_xrDebugUtilsMessengerCallbackEXT userCallback_ = nullptr,
         void* XR_MAY_ALIAS userData_ = nullptr)
-        : Parent(StructureType::DebugUtilsMessengerCreateInfoEXT)
-        , messageSeverities { messageSeverities_ }
+        :
+
+        Parent(StructureType::DebugUtilsMessengerCreateInfoEXT)
+        ,
+
+        messageSeverities { messageSeverities_ }
         , messageTypes { messageTypes_ }
         , userCallback { userCallback_ }
         , userData { userData_ }
     {
     }
     operator const XrDebugUtilsMessengerCreateInfoEXT&() const { return *reinterpret_cast<const XrDebugUtilsMessengerCreateInfoEXT*>(this); }
-    operator XrDebugUtilsMessengerCreateInfoEXT&() { return *reinterpret_cast<XrDebugUtilsMessengerCreateInfoEXT*>(this); }
+    operator XrDebugUtilsMessengerCreateInfoEXT&()
+    {
+        return *reinterpret_cast<XrDebugUtilsMessengerCreateInfoEXT*>(this);
+    }
 
     // member decl
     DebugUtilsMessageSeverityFlagsEXT messageSeverities;
@@ -15483,6 +12099,17 @@ public:
     void* XR_MAY_ALIAS userData;
 };
 static_assert(sizeof(DebugUtilsMessengerCreateInfoEXT) == sizeof(XrDebugUtilsMessengerCreateInfoEXT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for DebugUtilsMessengerCreateInfoEXT const reference as a raw XrDebugUtilsMessengerCreateInfoEXT const pointer
+//! @relates DebugUtilsMessengerCreateInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT const* get(DebugUtilsMessengerCreateInfoEXT const& h)
+{
+    return &(h.operator XrDebugUtilsMessengerCreateInfoEXT const&());
+}
+
+//! @brief Free function accessor for passing DebugUtilsMessengerCreateInfoEXT as the address of a raw XrDebugUtilsMessengerCreateInfoEXT
+//! @relates DebugUtilsMessengerCreateInfoEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerCreateInfoEXT* put(DebugUtilsMessengerCreateInfoEXT& h) { return &(h.operator XrDebugUtilsMessengerCreateInfoEXT&()); }
 
 struct SpatialAnchorCreateInfoMSFT : public traits::TypedStructTraits<SpatialAnchorCreateInfoMSFT> {
 private:
@@ -15494,14 +12121,21 @@ public:
         const Space& space_ = {},
         const Posef& pose_ = {},
         const Time& time_ = {})
-        : Parent(StructureType::SpatialAnchorCreateInfoMSFT)
-        , space { space_ }
+        :
+
+        Parent(StructureType::SpatialAnchorCreateInfoMSFT)
+        ,
+
+        space { space_ }
         , pose { pose_ }
         , time { time_ }
     {
     }
     operator const XrSpatialAnchorCreateInfoMSFT&() const { return *reinterpret_cast<const XrSpatialAnchorCreateInfoMSFT*>(this); }
-    operator XrSpatialAnchorCreateInfoMSFT&() { return *reinterpret_cast<XrSpatialAnchorCreateInfoMSFT*>(this); }
+    operator XrSpatialAnchorCreateInfoMSFT&()
+    {
+        return *reinterpret_cast<XrSpatialAnchorCreateInfoMSFT*>(this);
+    }
 
     // member decl
     Space space;
@@ -15509,6 +12143,17 @@ public:
     Time time;
 };
 static_assert(sizeof(SpatialAnchorCreateInfoMSFT) == sizeof(XrSpatialAnchorCreateInfoMSFT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SpatialAnchorCreateInfoMSFT const reference as a raw XrSpatialAnchorCreateInfoMSFT const pointer
+//! @relates SpatialAnchorCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT const* get(SpatialAnchorCreateInfoMSFT const& h)
+{
+    return &(h.operator XrSpatialAnchorCreateInfoMSFT const&());
+}
+
+//! @brief Free function accessor for passing SpatialAnchorCreateInfoMSFT as the address of a raw XrSpatialAnchorCreateInfoMSFT
+//! @relates SpatialAnchorCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorCreateInfoMSFT* put(SpatialAnchorCreateInfoMSFT& h) { return &(h.operator XrSpatialAnchorCreateInfoMSFT&()); }
 
 struct SpatialAnchorSpaceCreateInfoMSFT : public traits::TypedStructTraits<SpatialAnchorSpaceCreateInfoMSFT> {
 private:
@@ -15519,19 +12164,37 @@ public:
     SpatialAnchorSpaceCreateInfoMSFT(
         const SpatialAnchorMSFT& anchor_ = {},
         const Posef& poseInAnchorSpace_ = {})
-        : Parent(StructureType::SpatialAnchorSpaceCreateInfoMSFT)
-        , anchor { anchor_ }
+        :
+
+        Parent(StructureType::SpatialAnchorSpaceCreateInfoMSFT)
+        ,
+
+        anchor { anchor_ }
         , poseInAnchorSpace { poseInAnchorSpace_ }
     {
     }
     operator const XrSpatialAnchorSpaceCreateInfoMSFT&() const { return *reinterpret_cast<const XrSpatialAnchorSpaceCreateInfoMSFT*>(this); }
-    operator XrSpatialAnchorSpaceCreateInfoMSFT&() { return *reinterpret_cast<XrSpatialAnchorSpaceCreateInfoMSFT*>(this); }
+    operator XrSpatialAnchorSpaceCreateInfoMSFT&()
+    {
+        return *reinterpret_cast<XrSpatialAnchorSpaceCreateInfoMSFT*>(this);
+    }
 
     // member decl
     SpatialAnchorMSFT anchor;
     Posef poseInAnchorSpace;
 };
 static_assert(sizeof(SpatialAnchorSpaceCreateInfoMSFT) == sizeof(XrSpatialAnchorSpaceCreateInfoMSFT), "struct and wrapper have different size!");
+
+//! @brief Free function accessor for SpatialAnchorSpaceCreateInfoMSFT const reference as a raw XrSpatialAnchorSpaceCreateInfoMSFT const pointer
+//! @relates SpatialAnchorSpaceCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT const* get(SpatialAnchorSpaceCreateInfoMSFT const& h)
+{
+    return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT const&());
+}
+
+//! @brief Free function accessor for passing SpatialAnchorSpaceCreateInfoMSFT as the address of a raw XrSpatialAnchorSpaceCreateInfoMSFT
+//! @relates SpatialAnchorSpaceCreateInfoMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorSpaceCreateInfoMSFT* put(SpatialAnchorSpaceCreateInfoMSFT& h) { return &(h.operator XrSpatialAnchorSpaceCreateInfoMSFT&()); }
 
 } // namespace OPENXR_HPP_NAMESPACE
 
@@ -17562,72 +14225,57 @@ OPENXR_HPP_INLINE Result enumerateApiLayerProperties(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
-    enumerateApiLayerProperties(Dispatch &&d) {
-  // Two-call idiom
-  std::vector<ApiLayerProperties, Allocator> properties;
-  uint32_t propertyCountOutput = 0;
-  uint32_t propertyCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type enumerateApiLayerProperties(
+    Dispatch&& d)
+{
+    // Two-call idiom
+    std::vector<ApiLayerProperties, Allocator> properties;
+    uint32_t propertyCountOutput = 0;
+    uint32_t propertyCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateApiLayerProperties(
-      propertyCapacityInput, &propertyCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
 
-    return impl::createResultValue(result, properties,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::enumerateApiLayerProperties");
-  }
-  do {
-    properties.resize(propertyCountOutput);
-    propertyCapacityInput = static_cast<uint32_t>(properties.size());
-    result = static_cast<Result>(d.xrEnumerateApiLayerProperties(
-        propertyCapacityInput, &propertyCountOutput,
-        reinterpret_cast<XrApiLayerProperties *>(properties.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
-    properties.resize(propertyCountOutput);
-  }
+        return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
+    }
+    do {
+        properties.resize(propertyCountOutput);
+        propertyCapacityInput = static_cast<uint32_t>(properties.size());
+        result = static_cast<Result>(d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, reinterpret_cast<XrApiLayerProperties*>(properties.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
+        properties.resize(propertyCountOutput);
+    }
 
-  return impl::createResultValue(result, properties,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::enumerateApiLayerProperties");
+    return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type
-    enumerateApiLayerProperties(Allocator const &vectorAllocator,
-                                Dispatch &&d) {
-  // Two-call idiom
-  std::vector<ApiLayerProperties, Allocator> properties{vectorAllocator};
-  uint32_t propertyCountOutput = 0;
-  uint32_t propertyCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ApiLayerProperties, Allocator>>::type enumerateApiLayerProperties(
+    Allocator const& vectorAllocator, Dispatch&& d)
+{
+    // Two-call idiom
+    std::vector<ApiLayerProperties, Allocator> properties { vectorAllocator };
+    uint32_t propertyCountOutput = 0;
+    uint32_t propertyCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateApiLayerProperties(
-      propertyCapacityInput, &propertyCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
 
-    return impl::createResultValue(result, properties,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::enumerateApiLayerProperties");
-  }
-  do {
-    properties.resize(propertyCountOutput);
-    propertyCapacityInput = static_cast<uint32_t>(properties.size());
-    result = static_cast<Result>(d.xrEnumerateApiLayerProperties(
-        propertyCapacityInput, &propertyCountOutput,
-        reinterpret_cast<XrApiLayerProperties *>(properties.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
-    properties.resize(propertyCountOutput);
-  }
+        return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
+    }
+    do {
+        properties.resize(propertyCountOutput);
+        propertyCapacityInput = static_cast<uint32_t>(properties.size());
+        result = static_cast<Result>(d.xrEnumerateApiLayerProperties(propertyCapacityInput, &propertyCountOutput, reinterpret_cast<XrApiLayerProperties*>(properties.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
+        properties.resize(propertyCountOutput);
+    }
 
-  return impl::createResultValue(result, properties,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::enumerateApiLayerProperties");
+    return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateApiLayerProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -17640,107 +14288,87 @@ OPENXR_HPP_INLINE Result enumerateInstanceExtensionProperties(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
-    enumerateInstanceExtensionProperties(const char *layerName, Dispatch &&d) {
-  // Two-call idiom
-  std::vector<ExtensionProperties, Allocator> properties;
-  uint32_t propertyCountOutput = 0;
-  uint32_t propertyCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type enumerateInstanceExtensionProperties(
+    const char* layerName, Dispatch&& d)
+{
+    // Two-call idiom
+    std::vector<ExtensionProperties, Allocator> properties;
+    uint32_t propertyCountOutput = 0;
+    uint32_t propertyCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(
-      layerName, propertyCapacityInput, &propertyCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
 
-    return impl::createResultValue(result, properties,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::enumerateInstanceExtensionProperties");
-  }
-  do {
-    properties.resize(propertyCountOutput);
-    propertyCapacityInput = static_cast<uint32_t>(properties.size());
-    result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(
-        layerName, propertyCapacityInput, &propertyCountOutput,
-        reinterpret_cast<XrExtensionProperties *>(properties.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
-    properties.resize(propertyCountOutput);
-  }
+        return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
+    }
+    do {
+        properties.resize(propertyCountOutput);
+        propertyCapacityInput = static_cast<uint32_t>(properties.size());
+        result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, reinterpret_cast<XrExtensionProperties*>(properties.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
+        properties.resize(propertyCountOutput);
+    }
 
-  return impl::createResultValue(result, properties,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::enumerateInstanceExtensionProperties");
+    return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type
-    enumerateInstanceExtensionProperties(const char *layerName,
-                                         Allocator const &vectorAllocator,
-                                         Dispatch &&d) {
-  // Two-call idiom
-  std::vector<ExtensionProperties, Allocator> properties{vectorAllocator};
-  uint32_t propertyCountOutput = 0;
-  uint32_t propertyCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ExtensionProperties, Allocator>>::type enumerateInstanceExtensionProperties(
+    const char* layerName, Allocator const& vectorAllocator, Dispatch&& d)
+{
+    // Two-call idiom
+    std::vector<ExtensionProperties, Allocator> properties { vectorAllocator };
+    uint32_t propertyCountOutput = 0;
+    uint32_t propertyCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(
-      layerName, propertyCapacityInput, &propertyCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || propertyCountOutput == 0) {
 
-    return impl::createResultValue(result, properties,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::enumerateInstanceExtensionProperties");
-  }
-  do {
-    properties.resize(propertyCountOutput);
-    propertyCapacityInput = static_cast<uint32_t>(properties.size());
-    result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(
-        layerName, propertyCapacityInput, &propertyCountOutput,
-        reinterpret_cast<XrExtensionProperties *>(properties.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
-    properties.resize(propertyCountOutput);
-  }
+        return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
+    }
+    do {
+        properties.resize(propertyCountOutput);
+        propertyCapacityInput = static_cast<uint32_t>(properties.size());
+        result = static_cast<Result>(d.xrEnumerateInstanceExtensionProperties(layerName, propertyCapacityInput, &propertyCountOutput, reinterpret_cast<XrExtensionProperties*>(properties.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(propertyCountOutput <= properties.size());
+        properties.resize(propertyCountOutput);
+    }
 
-  return impl::createResultValue(result, properties,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::enumerateInstanceExtensionProperties");
+    return impl::createResultValue(result, properties, OPENXR_HPP_NAMESPACE_STRING "::enumerateInstanceExtensionProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result createInstance(const InstanceCreateInfo &createInfo,
-                                        Instance &instance, Dispatch &&d) {
-  Result result = static_cast<Result>(d.xrCreateInstance(
-      OPENXR_HPP_NAMESPACE::get(createInfo), instance.put()));
-  return result;
+OPENXR_HPP_INLINE Result createInstance(
+    const InstanceCreateInfo& createInfo, Instance& instance, Dispatch&& d)
+{
+    Result result = static_cast<Result>(d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), instance.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Instance>::type
-createInstance(const InstanceCreateInfo &createInfo, Dispatch &&d) {
-  Instance handle;
-  Result result = static_cast<Result>(
-      d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(
-      result, handle, OPENXR_HPP_NAMESPACE_STRING "::createInstance");
+OPENXR_HPP_INLINE typename ResultValueType<Instance>::type createInstance(
+    const InstanceCreateInfo& createInfo, Dispatch&& d)
+{
+    Instance handle;
+    Result result = static_cast<Result>(d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::createInstance");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type
-createInstanceUnique(const InstanceCreateInfo &createInfo, Dispatch &&d) {
-  Instance handle;
-  Result result = static_cast<Result>(
-      d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Instance, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::createInstanceUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Instance, impl::RemoveRefConst<Dispatch>>>::type createInstanceUnique(
+    const InstanceCreateInfo& createInfo, Dispatch&& d)
+{
+    Instance handle;
+    Result result = static_cast<Result>(d.xrCreateInstance(OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Instance, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::createInstanceUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -17767,43 +14395,39 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::destroy(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getInstanceProperties(
-    InstanceProperties &instanceProperties, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetInstanceProperties(
-      this->get(), OPENXR_HPP_NAMESPACE::get(instanceProperties)));
-  return result;
+    InstanceProperties& instanceProperties, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetInstanceProperties(this->get(), OPENXR_HPP_NAMESPACE::put(instanceProperties)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<InstanceProperties>::type
-Instance::getInstanceProperties(Dispatch &&d) const {
-  InstanceProperties structResult;
-  Result result = static_cast<Result>(d.xrGetInstanceProperties(
-      this->get(), OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getInstanceProperties");
+OPENXR_HPP_INLINE typename ResultValueType<InstanceProperties>::type Instance::getInstanceProperties(
+    Dispatch&& d) const
+{
+    InstanceProperties structResult;
+    Result result = static_cast<Result>(d.xrGetInstanceProperties(this->get(), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getInstanceProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Instance::pollEvent(EventDataBuffer &eventData,
-                                             Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::get(eventData)));
-  return result;
+OPENXR_HPP_INLINE Result Instance::pollEvent(
+    EventDataBuffer& eventData, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::put(eventData)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Instance::pollEvent(EventDataBuffer &eventData,
-                                             Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::get(eventData)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING "::Instance::pollEvent",
-      {Result::Success, Result::EventUnavailable});
+OPENXR_HPP_INLINE Result Instance::pollEvent(
+    EventDataBuffer& eventData, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrPollEvent(this->get(), OPENXR_HPP_NAMESPACE::put(eventData)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::pollEvent", { Result::Success, Result::EventUnavailable });
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -17854,182 +14478,133 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Instance::structureTypeToString(
 #endif //  OPENXR_HPP_PROVIDE_DISCOURAGED_FUNCTIONS
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Instance::getSystem(const SystemGetInfo &getInfo,
-                                             XrSystemId *systemId,
-                                             Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrGetSystem(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), systemId));
-  return result;
+OPENXR_HPP_INLINE Result Instance::getSystem(
+    const SystemGetInfo& getInfo, XrSystemId* systemId, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetSystem(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), systemId));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<SystemId>::type
-Instance::getSystem(const SystemGetInfo &getInfo, Dispatch &&d) const {
-  SystemId structResult;
-  Result result = static_cast<Result>(d.xrGetSystem(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getSystem");
+OPENXR_HPP_INLINE typename ResultValueType<SystemId>::type Instance::getSystem(
+    const SystemGetInfo& getInfo, Dispatch&& d) const
+{
+    SystemId structResult;
+    Result result = static_cast<Result>(d.xrGetSystem(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystem");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getSystemProperties(
-    XrSystemId systemId, SystemProperties &properties, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetSystemProperties(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(properties)));
-  return result;
+    XrSystemId systemId, SystemProperties& properties, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetSystemProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(properties)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<SystemProperties>::type
-Instance::getSystemProperties(XrSystemId systemId, Dispatch &&d) const {
-  SystemProperties structResult;
-  Result result = static_cast<Result>(d.xrGetSystemProperties(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getSystemProperties");
+OPENXR_HPP_INLINE typename ResultValueType<SystemProperties>::type Instance::getSystemProperties(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    SystemProperties structResult;
+    Result result = static_cast<Result>(d.xrGetSystemProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystemProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::enumerateEnvironmentBlendModes(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    uint32_t environmentBlendModeCapacityInput,
-    uint32_t *environmentBlendModeCountOutput,
-    XrEnvironmentBlendMode *environmentBlendModes, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      environmentBlendModeCapacityInput, environmentBlendModeCountOutput,
-      environmentBlendModes));
-  return result;
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, uint32_t environmentBlendModeCapacityInput, uint32_t* environmentBlendModeCountOutput, XrEnvironmentBlendMode* environmentBlendModes, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, environmentBlendModeCountOutput, environmentBlendModes));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
-    Instance::enumerateEnvironmentBlendModes(
-        XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-        Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes;
-  uint32_t environmentBlendModeCountOutput = 0;
-  uint32_t environmentBlendModeCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type Instance::enumerateEnvironmentBlendModes(
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes;
+    uint32_t environmentBlendModeCountOutput = 0;
+    uint32_t environmentBlendModeCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      environmentBlendModeCapacityInput, &environmentBlendModeCountOutput,
-      nullptr));
-  if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, environmentBlendModes,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::enumerateEnvironmentBlendModes");
-  }
-  do {
-    environmentBlendModes.resize(environmentBlendModeCountOutput);
-    environmentBlendModeCapacityInput =
-        static_cast<uint32_t>(environmentBlendModes.size());
-    result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(
-        this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-        environmentBlendModeCapacityInput, &environmentBlendModeCountOutput,
-        reinterpret_cast<XrEnvironmentBlendMode *>(
-            environmentBlendModes.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <=
-                      environmentBlendModes.size());
-    environmentBlendModes.resize(environmentBlendModeCountOutput);
-  }
+        return impl::createResultValue(result, environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    }
+    do {
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+        environmentBlendModeCapacityInput = static_cast<uint32_t>(environmentBlendModes.size());
+        result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, reinterpret_cast<XrEnvironmentBlendMode*>(environmentBlendModes.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <= environmentBlendModes.size());
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+    }
 
-  return impl::createResultValue(result, environmentBlendModes,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateEnvironmentBlendModes");
+    return impl::createResultValue(result, environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type
-    Instance::enumerateEnvironmentBlendModes(
-        XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-        Allocator const &vectorAllocator, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes{
-      vectorAllocator};
-  uint32_t environmentBlendModeCountOutput = 0;
-  uint32_t environmentBlendModeCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<EnvironmentBlendMode, Allocator>>::type Instance::enumerateEnvironmentBlendModes(
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<EnvironmentBlendMode, Allocator> environmentBlendModes { vectorAllocator };
+    uint32_t environmentBlendModeCountOutput = 0;
+    uint32_t environmentBlendModeCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      environmentBlendModeCapacityInput, &environmentBlendModeCountOutput,
-      nullptr));
-  if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || environmentBlendModeCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, environmentBlendModes,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::enumerateEnvironmentBlendModes");
-  }
-  do {
-    environmentBlendModes.resize(environmentBlendModeCountOutput);
-    environmentBlendModeCapacityInput =
-        static_cast<uint32_t>(environmentBlendModes.size());
-    result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(
-        this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-        environmentBlendModeCapacityInput, &environmentBlendModeCountOutput,
-        reinterpret_cast<XrEnvironmentBlendMode *>(
-            environmentBlendModes.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <=
-                      environmentBlendModes.size());
-    environmentBlendModes.resize(environmentBlendModeCountOutput);
-  }
+        return impl::createResultValue(result, environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
+    }
+    do {
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+        environmentBlendModeCapacityInput = static_cast<uint32_t>(environmentBlendModes.size());
+        result = static_cast<Result>(d.xrEnumerateEnvironmentBlendModes(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), environmentBlendModeCapacityInput, &environmentBlendModeCountOutput, reinterpret_cast<XrEnvironmentBlendMode*>(environmentBlendModes.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(environmentBlendModeCountOutput <= environmentBlendModes.size());
+        environmentBlendModes.resize(environmentBlendModeCountOutput);
+    }
 
-  return impl::createResultValue(result, environmentBlendModes,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateEnvironmentBlendModes");
+    return impl::createResultValue(result, environmentBlendModes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateEnvironmentBlendModes");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createSession(
-    const SessionCreateInfo &createInfo, Session &session, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), session.put()));
-  return result;
+    const SessionCreateInfo& createInfo, Session& session, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateSession(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), session.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Session>::type
-Instance::createSession(const SessionCreateInfo &createInfo,
-                        Dispatch &&d) const {
-  Session handle;
-  Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(
-      result, handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSession");
+OPENXR_HPP_INLINE typename ResultValueType<Session>::type Instance::createSession(
+    const SessionCreateInfo& createInfo, Dispatch&& d) const
+{
+    Session handle;
+    Result result = static_cast<Result>(d.xrCreateSession(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSession");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type
-Instance::createSessionUnique(const SessionCreateInfo &createInfo,
-                              Dispatch &&d) const {
-  Session handle;
-  Result result = static_cast<Result>(d.xrCreateSession(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Session, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Instance::createSessionUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Session, impl::RemoveRefConst<Dispatch>>>::type Instance::createSessionUnique(
+    const SessionCreateInfo& createInfo, Dispatch&& d) const
+{
+    Session handle;
+    Result result = static_cast<Result>(d.xrCreateSession(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Session, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createSessionUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -18056,118 +14631,94 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Session::destroy(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::enumerateReferenceSpaces(
-    uint32_t spaceCapacityInput, uint32_t *spaceCountOutput,
-    XrReferenceSpaceType *spaces, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(
-      this->get(), spaceCapacityInput, spaceCountOutput, spaces));
-  return result;
+    uint32_t spaceCapacityInput, uint32_t* spaceCountOutput, XrReferenceSpaceType* spaces, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, spaceCountOutput, spaces));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
-    Session::enumerateReferenceSpaces(Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ReferenceSpaceType, Allocator> spaces;
-  uint32_t spaceCountOutput = 0;
-  uint32_t spaceCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type Session::enumerateReferenceSpaces(
+    Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ReferenceSpaceType, Allocator> spaces;
+    uint32_t spaceCountOutput = 0;
+    uint32_t spaceCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(
-      this->get(), spaceCapacityInput, &spaceCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
 
-    return impl::createResultValue(result, spaces,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateReferenceSpaces");
-  }
-  do {
-    spaces.resize(spaceCountOutput);
-    spaceCapacityInput = static_cast<uint32_t>(spaces.size());
-    result = static_cast<Result>(d.xrEnumerateReferenceSpaces(
-        this->get(), spaceCapacityInput, &spaceCountOutput,
-        reinterpret_cast<XrReferenceSpaceType *>(spaces.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
-    spaces.resize(spaceCountOutput);
-  }
+        return impl::createResultValue(result, spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
+    }
+    do {
+        spaces.resize(spaceCountOutput);
+        spaceCapacityInput = static_cast<uint32_t>(spaces.size());
+        result = static_cast<Result>(d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, reinterpret_cast<XrReferenceSpaceType*>(spaces.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
+        spaces.resize(spaceCountOutput);
+    }
 
-  return impl::createResultValue(result, spaces,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateReferenceSpaces");
+    return impl::createResultValue(result, spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type
-    Session::enumerateReferenceSpaces(Allocator const &vectorAllocator,
-                                      Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ReferenceSpaceType, Allocator> spaces{vectorAllocator};
-  uint32_t spaceCountOutput = 0;
-  uint32_t spaceCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ReferenceSpaceType, Allocator>>::type Session::enumerateReferenceSpaces(
+    Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ReferenceSpaceType, Allocator> spaces { vectorAllocator };
+    uint32_t spaceCountOutput = 0;
+    uint32_t spaceCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(
-      this->get(), spaceCapacityInput, &spaceCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || spaceCountOutput == 0) {
 
-    return impl::createResultValue(result, spaces,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateReferenceSpaces");
-  }
-  do {
-    spaces.resize(spaceCountOutput);
-    spaceCapacityInput = static_cast<uint32_t>(spaces.size());
-    result = static_cast<Result>(d.xrEnumerateReferenceSpaces(
-        this->get(), spaceCapacityInput, &spaceCountOutput,
-        reinterpret_cast<XrReferenceSpaceType *>(spaces.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
-    spaces.resize(spaceCountOutput);
-  }
+        return impl::createResultValue(result, spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
+    }
+    do {
+        spaces.resize(spaceCountOutput);
+        spaceCapacityInput = static_cast<uint32_t>(spaces.size());
+        result = static_cast<Result>(d.xrEnumerateReferenceSpaces(this->get(), spaceCapacityInput, &spaceCountOutput, reinterpret_cast<XrReferenceSpaceType*>(spaces.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(spaceCountOutput <= spaces.size());
+        spaces.resize(spaceCountOutput);
+    }
 
-  return impl::createResultValue(result, spaces,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateReferenceSpaces");
+    return impl::createResultValue(result, spaces, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateReferenceSpaces");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
-                              Space &space, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
-  return result;
+OPENXR_HPP_INLINE Result Session::createReferenceSpace(
+    const ReferenceSpaceCreateInfo& createInfo, Space& space, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateReferenceSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Space>::type
-Session::createReferenceSpace(const ReferenceSpaceCreateInfo &createInfo,
-                              Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::createReferenceSpace");
+OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createReferenceSpace(
+    const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateReferenceSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createReferenceSpace");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-Session::createReferenceSpaceUnique(const ReferenceSpaceCreateInfo &createInfo,
-                                    Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateReferenceSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Session::createReferenceSpaceUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createReferenceSpaceUnique(
+    const ReferenceSpaceCreateInfo& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateReferenceSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createReferenceSpaceUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -18175,88 +14726,71 @@ Session::createReferenceSpaceUnique(const ReferenceSpaceCreateInfo &createInfo,
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
-                                     Extent2Df &bounds, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(
-      this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType),
-      OPENXR_HPP_NAMESPACE::get(bounds)));
-  return result;
+OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect(
+    ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), OPENXR_HPP_NAMESPACE::put(bounds)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::getReferenceSpaceBoundsRect(ReferenceSpaceType referenceSpaceType,
-                                     Extent2Df &bounds, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(
-      this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType),
-      OPENXR_HPP_NAMESPACE::get(bounds)));
-  return impl::createResultValue(
-      result,
-      OPENXR_HPP_NAMESPACE_STRING "::Session::getReferenceSpaceBoundsRect",
-      {Result::Success, Result::SpaceBoundsUnavailable});
+OPENXR_HPP_INLINE Result Session::getReferenceSpaceBoundsRect(
+    ReferenceSpaceType referenceSpaceType, Extent2Df& bounds, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetReferenceSpaceBoundsRect(this->get(), OPENXR_HPP_NAMESPACE::get(referenceSpaceType), OPENXR_HPP_NAMESPACE::put(bounds)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::getReferenceSpaceBoundsRect", { Result::Success, Result::SpaceBoundsUnavailable });
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createActionSpace(
-    const ActionSpaceCreateInfo &createInfo, Space &space, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
-  return result;
+    const ActionSpaceCreateInfo& createInfo, Space& space, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateActionSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Space>::type
-Session::createActionSpace(const ActionSpaceCreateInfo &createInfo,
-                           Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::createActionSpace");
+OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createActionSpace(
+    const ActionSpaceCreateInfo& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateActionSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createActionSpace");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-Session::createActionSpaceUnique(const ActionSpaceCreateInfo &createInfo,
-                                 Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateActionSpace(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Session::createActionSpaceUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createActionSpaceUnique(
+    const ActionSpaceCreateInfo& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateActionSpace(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createActionSpaceUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Space::locateSpace(Space baseSpace, XrTime time,
-                                            SpaceLocation &location,
-                                            Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrLocateSpace(
-      this->get(), baseSpace.get(), time, OPENXR_HPP_NAMESPACE::get(location)));
-  return result;
+OPENXR_HPP_INLINE Result Space::locateSpace(
+    Space baseSpace, const Time& time, SpaceLocation& location, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrLocateSpace(this->get(), baseSpace.get(), OPENXR_HPP_NAMESPACE::get(time), OPENXR_HPP_NAMESPACE::put(location)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<SpaceLocation>::type
-Space::locateSpace(Space baseSpace, XrTime time, Dispatch &&d) const {
-  SpaceLocation structResult;
-  Result result = static_cast<Result>(
-      d.xrLocateSpace(this->get(), baseSpace.get(), time,
-                      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(
-      result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
+OPENXR_HPP_INLINE typename ResultValueType<SpaceLocation>::type Space::locateSpace(
+    Space baseSpace, const Time& time, Dispatch&& d) const
+{
+    SpaceLocation structResult;
+    Result result = static_cast<Result>(d.xrLocateSpace(this->get(), baseSpace.get(), OPENXR_HPP_NAMESPACE::get(time), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -18281,120 +14815,83 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Space::destroy(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::enumerateViewConfigurations(
-    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput,
-    uint32_t *viewConfigurationTypeCountOutput,
-    XrViewConfigurationType *viewConfigurationTypes, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(
-      this->get(), systemId, viewConfigurationTypeCapacityInput,
-      viewConfigurationTypeCountOutput, viewConfigurationTypes));
-  return result;
+    XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput, uint32_t* viewConfigurationTypeCountOutput, XrViewConfigurationType* viewConfigurationTypes, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, viewConfigurationTypeCountOutput, viewConfigurationTypes));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    std::vector<ViewConfigurationType, Allocator>>::type
-Instance::enumerateViewConfigurations(XrSystemId systemId, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes;
-  uint32_t viewConfigurationTypeCountOutput = 0;
-  uint32_t viewConfigurationTypeCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type Instance::enumerateViewConfigurations(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes;
+    uint32_t viewConfigurationTypeCountOutput = 0;
+    uint32_t viewConfigurationTypeCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(
-      this->get(), systemId, viewConfigurationTypeCapacityInput,
-      &viewConfigurationTypeCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
 
-    return impl::createResultValue(result, viewConfigurationTypes,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Instance::enumerateViewConfigurations");
-  }
-  do {
-    viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
-    viewConfigurationTypeCapacityInput =
-        static_cast<uint32_t>(viewConfigurationTypes.size());
-    result = static_cast<Result>(d.xrEnumerateViewConfigurations(
-        this->get(), systemId, viewConfigurationTypeCapacityInput,
-        &viewConfigurationTypeCountOutput,
-        reinterpret_cast<XrViewConfigurationType *>(
-            viewConfigurationTypes.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <=
-                      viewConfigurationTypes.size());
-    viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
-  }
+        return impl::createResultValue(result, viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    }
+    do {
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+        viewConfigurationTypeCapacityInput = static_cast<uint32_t>(viewConfigurationTypes.size());
+        result = static_cast<Result>(d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, reinterpret_cast<XrViewConfigurationType*>(viewConfigurationTypes.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <= viewConfigurationTypes.size());
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+    }
 
-  return impl::createResultValue(result, viewConfigurationTypes,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateViewConfigurations");
+    return impl::createResultValue(result, viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    std::vector<ViewConfigurationType, Allocator>>::type
-Instance::enumerateViewConfigurations(XrSystemId systemId,
-                                      Allocator const &vectorAllocator,
-                                      Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes{
-      vectorAllocator};
-  uint32_t viewConfigurationTypeCountOutput = 0;
-  uint32_t viewConfigurationTypeCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ViewConfigurationType, Allocator>>::type Instance::enumerateViewConfigurations(
+    XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ViewConfigurationType, Allocator> viewConfigurationTypes { vectorAllocator };
+    uint32_t viewConfigurationTypeCountOutput = 0;
+    uint32_t viewConfigurationTypeCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(
-      this->get(), systemId, viewConfigurationTypeCapacityInput,
-      &viewConfigurationTypeCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewConfigurationTypeCountOutput == 0) {
 
-    return impl::createResultValue(result, viewConfigurationTypes,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Instance::enumerateViewConfigurations");
-  }
-  do {
-    viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
-    viewConfigurationTypeCapacityInput =
-        static_cast<uint32_t>(viewConfigurationTypes.size());
-    result = static_cast<Result>(d.xrEnumerateViewConfigurations(
-        this->get(), systemId, viewConfigurationTypeCapacityInput,
-        &viewConfigurationTypeCountOutput,
-        reinterpret_cast<XrViewConfigurationType *>(
-            viewConfigurationTypes.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <=
-                      viewConfigurationTypes.size());
-    viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
-  }
+        return impl::createResultValue(result, viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
+    }
+    do {
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+        viewConfigurationTypeCapacityInput = static_cast<uint32_t>(viewConfigurationTypes.size());
+        result = static_cast<Result>(d.xrEnumerateViewConfigurations(this->get(), systemId, viewConfigurationTypeCapacityInput, &viewConfigurationTypeCountOutput, reinterpret_cast<XrViewConfigurationType*>(viewConfigurationTypes.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewConfigurationTypeCountOutput <= viewConfigurationTypes.size());
+        viewConfigurationTypes.resize(viewConfigurationTypeCountOutput);
+    }
 
-  return impl::createResultValue(result, viewConfigurationTypes,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateViewConfigurations");
+    return impl::createResultValue(result, viewConfigurationTypes, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurations");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getViewConfigurationProperties(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    ViewConfigurationProperties &configurationProperties, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      OPENXR_HPP_NAMESPACE::get(configurationProperties)));
-  return result;
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, ViewConfigurationProperties& configurationProperties, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), OPENXR_HPP_NAMESPACE::put(configurationProperties)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ViewConfigurationProperties>::type
-Instance::getViewConfigurationProperties(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    Dispatch &&d) const {
-  ViewConfigurationProperties structResult;
-  Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getViewConfigurationProperties");
+OPENXR_HPP_INLINE typename ResultValueType<ViewConfigurationProperties>::type Instance::getViewConfigurationProperties(
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d) const
+{
+    ViewConfigurationProperties structResult;
+    Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getViewConfigurationProperties");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -18407,81 +14904,57 @@ OPENXR_HPP_INLINE Result Instance::enumerateViewConfigurationViews(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    std::vector<ViewConfigurationView, Allocator>>::type
-Instance::enumerateViewConfigurationViews(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ViewConfigurationView, Allocator> views;
-  uint32_t viewCountOutput = 0;
-  uint32_t viewCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type Instance::enumerateViewConfigurationViews(
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ViewConfigurationView, Allocator> views;
+    uint32_t viewCountOutput = 0;
+    uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      viewCapacityInput, &viewCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, views,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::enumerateViewConfigurationViews");
-  }
-  do {
-    views.resize(viewCountOutput);
-    viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(
-        this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-        viewCapacityInput, &viewCountOutput,
-        reinterpret_cast<XrViewConfigurationView *>(views.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
-    views.resize(viewCountOutput);
-  }
+        return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
+    }
+    do {
+        views.resize(viewCountOutput);
+        viewCapacityInput = static_cast<uint32_t>(views.size());
+        result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, reinterpret_cast<XrViewConfigurationView*>(views.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
+        views.resize(viewCountOutput);
+    }
 
-  return impl::createResultValue(result, views,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateViewConfigurationViews");
+    return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    std::vector<ViewConfigurationView, Allocator>>::type
-Instance::enumerateViewConfigurationViews(
-    XrSystemId systemId, ViewConfigurationType viewConfigurationType,
-    Allocator const &vectorAllocator, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ViewConfigurationView, Allocator> views{vectorAllocator};
-  uint32_t viewCountOutput = 0;
-  uint32_t viewCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ViewConfigurationView, Allocator>>::type Instance::enumerateViewConfigurationViews(
+    XrSystemId systemId, ViewConfigurationType viewConfigurationType, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ViewConfigurationView, Allocator> views { vectorAllocator };
+    uint32_t viewCountOutput = 0;
+    uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      viewCapacityInput, &viewCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, views,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::enumerateViewConfigurationViews");
-  }
-  do {
-    views.resize(viewCountOutput);
-    viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(
-        this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-        viewCapacityInput, &viewCountOutput,
-        reinterpret_cast<XrViewConfigurationView *>(views.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
-    views.resize(viewCountOutput);
-  }
+        return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
+    }
+    do {
+        views.resize(viewCountOutput);
+        viewCapacityInput = static_cast<uint32_t>(views.size());
+        result = static_cast<Result>(d.xrEnumerateViewConfigurationViews(this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewCapacityInput, &viewCountOutput, reinterpret_cast<XrViewConfigurationView*>(views.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
+        views.resize(viewCountOutput);
+    }
 
-  return impl::createResultValue(result, views,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::enumerateViewConfigurationViews");
+    return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Instance::enumerateViewConfigurationViews");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -18494,109 +14967,87 @@ OPENXR_HPP_INLINE Result Session::enumerateSwapchainFormats(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<int64_t, Allocator>>::type
-    Session::enumerateSwapchainFormats(Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<int64_t, Allocator> formats;
-  uint32_t formatCountOutput = 0;
-  uint32_t formatCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<int64_t, Allocator>>::type Session::enumerateSwapchainFormats(
+    Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<int64_t, Allocator> formats;
+    uint32_t formatCountOutput = 0;
+    uint32_t formatCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateSwapchainFormats(
-      this->get(), formatCapacityInput, &formatCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
 
-    return impl::createResultValue(result, formats,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateSwapchainFormats");
-  }
-  do {
-    formats.resize(formatCountOutput);
-    formatCapacityInput = static_cast<uint32_t>(formats.size());
-    result = static_cast<Result>(d.xrEnumerateSwapchainFormats(
-        this->get(), formatCapacityInput, &formatCountOutput,
-        reinterpret_cast<int64_t *>(formats.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(formatCountOutput <= formats.size());
-    formats.resize(formatCountOutput);
-  }
+        return impl::createResultValue(result, formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
+    }
+    do {
+        formats.resize(formatCountOutput);
+        formatCapacityInput = static_cast<uint32_t>(formats.size());
+        result = static_cast<Result>(d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, reinterpret_cast<int64_t*>(formats.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(formatCountOutput <= formats.size());
+        formats.resize(formatCountOutput);
+    }
 
-  return impl::createResultValue(result, formats,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateSwapchainFormats");
+    return impl::createResultValue(result, formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<int64_t, Allocator>>::type
-    Session::enumerateSwapchainFormats(Allocator const &vectorAllocator,
-                                       Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<int64_t, Allocator> formats{vectorAllocator};
-  uint32_t formatCountOutput = 0;
-  uint32_t formatCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<int64_t, Allocator>>::type Session::enumerateSwapchainFormats(
+    Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<int64_t, Allocator> formats { vectorAllocator };
+    uint32_t formatCountOutput = 0;
+    uint32_t formatCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateSwapchainFormats(
-      this->get(), formatCapacityInput, &formatCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || formatCountOutput == 0) {
 
-    return impl::createResultValue(result, formats,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateSwapchainFormats");
-  }
-  do {
-    formats.resize(formatCountOutput);
-    formatCapacityInput = static_cast<uint32_t>(formats.size());
-    result = static_cast<Result>(d.xrEnumerateSwapchainFormats(
-        this->get(), formatCapacityInput, &formatCountOutput,
-        reinterpret_cast<int64_t *>(formats.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(formatCountOutput <= formats.size());
-    formats.resize(formatCountOutput);
-  }
+        return impl::createResultValue(result, formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
+    }
+    do {
+        formats.resize(formatCountOutput);
+        formatCapacityInput = static_cast<uint32_t>(formats.size());
+        result = static_cast<Result>(d.xrEnumerateSwapchainFormats(this->get(), formatCapacityInput, &formatCountOutput, reinterpret_cast<int64_t*>(formats.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(formatCountOutput <= formats.size());
+        formats.resize(formatCountOutput);
+    }
 
-  return impl::createResultValue(result, formats,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateSwapchainFormats");
+    return impl::createResultValue(result, formats, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateSwapchainFormats");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::createSwapchain(const SwapchainCreateInfo &createInfo,
-                         Swapchain &swapchain, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), swapchain.put()));
-  return result;
+OPENXR_HPP_INLINE Result Session::createSwapchain(
+    const SwapchainCreateInfo& createInfo, Swapchain& swapchain, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateSwapchain(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), swapchain.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Swapchain>::type
-Session::createSwapchain(const SwapchainCreateInfo &createInfo,
-                         Dispatch &&d) const {
-  Swapchain handle;
-  Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(
-      result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchain");
+OPENXR_HPP_INLINE typename ResultValueType<Swapchain>::type Session::createSwapchain(
+    const SwapchainCreateInfo& createInfo, Dispatch&& d) const
+{
+    Swapchain handle;
+    Result result = static_cast<Result>(d.xrCreateSwapchain(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchain");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type
-Session::createSwapchainUnique(const SwapchainCreateInfo &createInfo,
-                               Dispatch &&d) const {
-  Swapchain handle;
-  Result result = static_cast<Result>(d.xrCreateSwapchain(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Swapchain, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Swapchain, impl::RemoveRefConst<Dispatch>>>::type Session::createSwapchainUnique(
+    const SwapchainCreateInfo& createInfo, Dispatch&& d) const
+{
+    Swapchain handle;
+    Result result = static_cast<Result>(d.xrCreateSwapchain(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Swapchain, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -18630,11 +15081,11 @@ OPENXR_HPP_INLINE Result Swapchain::enumerateSwapchainImages(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename ResultItemType, typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocator>>::type Swapchain::enumerateSwapchainImages(
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ResultItemType, Allocator>>::type Swapchain::enumerateSwapchainImages(
     Dispatch&& d) const
 {
     // Two-call idiom
-    ::std::vector<ResultItemType, Allocator> images;
+    std::vector<ResultItemType, Allocator> images;
     uint32_t imageCountOutput = 0;
     uint32_t imageCapacityInput = 0;
 
@@ -18655,159 +15106,108 @@ OPENXR_HPP_INLINE typename ResultValueType<::std::vector<ResultItemType, Allocat
 
     return impl::createResultValue(result, images, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::enumerateSwapchainImages");
 }
-#ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
-template <typename ResultItemType, typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
-    Swapchain::enumerateSwapchainImages(Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ResultItemType, Allocator> images;
-  uint32_t imageCountOutput = 0;
-  uint32_t imageCapacityInput = 0;
-
-  Result result = static_cast<Result>(d.xrEnumerateSwapchainImages(
-      this->get(), imageCapacityInput, &imageCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || imageCountOutput == 0) {
-
-    return impl::createResultValue(result, images,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Swapchain::enumerateSwapchainImages");
-  }
-  do {
-    images.resize(imageCountOutput);
-    imageCapacityInput = static_cast<uint32_t>(images.size());
-    result = static_cast<Result>(d.xrEnumerateSwapchainImages(
-        this->get(), imageCapacityInput, &imageCountOutput,
-        reinterpret_cast<XrSwapchainImageBaseHeader *>(images.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(imageCountOutput <= images.size());
-    images.resize(imageCountOutput);
-  }
-
-  return impl::createResultValue(result, images,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Swapchain::enumerateSwapchainImages");
-}
 
 template <typename ResultItemType, typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<std::vector<ResultItemType, Allocator>>::type
-    Swapchain::enumerateSwapchainImages(Allocator const &vectorAllocator,
-                                        Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<ResultItemType, Allocator> images{vectorAllocator};
-  uint32_t imageCountOutput = 0;
-  uint32_t imageCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<ResultItemType, Allocator>>::type Swapchain::enumerateSwapchainImages(
+    Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<ResultItemType, Allocator> images { vectorAllocator };
+    uint32_t imageCountOutput = 0;
+    uint32_t imageCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateSwapchainImages(
-      this->get(), imageCapacityInput, &imageCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || imageCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateSwapchainImages(this->get(), imageCapacityInput, &imageCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || imageCountOutput == 0) {
 
-    return impl::createResultValue(result, images,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Swapchain::enumerateSwapchainImages");
-  }
-  do {
-    images.resize(imageCountOutput);
-    imageCapacityInput = static_cast<uint32_t>(images.size());
-    result = static_cast<Result>(d.xrEnumerateSwapchainImages(
-        this->get(), imageCapacityInput, &imageCountOutput,
-        reinterpret_cast<XrSwapchainImageBaseHeader *>(images.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(imageCountOutput <= images.size());
-    images.resize(imageCountOutput);
-  }
+        return impl::createResultValue(result, images, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::enumerateSwapchainImages");
+    }
+    do {
+        images.resize(imageCountOutput);
+        imageCapacityInput = static_cast<uint32_t>(images.size());
+        result = static_cast<Result>(d.xrEnumerateSwapchainImages(this->get(), imageCapacityInput, &imageCountOutput, reinterpret_cast<XrSwapchainImageBaseHeader*>(images.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(imageCountOutput <= images.size());
+        images.resize(imageCountOutput);
+    }
 
-  return impl::createResultValue(result, images,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Swapchain::enumerateSwapchainImages");
+    return impl::createResultValue(result, images, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::enumerateSwapchainImages");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
-                                 uint32_t *index, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
-      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), index));
-  return result;
+OPENXR_HPP_INLINE Result Swapchain::acquireSwapchainImage(
+    const SwapchainImageAcquireInfo& acquireInfo, uint32_t* index, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrAcquireSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), index));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<uint32_t>::type
-Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
-                                 Dispatch &&d) const {
-  uint32_t structResult;
-  Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
-      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Swapchain::acquireSwapchainImage");
+OPENXR_HPP_INLINE typename ResultValueType<uint32_t>::type Swapchain::acquireSwapchainImage(
+    const SwapchainImageAcquireInfo& acquireInfo, Dispatch&& d) const
+{
+    uint32_t structResult;
+    Result result = static_cast<Result>(d.xrAcquireSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::acquireSwapchainImage");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage(
-    const SwapchainImageWaitInfo &waitInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
-  return result;
+    const SwapchainImageWaitInfo& waitInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::waitSwapchainImage(
-    const SwapchainImageWaitInfo &waitInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::waitSwapchainImage",
-      {Result::Success, Result::TimeoutExpired});
+    const SwapchainImageWaitInfo& waitInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrWaitSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(waitInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::waitSwapchainImage", { Result::Success, Result::TimeoutExpired });
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Swapchain::releaseSwapchainImage(
-    const SwapchainImageReleaseInfo &releaseInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrReleaseSwapchainImage(
-      this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
-  return result;
+    const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrReleaseSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Swapchain::releaseSwapchainImage(const SwapchainImageReleaseInfo &releaseInfo,
-                                 Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrReleaseSwapchainImage(
-      this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Swapchain::releaseSwapchainImage");
+OPENXR_HPP_INLINE ResultValueType<void>::type Swapchain::releaseSwapchainImage(
+    const SwapchainImageReleaseInfo& releaseInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrReleaseSwapchainImage(this->get(), OPENXR_HPP_NAMESPACE::get(releaseInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Swapchain::releaseSwapchainImage");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::beginSession(const SessionBeginInfo &beginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
-  return result;
+OPENXR_HPP_INLINE Result Session::beginSession(
+    const SessionBeginInfo& beginInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::beginSession(const SessionBeginInfo &beginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::beginSession");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::beginSession(
+    const SessionBeginInfo& beginInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrBeginSession(this->get(), OPENXR_HPP_NAMESPACE::get(beginInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginSession");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -18822,11 +15222,11 @@ OPENXR_HPP_INLINE Result Session::endSession(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::endSession(Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEndSession(this->get()));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::endSession");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::endSession(
+    Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEndSession(this->get()));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::endSession");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -18841,178 +15241,150 @@ OPENXR_HPP_INLINE Result Session::requestExitSession(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::requestExitSession(Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrRequestExitSession(this->get()));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::requestExitSession");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::requestExitSession(
+    Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrRequestExitSession(this->get()));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::requestExitSession");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Session::waitFrame(const FrameWaitInfo &frameWaitInfo,
-                                            FrameState &frameState,
-                                            Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo),
-                    OPENXR_HPP_NAMESPACE::get(frameState)));
-  return result;
+OPENXR_HPP_INLINE Result Session::waitFrame(
+    const FrameWaitInfo& frameWaitInfo, FrameState& frameState, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo), OPENXR_HPP_NAMESPACE::put(frameState)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<FrameState>::type
-Session::waitFrame(const FrameWaitInfo &frameWaitInfo, Dispatch &&d) const {
-  FrameState structResult;
-  Result result = static_cast<Result>(
-      d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo),
-                    OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(
-      result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
+OPENXR_HPP_INLINE typename ResultValueType<FrameState>::type Session::waitFrame(
+    const FrameWaitInfo& frameWaitInfo, Dispatch&& d) const
+{
+    FrameState structResult;
+    Result result = static_cast<Result>(d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
-  return result;
+OPENXR_HPP_INLINE Result Session::beginFrame(
+    const FrameBeginInfo& frameBeginInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::beginFrame(const FrameBeginInfo &frameBeginInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginFrame",
-      {Result::Success, Result::FrameDiscarded});
+OPENXR_HPP_INLINE Result Session::beginFrame(
+    const FrameBeginInfo& frameBeginInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrBeginFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameBeginInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::beginFrame", { Result::Success, Result::FrameDiscarded });
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Session::endFrame(const FrameEndInfo &frameEndInfo,
-                                           Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
-  return result;
+OPENXR_HPP_INLINE Result Session::endFrame(
+    const FrameEndInfo& frameEndInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::endFrame(const FrameEndInfo &frameEndInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::endFrame");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::endFrame(
+    const FrameEndInfo& frameEndInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEndFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameEndInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::endFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::locateViews(
-    const ViewLocateInfo &viewLocateInfo, XrViewState *viewState,
-    uint32_t viewCapacityInput, uint32_t *viewCountOutput, XrView *views,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
-                      viewState, viewCapacityInput, viewCountOutput, views));
-  return result;
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo), viewState, viewCapacityInput, viewCountOutput, views));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type
-Session::locateViews(const ViewLocateInfo &viewLocateInfo,
-                     XrViewState *viewState, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<View, Allocator> views;
-  uint32_t viewCountOutput = 0;
-  uint32_t viewCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type Session::locateViews(
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<View, Allocator> views;
+    uint32_t viewCountOutput = 0;
+    uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(
-      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
-                      viewState, viewCapacityInput, &viewCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo), viewState, viewCapacityInput, &viewCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
-  }
-  do {
-    views.resize(viewCountOutput);
-    viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(
-        d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
-                        viewState, viewCapacityInput, &viewCountOutput,
-                        reinterpret_cast<XrView *>(views.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
-    views.resize(viewCountOutput);
-  }
+        return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
+    }
+    do {
+        views.resize(viewCountOutput);
+        viewCapacityInput = static_cast<uint32_t>(views.size());
+        result = static_cast<Result>(d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo), viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
+        views.resize(viewCountOutput);
+    }
 
-  return impl::createResultValue(
-      result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
+    return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type
-Session::locateViews(const ViewLocateInfo &viewLocateInfo,
-                     XrViewState *viewState, Allocator const &vectorAllocator,
-                     Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<View, Allocator> views{vectorAllocator};
-  uint32_t viewCountOutput = 0;
-  uint32_t viewCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<View, Allocator>>::type Session::locateViews(
+    const ViewLocateInfo& viewLocateInfo, XrViewState* viewState, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<View, Allocator> views { vectorAllocator };
+    uint32_t viewCountOutput = 0;
+    uint32_t viewCapacityInput = 0;
 
-  Result result = static_cast<Result>(
-      d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
-                      viewState, viewCapacityInput, &viewCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo), viewState, viewCapacityInput, &viewCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || viewCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
-  }
-  do {
-    views.resize(viewCountOutput);
-    viewCapacityInput = static_cast<uint32_t>(views.size());
-    result = static_cast<Result>(
-        d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo),
-                        viewState, viewCapacityInput, &viewCountOutput,
-                        reinterpret_cast<XrView *>(views.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
-    views.resize(viewCountOutput);
-  }
+        return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
+    }
+    do {
+        views.resize(viewCountOutput);
+        viewCapacityInput = static_cast<uint32_t>(views.size());
+        result = static_cast<Result>(d.xrLocateViews(this->get(), OPENXR_HPP_NAMESPACE::get(viewLocateInfo), viewState, viewCapacityInput, &viewCountOutput, reinterpret_cast<XrView*>(views.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(viewCountOutput <= views.size());
+        views.resize(viewCountOutput);
+    }
 
-  return impl::createResultValue(
-      result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
+    return impl::createResultValue(result, views, OPENXR_HPP_NAMESPACE_STRING "::Session::locateViews");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Instance::stringToPath(const char *pathString,
-                                                XrPath *path,
-                                                Dispatch &&d) const {
-  Result result =
-      static_cast<Result>(d.xrStringToPath(this->get(), pathString, path));
-  return result;
+OPENXR_HPP_INLINE Result Instance::stringToPath(
+    const char* pathString, XrPath* path, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrStringToPath(this->get(), pathString, path));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Path>::type
-Instance::stringToPath(const char *pathString, Dispatch &&d) const {
-  Path structResult;
-  Result result = static_cast<Result>(
-      d.xrStringToPath(this->get(), pathString, &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::stringToPath");
+OPENXR_HPP_INLINE typename ResultValueType<Path>::type Instance::stringToPath(
+    const char* pathString, Dispatch&& d) const
+{
+    Path structResult;
+    Result result = static_cast<Result>(d.xrStringToPath(this->get(), pathString, &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::stringToPath");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19025,111 +15397,91 @@ OPENXR_HPP_INLINE Result Instance::pathToString(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::pathToString(XrPath path, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer;
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::pathToString(
+    XrPath path, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer;
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
-  Result result = static_cast<Result>(d.xrPathToString(
-      this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { {} };
+    Result result = static_cast<Result>(d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrPathToString(
-        this->get(), path, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(
-      result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::pathToString(XrPath path, Allocator const &vectorAllocator,
-                       Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer{vectorAllocator};
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::pathToString(
+    XrPath path, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer { vectorAllocator };
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{
-      vectorAllocator};
-  Result result = static_cast<Result>(d.xrPathToString(
-      this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { vectorAllocator };
+    Result result = static_cast<Result>(d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrPathToString(
-        this->get(), path, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrPathToString(this->get(), path, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(
-      result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::pathToString");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Instance::createActionSet(const ActionSetCreateInfo &createInfo,
-                          ActionSet &actionSet, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), actionSet.put()));
-  return result;
+OPENXR_HPP_INLINE Result Instance::createActionSet(
+    const ActionSetCreateInfo& createInfo, ActionSet& actionSet, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateActionSet(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), actionSet.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ActionSet>::type
-Instance::createActionSet(const ActionSetCreateInfo &createInfo,
-                          Dispatch &&d) const {
-  ActionSet handle;
-  Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::createActionSet");
+OPENXR_HPP_INLINE typename ResultValueType<ActionSet>::type Instance::createActionSet(
+    const ActionSetCreateInfo& createInfo, Dispatch&& d) const
+{
+    ActionSet handle;
+    Result result = static_cast<Result>(d.xrCreateActionSet(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createActionSet");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type
-Instance::createActionSetUnique(const ActionSetCreateInfo &createInfo,
-                                Dispatch &&d) const {
-  ActionSet handle;
-  Result result = static_cast<Result>(d.xrCreateActionSet(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<ActionSet, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Instance::createActionSetUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<ActionSet, impl::RemoveRefConst<Dispatch>>>::type Instance::createActionSetUnique(
+    const ActionSetCreateInfo& createInfo, Dispatch&& d) const
+{
+    ActionSet handle;
+    Result result = static_cast<Result>(d.xrCreateActionSet(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<ActionSet, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createActionSetUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -19156,37 +15508,31 @@ OPENXR_HPP_INLINE ResultValueType<void>::type ActionSet::destroy(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result ActionSet::createAction(
-    const ActionCreateInfo &createInfo, Action &action, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), action.put()));
-  return result;
+    const ActionCreateInfo& createInfo, Action& action, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateAction(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), action.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Action>::type
-ActionSet::createAction(const ActionCreateInfo &createInfo,
-                        Dispatch &&d) const {
-  Action handle;
-  Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(
-      result, handle, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createAction");
+OPENXR_HPP_INLINE typename ResultValueType<Action>::type ActionSet::createAction(
+    const ActionCreateInfo& createInfo, Dispatch&& d) const
+{
+    Action handle;
+    Result result = static_cast<Result>(d.xrCreateAction(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createAction");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type
-ActionSet::createActionUnique(const ActionCreateInfo &createInfo,
-                              Dispatch &&d) const {
-  Action handle;
-  Result result = static_cast<Result>(d.xrCreateAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Action, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createActionUnique");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Action, impl::RemoveRefConst<Dispatch>>>::type ActionSet::createActionUnique(
+    const ActionCreateInfo& createInfo, Dispatch&& d) const
+{
+    Action handle;
+    Result result = static_cast<Result>(d.xrCreateAction(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Action, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::ActionSet::createActionUnique");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -19214,412 +15560,320 @@ OPENXR_HPP_INLINE ResultValueType<void>::type Action::destroy(
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::suggestInteractionProfileBindings(
-    const InteractionProfileSuggestedBinding &suggestedBindings,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(
-      this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
-  return result;
+    const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Instance::suggestInteractionProfileBindings(
-    const InteractionProfileSuggestedBinding &suggestedBindings,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(
-      this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::suggestInteractionProfileBindings");
+OPENXR_HPP_INLINE ResultValueType<void>::type Instance::suggestInteractionProfileBindings(
+    const InteractionProfileSuggestedBinding& suggestedBindings, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSuggestInteractionProfileBindings(this->get(), OPENXR_HPP_NAMESPACE::get(suggestedBindings)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::suggestInteractionProfileBindings");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::attachSessionActionSets(
-    const SessionActionSetsAttachInfo &attachInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrAttachSessionActionSets(
-      this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
-  return result;
+    const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrAttachSessionActionSets(this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::attachSessionActionSets(const SessionActionSetsAttachInfo &attachInfo,
-                                 Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrAttachSessionActionSets(
-      this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::attachSessionActionSets");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::attachSessionActionSets(
+    const SessionActionSetsAttachInfo& attachInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrAttachSessionActionSets(this->get(), OPENXR_HPP_NAMESPACE::get(attachInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::attachSessionActionSets");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getCurrentInteractionProfile(
-    XrPath topLevelUserPath, InteractionProfileState &interactionProfile,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(
-      this->get(), topLevelUserPath,
-      OPENXR_HPP_NAMESPACE::get(interactionProfile)));
-  return result;
+    XrPath topLevelUserPath, InteractionProfileState& interactionProfile, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(interactionProfile)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<InteractionProfileState>::type
-Session::getCurrentInteractionProfile(XrPath topLevelUserPath,
-                                      Dispatch &&d) const {
-  InteractionProfileState structResult;
-  Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(
-      this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getCurrentInteractionProfile");
+OPENXR_HPP_INLINE typename ResultValueType<InteractionProfileState>::type Session::getCurrentInteractionProfile(
+    XrPath topLevelUserPath, Dispatch&& d) const
+{
+    InteractionProfileState structResult;
+    Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getCurrentInteractionProfile");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::getActionStateBoolean(const ActionStateGetInfo &getInfo,
-                               ActionStateBoolean &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                                OPENXR_HPP_NAMESPACE::get(state)));
-  return result;
+OPENXR_HPP_INLINE Result Session::getActionStateBoolean(
+    const ActionStateGetInfo& getInfo, ActionStateBoolean& state, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(state)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ActionStateBoolean>::type
-Session::getActionStateBoolean(const ActionStateGetInfo &getInfo,
-                               Dispatch &&d) const {
-  ActionStateBoolean structResult;
-  Result result = static_cast<Result>(
-      d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                                OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getActionStateBoolean");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateBoolean>::type Session::getActionStateBoolean(
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const
+{
+    ActionStateBoolean structResult;
+    Result result = static_cast<Result>(d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateBoolean");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::getActionStateFloat(const ActionStateGetInfo &getInfo,
-                             ActionStateFloat &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                              OPENXR_HPP_NAMESPACE::get(state)));
-  return result;
+OPENXR_HPP_INLINE Result Session::getActionStateFloat(
+    const ActionStateGetInfo& getInfo, ActionStateFloat& state, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(state)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ActionStateFloat>::type
-Session::getActionStateFloat(const ActionStateGetInfo &getInfo,
-                             Dispatch &&d) const {
-  ActionStateFloat structResult;
-  Result result = static_cast<Result>(
-      d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                              OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getActionStateFloat");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateFloat>::type Session::getActionStateFloat(
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const
+{
+    ActionStateFloat structResult;
+    Result result = static_cast<Result>(d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateFloat");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getActionStateVector2f(
-    const ActionStateGetInfo &getInfo, ActionStateVector2f &state,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetActionStateVector2f(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-      OPENXR_HPP_NAMESPACE::get(state)));
-  return result;
+    const ActionStateGetInfo& getInfo, ActionStateVector2f& state, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetActionStateVector2f(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(state)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ActionStateVector2f>::type
-Session::getActionStateVector2f(const ActionStateGetInfo &getInfo,
-                                Dispatch &&d) const {
-  ActionStateVector2f structResult;
-  Result result = static_cast<Result>(d.xrGetActionStateVector2f(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getActionStateVector2f");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStateVector2f>::type Session::getActionStateVector2f(
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const
+{
+    ActionStateVector2f structResult;
+    Result result = static_cast<Result>(d.xrGetActionStateVector2f(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStateVector2f");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result
-Session::getActionStatePose(const ActionStateGetInfo &getInfo,
-                            ActionStatePose &state, Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                             OPENXR_HPP_NAMESPACE::get(state)));
-  return result;
+OPENXR_HPP_INLINE Result Session::getActionStatePose(
+    const ActionStateGetInfo& getInfo, ActionStatePose& state, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(state)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<ActionStatePose>::type
-Session::getActionStatePose(const ActionStateGetInfo &getInfo,
-                            Dispatch &&d) const {
-  ActionStatePose structResult;
-  Result result = static_cast<Result>(
-      d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                             OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getActionStatePose");
+OPENXR_HPP_INLINE typename ResultValueType<ActionStatePose>::type Session::getActionStatePose(
+    const ActionStateGetInfo& getInfo, Dispatch&& d) const
+{
+    ActionStatePose structResult;
+    Result result = static_cast<Result>(d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getActionStatePose");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Session::syncActions(const ActionsSyncInfo &syncInfo,
-                                              Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
-  return result;
+OPENXR_HPP_INLINE Result Session::syncActions(
+    const ActionsSyncInfo& syncInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE Result Session::syncActions(const ActionsSyncInfo &syncInfo,
-                                              Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING "::Session::syncActions",
-      {Result::Success, Result::SessionNotFocused});
+OPENXR_HPP_INLINE Result Session::syncActions(
+    const ActionsSyncInfo& syncInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSyncActions(this->get(), OPENXR_HPP_NAMESPACE::get(syncInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::syncActions", { Result::Success, Result::SessionNotFocused });
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::enumerateBoundSourcesForAction(
-    const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-    uint32_t sourceCapacityInput, uint32_t *sourceCountOutput, XrPath *sources,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
-      sourceCapacityInput, sourceCountOutput, sources));
-  return result;
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo), sourceCapacityInput, sourceCountOutput, sources));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type
-Session::enumerateBoundSourcesForAction(
-    const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-    Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<Path, Allocator> sources;
-  uint32_t sourceCountOutput = 0;
-  uint32_t sourceCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type Session::enumerateBoundSourcesForAction(
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<Path, Allocator> sources;
+    uint32_t sourceCountOutput = 0;
+    uint32_t sourceCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
-      sourceCapacityInput, &sourceCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo), sourceCapacityInput, &sourceCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
 
-    return impl::createResultValue(result, sources,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateBoundSourcesForAction");
-  }
-  do {
-    sources.resize(sourceCountOutput);
-    sourceCapacityInput = static_cast<uint32_t>(sources.size());
-    result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-        this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
-        sourceCapacityInput, &sourceCountOutput,
-        reinterpret_cast<XrPath *>(sources.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
-    sources.resize(sourceCountOutput);
-  }
+        return impl::createResultValue(result, sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
+    }
+    do {
+        sources.resize(sourceCountOutput);
+        sourceCapacityInput = static_cast<uint32_t>(sources.size());
+        result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo), sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
+        sources.resize(sourceCountOutput);
+    }
 
-  return impl::createResultValue(result, sources,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateBoundSourcesForAction");
+    return impl::createResultValue(result, sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type
-Session::enumerateBoundSourcesForAction(
-    const BoundSourcesForActionEnumerateInfo &enumerateInfo,
-    Allocator const &vectorAllocator, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<Path, Allocator> sources{vectorAllocator};
-  uint32_t sourceCountOutput = 0;
-  uint32_t sourceCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<std::vector<Path, Allocator>>::type Session::enumerateBoundSourcesForAction(
+    const BoundSourcesForActionEnumerateInfo& enumerateInfo, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<Path, Allocator> sources { vectorAllocator };
+    uint32_t sourceCountOutput = 0;
+    uint32_t sourceCapacityInput = 0;
 
-  Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-      this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
-      sourceCapacityInput, &sourceCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
+    Result result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo), sourceCapacityInput, &sourceCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || sourceCountOutput == 0) {
 
-    return impl::createResultValue(result, sources,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::enumerateBoundSourcesForAction");
-  }
-  do {
-    sources.resize(sourceCountOutput);
-    sourceCapacityInput = static_cast<uint32_t>(sources.size());
-    result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(
-        this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo),
-        sourceCapacityInput, &sourceCountOutput,
-        reinterpret_cast<XrPath *>(sources.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
-    sources.resize(sourceCountOutput);
-  }
+        return impl::createResultValue(result, sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
+    }
+    do {
+        sources.resize(sourceCountOutput);
+        sourceCapacityInput = static_cast<uint32_t>(sources.size());
+        result = static_cast<Result>(d.xrEnumerateBoundSourcesForAction(this->get(), OPENXR_HPP_NAMESPACE::get(enumerateInfo), sourceCapacityInput, &sourceCountOutput, reinterpret_cast<XrPath*>(sources.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(sourceCountOutput <= sources.size());
+        sources.resize(sourceCountOutput);
+    }
 
-  return impl::createResultValue(result, sources,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::enumerateBoundSourcesForAction");
+    return impl::createResultValue(result, sources, OPENXR_HPP_NAMESPACE_STRING "::Session::enumerateBoundSourcesForAction");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getInputSourceLocalizedName(
-    const InputSourceLocalizedNameGetInfo &getInfo,
-    uint32_t bufferCapacityInput, uint32_t *bufferCountOutput, char *buffer,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
-      bufferCountOutput, buffer));
-  return result;
+    const InputSourceLocalizedNameGetInfo& getInfo, uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput, bufferCountOutput, buffer));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Session::getInputSourceLocalizedName(
-    const InputSourceLocalizedNameGetInfo &getInfo, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer;
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Session::getInputSourceLocalizedName(
+    const InputSourceLocalizedNameGetInfo& getInfo, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer;
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
-  Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
-      &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { {} };
+    Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(result, str,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::getInputSourceLocalizedName");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-        this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
-        &bufferCountOutput, reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetInputSourceLocalizedName(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getInputSourceLocalizedName");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Session::getInputSourceLocalizedName(
-    const InputSourceLocalizedNameGetInfo &getInfo,
-    Allocator const &vectorAllocator, Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer{vectorAllocator};
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Session::getInputSourceLocalizedName(
+    const InputSourceLocalizedNameGetInfo& getInfo, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer { vectorAllocator };
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{
-      vectorAllocator};
-  Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
-      &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { vectorAllocator };
+    Result result = static_cast<Result>(d.xrGetInputSourceLocalizedName(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(result, str,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Session::getInputSourceLocalizedName");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetInputSourceLocalizedName(
-        this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput,
-        &bufferCountOutput, reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetInputSourceLocalizedName(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getInputSourceLocalizedName");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Session::getInputSourceLocalizedName");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::applyHapticFeedback(
-    const HapticActionInfo &hapticActionInfo,
-    const XrHapticBaseHeader *hapticFeedback, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrApplyHapticFeedback(
-      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo),
-      hapticFeedback));
-  return result;
+    const HapticActionInfo& hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrApplyHapticFeedback(this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo), hapticFeedback));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::applyHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                             const XrHapticBaseHeader *hapticFeedback,
-                             Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrApplyHapticFeedback(
-      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo),
-      hapticFeedback));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::applyHapticFeedback");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::applyHapticFeedback(
+    const HapticActionInfo& hapticActionInfo, const XrHapticBaseHeader* hapticFeedback, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrApplyHapticFeedback(this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo), hapticFeedback));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::applyHapticFeedback");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::stopHapticFeedback(
-    const HapticActionInfo &hapticActionInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrStopHapticFeedback(
-      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
-  return result;
+    const HapticActionInfo& hapticActionInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrStopHapticFeedback(this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::stopHapticFeedback(const HapticActionInfo &hapticActionInfo,
-                            Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrStopHapticFeedback(
-      this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::stopHapticFeedback");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::stopHapticFeedback(
+    const HapticActionInfo& hapticActionInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrStopHapticFeedback(this->get(), OPENXR_HPP_NAMESPACE::get(hapticActionInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::stopHapticFeedback");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19636,13 +15890,11 @@ OPENXR_HPP_INLINE Result Session::setAndroidApplicationThreadKHR(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::setAndroidApplicationThreadKHR(AndroidThreadTypeKHR threadType,
-                                        uint32_t threadId, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSetAndroidApplicationThreadKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(threadType), threadId));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::setAndroidApplicationThreadKHR");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::setAndroidApplicationThreadKHR(
+    AndroidThreadTypeKHR threadType, uint32_t threadId, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSetAndroidApplicationThreadKHR(this->get(), OPENXR_HPP_NAMESPACE::get(threadType), threadId));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::setAndroidApplicationThreadKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19652,44 +15904,31 @@ Session::setAndroidApplicationThreadKHR(AndroidThreadTypeKHR threadType,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSwapchainAndroidSurfaceKHR(
-    const SwapchainCreateInfo &info, Swapchain &swapchain, jobject *surface,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(), surface));
-  return result;
+    const SwapchainCreateInfo& info, Swapchain& swapchain, jobject* surface, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(), surface));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<jobject>::type
-Session::createSwapchainAndroidSurfaceKHR(const SwapchainCreateInfo &info,
-                                          Swapchain &swapchain,
-                                          Dispatch &&d) const {
-  jobject handle;
-  Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(),
-      handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::createSwapchainAndroidSurfaceKHR");
+OPENXR_HPP_INLINE typename ResultValueType<jobject>::type Session::createSwapchainAndroidSurfaceKHR(
+    const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const
+{
+    jobject handle;
+    Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainAndroidSurfaceKHR");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type
-Session::createSwapchainAndroidSurfaceUniqueKHR(const SwapchainCreateInfo &info,
-                                                Swapchain &swapchain,
-                                                Dispatch &&d) const {
-  jobject handle;
-  Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(),
-      handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<jobject, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Session::createSwapchainAndroidSurfaceUniqueKHR");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<jobject, impl::RemoveRefConst<Dispatch>>>::type Session::createSwapchainAndroidSurfaceUniqueKHR(
+    const SwapchainCreateInfo& info, Swapchain& swapchain, Dispatch&& d) const
+{
+    jobject handle;
+    Result result = static_cast<Result>(d.xrCreateSwapchainAndroidSurfaceKHR(this->get(), OPENXR_HPP_NAMESPACE::get(info), swapchain.put(), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<jobject, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSwapchainAndroidSurfaceUniqueKHR");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -19701,25 +15940,20 @@ Session::createSwapchainAndroidSurfaceUniqueKHR(const SwapchainCreateInfo &info,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLGraphicsRequirementsKHR(
-    XrSystemId systemId, GraphicsRequirementsOpenGLKHR &graphicsRequirements,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
-  return result;
+    XrSystemId systemId, GraphicsRequirementsOpenGLKHR& graphicsRequirements, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(graphicsRequirements)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type
-Instance::getOpenGLGraphicsRequirementsKHR(XrSystemId systemId,
-                                           Dispatch &&d) const {
-  GraphicsRequirementsOpenGLKHR structResult;
-  Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(
-      result, structResult,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::getOpenGLGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type Instance::getOpenGLGraphicsRequirementsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    GraphicsRequirementsOpenGLKHR structResult;
+    Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19729,26 +15963,20 @@ Instance::getOpenGLGraphicsRequirementsKHR(XrSystemId systemId,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getOpenGLESGraphicsRequirementsKHR(
-    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR &graphicsRequirements,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
-  return result;
+    XrSystemId systemId, GraphicsRequirementsOpenGLESKHR& graphicsRequirements, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(graphicsRequirements)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE
-    typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type
-    Instance::getOpenGLESGraphicsRequirementsKHR(XrSystemId systemId,
-                                                 Dispatch &&d) const {
-  GraphicsRequirementsOpenGLESKHR structResult;
-  Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(
-      result, structResult,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::getOpenGLESGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type Instance::getOpenGLESGraphicsRequirementsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    GraphicsRequirementsOpenGLESKHR structResult;
+    Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getOpenGLESGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19765,81 +15993,61 @@ OPENXR_HPP_INLINE Result Instance::getVulkanInstanceExtensionsKHR(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::getVulkanInstanceExtensionsKHR(XrSystemId systemId,
-                                         Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer;
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::getVulkanInstanceExtensionsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer;
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
-  Result result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(
-      this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { {} };
+    Result result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, str,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::getVulkanInstanceExtensionsKHR");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(
-        this->get(), systemId, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getVulkanInstanceExtensionsKHR");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::getVulkanInstanceExtensionsKHR(XrSystemId systemId,
-                                         Allocator const &vectorAllocator,
-                                         Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer{vectorAllocator};
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::getVulkanInstanceExtensionsKHR(
+    XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer { vectorAllocator };
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{
-      vectorAllocator};
-  Result result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(
-      this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { vectorAllocator };
+    Result result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(
-        result, str,
-        OPENXR_HPP_NAMESPACE_STRING
-        "::Instance::getVulkanInstanceExtensionsKHR");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(
-        this->get(), systemId, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetVulkanInstanceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getVulkanInstanceExtensionsKHR");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanInstanceExtensionsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19856,79 +16064,61 @@ OPENXR_HPP_INLINE Result Instance::getVulkanDeviceExtensionsKHR(
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::getVulkanDeviceExtensionsKHR(XrSystemId systemId,
-                                       Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer;
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::getVulkanDeviceExtensionsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer;
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{{}};
-  Result result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(
-      this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { {} };
+    Result result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(result, str,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Instance::getVulkanDeviceExtensionsKHR");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(
-        this->get(), systemId, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getVulkanDeviceExtensionsKHR");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
 }
 
 template <typename Allocator, typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    ::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type
-Instance::getVulkanDeviceExtensionsKHR(XrSystemId systemId,
-                                       Allocator const &vectorAllocator,
-                                       Dispatch &&d) const {
-  // Two-call idiom
-  std::vector<char, Allocator> buffer{vectorAllocator};
-  uint32_t bufferCountOutput = 0;
-  uint32_t bufferCapacityInput = 0;
+OPENXR_HPP_INLINE typename ResultValueType<::std::basic_string<char, ::std::char_traits<char>, Allocator>>::type Instance::getVulkanDeviceExtensionsKHR(
+    XrSystemId systemId, Allocator const& vectorAllocator, Dispatch&& d) const
+{
+    // Two-call idiom
+    std::vector<char, Allocator> buffer { vectorAllocator };
+    uint32_t bufferCountOutput = 0;
+    uint32_t bufferCapacityInput = 0;
 
-  std::basic_string<char, std::char_traits<char>, Allocator> str{
-      vectorAllocator};
-  Result result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(
-      this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
-  if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
+    std::basic_string<char, std::char_traits<char>, Allocator> str { vectorAllocator };
+    Result result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, nullptr));
+    if (!unqualifiedSuccess(result) || bufferCountOutput == 0) {
 
-    return impl::createResultValue(result, str,
-                                   OPENXR_HPP_NAMESPACE_STRING
-                                   "::Instance::getVulkanDeviceExtensionsKHR");
-  }
-  do {
-    buffer.resize(bufferCountOutput);
-    bufferCapacityInput = static_cast<uint32_t>(buffer.size());
-    result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(
-        this->get(), systemId, bufferCapacityInput, &bufferCountOutput,
-        reinterpret_cast<char *>(buffer.data())));
-  } while (result == xr::Result::ErrorSizeInsufficient);
-  if (result == xr::Result::Success) {
-    OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
-    buffer.resize(bufferCountOutput);
-  }
+        return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
+    }
+    do {
+        buffer.resize(bufferCountOutput);
+        bufferCapacityInput = static_cast<uint32_t>(buffer.size());
+        result = static_cast<Result>(d.xrGetVulkanDeviceExtensionsKHR(this->get(), systemId, bufferCapacityInput, &bufferCountOutput, reinterpret_cast<char*>(buffer.data())));
+    } while (result == xr::Result::ErrorSizeInsufficient);
+    if (result == xr::Result::Success) {
+        OPENXR_HPP_ASSERT(bufferCountOutput <= buffer.size());
+        buffer.resize(bufferCountOutput);
+    }
 
-  str.assign(buffer.begin(), buffer.end());
-  return impl::createResultValue(result, str,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getVulkanDeviceExtensionsKHR");
+    str.assign(buffer.begin(), buffer.end());
+    return impl::createResultValue(result, str, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanDeviceExtensionsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19946,15 +16136,12 @@ OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsDeviceKHR(
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<VkPhysicalDevice>::type
-Instance::getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
-                                     Dispatch &&d) const {
-  VkPhysicalDevice structResult;
-  Result result = static_cast<Result>(d.xrGetVulkanGraphicsDeviceKHR(
-      this->get(), systemId, vkInstance, &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getVulkanGraphicsDeviceKHR");
+OPENXR_HPP_INLINE typename ResultValueType<VkPhysicalDevice>::type Instance::getVulkanGraphicsDeviceKHR(
+    XrSystemId systemId, VkInstance vkInstance, Dispatch&& d) const
+{
+    VkPhysicalDevice structResult;
+    Result result = static_cast<Result>(d.xrGetVulkanGraphicsDeviceKHR(this->get(), systemId, vkInstance, &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsDeviceKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19964,25 +16151,20 @@ Instance::getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getVulkanGraphicsRequirementsKHR(
-    XrSystemId systemId, GraphicsRequirementsVulkanKHR &graphicsRequirements,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
-  return result;
+    XrSystemId systemId, GraphicsRequirementsVulkanKHR& graphicsRequirements, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(graphicsRequirements)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsVulkanKHR>::type
-Instance::getVulkanGraphicsRequirementsKHR(XrSystemId systemId,
-                                           Dispatch &&d) const {
-  GraphicsRequirementsVulkanKHR structResult;
-  Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(
-      result, structResult,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::getVulkanGraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsVulkanKHR>::type Instance::getVulkanGraphicsRequirementsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    GraphicsRequirementsVulkanKHR structResult;
+    Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getVulkanGraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -19992,24 +16174,20 @@ Instance::getVulkanGraphicsRequirementsKHR(XrSystemId systemId,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D11GraphicsRequirementsKHR(
-    XrSystemId systemId, GraphicsRequirementsD3D11KHR &graphicsRequirements,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
-  return result;
+    XrSystemId systemId, GraphicsRequirementsD3D11KHR& graphicsRequirements, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(graphicsRequirements)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D11KHR>::type
-Instance::getD3D11GraphicsRequirementsKHR(XrSystemId systemId,
-                                          Dispatch &&d) const {
-  GraphicsRequirementsD3D11KHR structResult;
-  Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getD3D11GraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D11KHR>::type Instance::getD3D11GraphicsRequirementsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    GraphicsRequirementsD3D11KHR structResult;
+    Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D11GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20019,24 +16197,20 @@ Instance::getD3D11GraphicsRequirementsKHR(XrSystemId systemId,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::getD3D12GraphicsRequirementsKHR(
-    XrSystemId systemId, GraphicsRequirementsD3D12KHR &graphicsRequirements,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::get(graphicsRequirements)));
-  return result;
+    XrSystemId systemId, GraphicsRequirementsD3D12KHR& graphicsRequirements, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(graphicsRequirements)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D12KHR>::type
-Instance::getD3D12GraphicsRequirementsKHR(XrSystemId systemId,
-                                          Dispatch &&d) const {
-  GraphicsRequirementsD3D12KHR structResult;
-  Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getD3D12GraphicsRequirementsKHR");
+OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D12KHR>::type Instance::getD3D12GraphicsRequirementsKHR(
+    XrSystemId systemId, Dispatch&& d) const
+{
+    GraphicsRequirementsD3D12KHR structResult;
+    Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::getD3D12GraphicsRequirementsKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20044,31 +16218,20 @@ Instance::getD3D12GraphicsRequirementsKHR(XrSystemId systemId,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::getVisibilityMaskKHR(
-    ViewConfigurationType viewConfigurationType, uint32_t viewIndex,
-    VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR &visibilityMask,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex,
-      OPENXR_HPP_NAMESPACE::get(visibilityMaskType),
-      OPENXR_HPP_NAMESPACE::get(visibilityMask)));
-  return result;
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, VisibilityMaskKHR& visibilityMask, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), OPENXR_HPP_NAMESPACE::put(visibilityMask)));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<VisibilityMaskKHR>::type
-Session::getVisibilityMaskKHR(ViewConfigurationType viewConfigurationType,
-                              uint32_t viewIndex,
-                              VisibilityMaskTypeKHR visibilityMaskType,
-                              Dispatch &&d) const {
-  VisibilityMaskKHR structResult;
-  Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex,
-      OPENXR_HPP_NAMESPACE::get(visibilityMaskType),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::getVisibilityMaskKHR");
+OPENXR_HPP_INLINE typename ResultValueType<VisibilityMaskKHR>::type Session::getVisibilityMaskKHR(
+    ViewConfigurationType viewConfigurationType, uint32_t viewIndex, VisibilityMaskTypeKHR visibilityMaskType, Dispatch&& d) const
+{
+    VisibilityMaskKHR structResult;
+    Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex, OPENXR_HPP_NAMESPACE::get(visibilityMaskType), OPENXR_HPP_NAMESPACE::put(structResult)));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::getVisibilityMaskKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20076,25 +16239,20 @@ Session::getVisibilityMaskKHR(ViewConfigurationType viewConfigurationType,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertWin32PerformanceCounterToTimeKHR(
-    const LARGE_INTEGER* performanceCounter, XrTime* time, Dispatch&& d) const
+    const LARGE_INTEGER* performanceCounter, const Time& time, Dispatch&& d) const
 {
-    Result result = static_cast<Result>(d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, time));
+    Result result = static_cast<Result>(d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, OPENXR_HPP_NAMESPACE::get(time)));
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Time>::type
-Instance::convertWin32PerformanceCounterToTimeKHR(
-    const LARGE_INTEGER *performanceCounter, Dispatch &&d) const {
-  Time structResult;
-  Result result =
-      static_cast<Result>(d.xrConvertWin32PerformanceCounterToTimeKHR(
-          this->get(), performanceCounter, &structResult));
-  return impl::createResultValue(
-      result, structResult,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::convertWin32PerformanceCounterToTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<Time>::type Instance::convertWin32PerformanceCounterToTimeKHR(
+    const LARGE_INTEGER* performanceCounter, Dispatch&& d) const
+{
+    Time structResult;
+    Result result = static_cast<Result>(d.xrConvertWin32PerformanceCounterToTimeKHR(this->get(), performanceCounter, &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertWin32PerformanceCounterToTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20104,25 +16262,20 @@ Instance::convertWin32PerformanceCounterToTimeKHR(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimeToWin32PerformanceCounterKHR(
-    XrTime time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const
+    const Time& time, LARGE_INTEGER* performanceCounter, Dispatch&& d) const
 {
-    Result result = static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), time, performanceCounter));
+    Result result = static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), OPENXR_HPP_NAMESPACE::get(time), performanceCounter));
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<LARGE_INTEGER>::type
-Instance::convertTimeToWin32PerformanceCounterKHR(XrTime time,
-                                                  Dispatch &&d) const {
-  LARGE_INTEGER structResult;
-  Result result =
-      static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(
-          this->get(), time, &structResult));
-  return impl::createResultValue(
-      result, structResult,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::convertTimeToWin32PerformanceCounterKHR");
+OPENXR_HPP_INLINE typename ResultValueType<LARGE_INTEGER>::type Instance::convertTimeToWin32PerformanceCounterKHR(
+    const Time& time, Dispatch&& d) const
+{
+    LARGE_INTEGER structResult;
+    Result result = static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(this->get(), OPENXR_HPP_NAMESPACE::get(time), &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToWin32PerformanceCounterKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20132,23 +16285,20 @@ Instance::convertTimeToWin32PerformanceCounterKHR(XrTime time,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimespecTimeToTimeKHR(
-    const struct timespec* timespecTime, XrTime* time, Dispatch&& d) const
+    const struct timespec* timespecTime, const Time& time, Dispatch&& d) const
 {
-    Result result = static_cast<Result>(d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, time));
+    Result result = static_cast<Result>(d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, OPENXR_HPP_NAMESPACE::get(time)));
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Time>::type
-Instance::convertTimespecTimeToTimeKHR(const struct timespec *timespecTime,
-                                       Dispatch &&d) const {
-  Time structResult;
-  Result result = static_cast<Result>(d.xrConvertTimespecTimeToTimeKHR(
-      this->get(), timespecTime, &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::convertTimespecTimeToTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<Time>::type Instance::convertTimespecTimeToTimeKHR(
+    const struct timespec* timespecTime, Dispatch&& d) const
+{
+    Time structResult;
+    Result result = static_cast<Result>(d.xrConvertTimespecTimeToTimeKHR(this->get(), timespecTime, &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimespecTimeToTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20158,22 +16308,20 @@ Instance::convertTimespecTimeToTimeKHR(const struct timespec *timespecTime,
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::convertTimeToTimespecTimeKHR(
-    XrTime time, struct timespec* timespecTime, Dispatch&& d) const
+    const Time& time, struct timespec* timespecTime, Dispatch&& d) const
 {
-    Result result = static_cast<Result>(d.xrConvertTimeToTimespecTimeKHR(this->get(), time, timespecTime));
+    Result result = static_cast<Result>(d.xrConvertTimeToTimespecTimeKHR(this->get(), OPENXR_HPP_NAMESPACE::get(time), timespecTime));
     return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<timespec>::type
-Instance::convertTimeToTimespecTimeKHR(XrTime time, Dispatch &&d) const {
-  timespec structResult;
-  Result result = static_cast<Result>(
-      d.xrConvertTimeToTimespecTimeKHR(this->get(), time, &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::convertTimeToTimespecTimeKHR");
+OPENXR_HPP_INLINE typename ResultValueType<timespec>::type Instance::convertTimeToTimespecTimeKHR(
+    const Time& time, Dispatch&& d) const
+{
+    timespec structResult;
+    Result result = static_cast<Result>(d.xrConvertTimeToTimespecTimeKHR(this->get(), OPENXR_HPP_NAMESPACE::get(time), &structResult));
+    return impl::createResultValue(result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Instance::convertTimeToTimespecTimeKHR");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20190,16 +16338,11 @@ OPENXR_HPP_INLINE Result Session::perfSettingsSetPerformanceLevelEXT(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::perfSettingsSetPerformanceLevelEXT(PerfSettingsDomainEXT domain,
-                                            PerfSettingsLevelEXT level,
-                                            Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrPerfSettingsSetPerformanceLevelEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(domain),
-      OPENXR_HPP_NAMESPACE::get(level)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING
-      "::Session::perfSettingsSetPerformanceLevelEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::perfSettingsSetPerformanceLevelEXT(
+    PerfSettingsDomainEXT domain, PerfSettingsLevelEXT level, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrPerfSettingsSetPerformanceLevelEXT(this->get(), OPENXR_HPP_NAMESPACE::get(domain), OPENXR_HPP_NAMESPACE::get(level)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::perfSettingsSetPerformanceLevelEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20216,80 +16359,62 @@ OPENXR_HPP_INLINE Result Session::thermalGetTemperatureTrendEXT(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::thermalGetTemperatureTrendEXT(
-    PerfSettingsDomainEXT domain,
-    PerfSettingsNotificationLevelEXT &notificationLevel, float *tempHeadroom,
-    float *tempSlope, Dispatch &&d) const {
-  XrPerfSettingsNotificationLevelEXT notificationLevel_tmp;
-  Result result = static_cast<Result>(d.xrThermalGetTemperatureTrendEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(domain), notificationLevel_tmp,
-      tempHeadroom, tempSlope));
-  notificationLevel =
-      static_cast<PerfSettingsNotificationLevelEXT>(notificationLevel_tmp);
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::thermalGetTemperatureTrendEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::thermalGetTemperatureTrendEXT(
+    PerfSettingsDomainEXT domain, PerfSettingsNotificationLevelEXT& notificationLevel, float* tempHeadroom, float* tempSlope, Dispatch&& d) const
+{
+    XrPerfSettingsNotificationLevelEXT notificationLevel_tmp;
+    Result result = static_cast<Result>(d.xrThermalGetTemperatureTrendEXT(this->get(), OPENXR_HPP_NAMESPACE::get(domain), notificationLevel_tmp, tempHeadroom, tempSlope));
+    notificationLevel = static_cast<PerfSettingsNotificationLevelEXT>(notificationLevel_tmp);
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::thermalGetTemperatureTrendEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::setDebugUtilsObjectNameEXT(
-    const DebugUtilsObjectNameInfoEXT &nameInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
-  return result;
+    const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Instance::setDebugUtilsObjectNameEXT(
-    const DebugUtilsObjectNameInfoEXT &nameInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::setDebugUtilsObjectNameEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Instance::setDebugUtilsObjectNameEXT(
+    const DebugUtilsObjectNameInfoEXT& nameInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSetDebugUtilsObjectNameEXT(this->get(), OPENXR_HPP_NAMESPACE::get(nameInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::setDebugUtilsObjectNameEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::createDebugUtilsMessengerEXT(
-    const DebugUtilsMessengerCreateInfoEXT &createInfo,
-    DebugUtilsMessengerEXT &messenger, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), messenger.put()));
-  return result;
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, DebugUtilsMessengerEXT& messenger, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), messenger.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<DebugUtilsMessengerEXT>::type
-Instance::createDebugUtilsMessengerEXT(
-    const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const {
-  DebugUtilsMessengerEXT handle;
-  Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::createDebugUtilsMessengerEXT");
+OPENXR_HPP_INLINE typename ResultValueType<DebugUtilsMessengerEXT>::type Instance::createDebugUtilsMessengerEXT(
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const
+{
+    DebugUtilsMessengerEXT handle;
+    Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Instance::createDebugUtilsMessengerEXT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>>::type
-Instance::createDebugUtilsMessengerUniqueEXT(
-    const DebugUtilsMessengerCreateInfoEXT &createInfo, Dispatch &&d) const {
-  DebugUtilsMessengerEXT handle;
-  Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<DebugUtilsMessengerEXT,
-                                 impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Instance::createDebugUtilsMessengerUniqueEXT");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>>::type Instance::createDebugUtilsMessengerUniqueEXT(
+    const DebugUtilsMessengerCreateInfoEXT& createInfo, Dispatch&& d) const
+{
+    DebugUtilsMessengerEXT handle;
+    Result result = static_cast<Result>(d.xrCreateDebugUtilsMessengerEXT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<DebugUtilsMessengerEXT, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Instance::createDebugUtilsMessengerUniqueEXT");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -20317,51 +16442,38 @@ OPENXR_HPP_INLINE ResultValueType<void>::type DebugUtilsMessengerEXT::destroy(
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Instance::submitDebugUtilsMessageEXT(
-    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity,
-    XrDebugUtilsMessageTypeFlagsEXT messageTypes,
-    const DebugUtilsMessengerCallbackDataEXT &callbackData,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes,
-                                     OPENXR_HPP_NAMESPACE::get(callbackData)));
-  return result;
+    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, OPENXR_HPP_NAMESPACE::get(callbackData)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Instance::submitDebugUtilsMessageEXT(
-    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity,
-    XrDebugUtilsMessageTypeFlagsEXT messageTypes,
-    const DebugUtilsMessengerCallbackDataEXT &callbackData,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(
-      d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes,
-                                     OPENXR_HPP_NAMESPACE::get(callbackData)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::submitDebugUtilsMessageEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Instance::submitDebugUtilsMessageEXT(
+    XrDebugUtilsMessageSeverityFlagsEXT messageSeverity, XrDebugUtilsMessageTypeFlagsEXT messageTypes, const DebugUtilsMessengerCallbackDataEXT& callbackData, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSubmitDebugUtilsMessageEXT(this->get(), messageSeverity, messageTypes, OPENXR_HPP_NAMESPACE::get(callbackData)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Instance::submitDebugUtilsMessageEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionBeginDebugUtilsLabelRegionEXT(
-    const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
-  return result;
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::sessionBeginDebugUtilsLabelRegionEXT(
-    const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING
-      "::Session::sessionBeginDebugUtilsLabelRegionEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionBeginDebugUtilsLabelRegionEXT(
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSessionBeginDebugUtilsLabelRegionEXT(this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::sessionBeginDebugUtilsLabelRegionEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -20376,73 +16488,60 @@ OPENXR_HPP_INLINE Result Session::sessionEndDebugUtilsLabelRegionEXT(
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::sessionEndDebugUtilsLabelRegionEXT(Dispatch &&d) const {
-  Result result =
-      static_cast<Result>(d.xrSessionEndDebugUtilsLabelRegionEXT(this->get()));
-  return impl::createResultValue(
-      result, OPENXR_HPP_NAMESPACE_STRING
-      "::Session::sessionEndDebugUtilsLabelRegionEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionEndDebugUtilsLabelRegionEXT(
+    Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSessionEndDebugUtilsLabelRegionEXT(this->get()));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::sessionEndDebugUtilsLabelRegionEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef OPENXR_HPP_DISABLE_ENHANCED_MODE
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::sessionInsertDebugUtilsLabelEXT(
-    const DebugUtilsLabelEXT &labelInfo, Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
-  return result;
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
+    return result;
 }
 #else /* OPENXR_HPP_DISABLE_ENHANCED_MODE */
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE ResultValueType<void>::type
-Session::sessionInsertDebugUtilsLabelEXT(const DebugUtilsLabelEXT &labelInfo,
-                                         Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
-  return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::sessionInsertDebugUtilsLabelEXT");
+OPENXR_HPP_INLINE ResultValueType<void>::type Session::sessionInsertDebugUtilsLabelEXT(
+    const DebugUtilsLabelEXT& labelInfo, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrSessionInsertDebugUtilsLabelEXT(this->get(), OPENXR_HPP_NAMESPACE::get(labelInfo)));
+    return impl::createResultValue(result, OPENXR_HPP_NAMESPACE_STRING "::Session::sessionInsertDebugUtilsLabelEXT");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSpatialAnchorMSFT(
-    const SpatialAnchorCreateInfoMSFT &createInfo, SpatialAnchorMSFT &anchor,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), anchor.put()));
-  return result;
+    const SpatialAnchorCreateInfoMSFT& createInfo, SpatialAnchorMSFT& anchor, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), anchor.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<SpatialAnchorMSFT>::type
-Session::createSpatialAnchorMSFT(const SpatialAnchorCreateInfoMSFT &createInfo,
-                                 Dispatch &&d) const {
-  SpatialAnchorMSFT handle;
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::createSpatialAnchorMSFT");
+OPENXR_HPP_INLINE typename ResultValueType<SpatialAnchorMSFT>::type Session::createSpatialAnchorMSFT(
+    const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const
+{
+    SpatialAnchorMSFT handle;
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorMSFT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type
-Session::createSpatialAnchorUniqueMSFT(
-    const SpatialAnchorCreateInfoMSFT &createInfo, Dispatch &&d) const {
-  SpatialAnchorMSFT handle;
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<SpatialAnchorMSFT,
-                                 impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorUniqueMSFT");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>>::type Session::createSpatialAnchorUniqueMSFT(
+    const SpatialAnchorCreateInfoMSFT& createInfo, Dispatch&& d) const
+{
+    SpatialAnchorMSFT handle;
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<SpatialAnchorMSFT, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorUniqueMSFT");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/
@@ -20450,40 +16549,31 @@ Session::createSpatialAnchorUniqueMSFT(
 
 template <typename Dispatch>
 OPENXR_HPP_INLINE Result Session::createSpatialAnchorSpaceMSFT(
-    const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Space &space,
-    Dispatch &&d) const {
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
-  return result;
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Space& space, Dispatch&& d) const
+{
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), space.put()));
+    return result;
 }
 #ifndef OPENXR_HPP_DISABLE_ENHANCED_MODE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<Space>::type
-Session::createSpatialAnchorSpaceMSFT(
-    const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  return impl::createResultValue(result, handle,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Session::createSpatialAnchorSpaceMSFT");
+OPENXR_HPP_INLINE typename ResultValueType<Space>::type Session::createSpatialAnchorSpaceMSFT(
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    return impl::createResultValue(result, handle, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorSpaceMSFT");
 }
 #ifndef OPENXR_HPP_NO_SMART_HANDLE
 
 template <typename Dispatch>
-OPENXR_HPP_INLINE typename ResultValueType<
-    UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type
-Session::createSpatialAnchorSpaceUniqueMSFT(
-    const SpatialAnchorSpaceCreateInfoMSFT &createInfo, Dispatch &&d) const {
-  Space handle;
-  Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(
-      this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
-  ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter{d};
-  return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(
-      result, handle, deleter,
-      OPENXR_HPP_NAMESPACE_STRING
-      "::Session::createSpatialAnchorSpaceUniqueMSFT");
+OPENXR_HPP_INLINE typename ResultValueType<UniqueHandle<Space, impl::RemoveRefConst<Dispatch>>>::type Session::createSpatialAnchorSpaceUniqueMSFT(
+    const SpatialAnchorSpaceCreateInfoMSFT& createInfo, Dispatch&& d) const
+{
+    Space handle;
+    Result result = static_cast<Result>(d.xrCreateSpatialAnchorSpaceMSFT(this->get(), OPENXR_HPP_NAMESPACE::get(createInfo), handle.put()));
+    ObjectDestroy<impl::RemoveRefConst<Dispatch>> deleter { d };
+    return impl::createResultValue<Space, impl::RemoveRefConst<Dispatch>>(result, handle, deleter, OPENXR_HPP_NAMESPACE_STRING "::Session::createSpatialAnchorSpaceUniqueMSFT");
 }
 
 #endif /*OPENXR_HPP_NO_SMART_HANDLE*/

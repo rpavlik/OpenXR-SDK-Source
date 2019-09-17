@@ -160,10 +160,25 @@ namespace OPENXR_HPP_NAMESPACE {
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Duration>
 class Duration {
 public:
+  /*!
+   * @name Constructors, assignment, and conversions
+   * @{
+   */
   //! Default constructor.
   OPENXR_HPP_CONSTEXPR Duration() = default;
   //! Explicit constructor from raw XrDuration
   OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration v) noexcept : val_(v) {}
+  //! @}
+
+  /*!
+   * @name Validity checking
+   * @{
+   */
+  //! @}
+
+  //! @name Raw XrDuration manipulation
+  //! @{
+
   //! Gets the raw XrDuration type.
   OPENXR_HPP_CONSTEXPR XrDuration get() const noexcept { return val_; }
   //! @brief Clears this value, then returns the address of the raw XrDuration
@@ -172,6 +187,8 @@ public:
     val_ = 0;
     return &val_;
   }
+  //! @}
+
   //! Add a Duration to the current Duration
   Duration &operator+=(Duration d) noexcept {
     val_ += d.val_;
@@ -203,13 +220,15 @@ private:
   XrDuration val_{};
 };
 
+static_assert(sizeof(Duration) == sizeof(XrDuration),
+              "raw type and wrapper have different size!");
 //! @brief Free function for getting the raw XrDuration from Duration.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see Duration::get()
 //! @relates Duration
-OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration v) noexcept {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrDuration get(Duration v) noexcept {
   return v.get();
 }
 //! @brief Free function for clearing and getting the raw XrDuration from
@@ -219,8 +238,7 @@ OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration v) noexcept {
 //! namespace qualification.
 //! @see Duration::put()
 //! @relates Duration
-inline XrDuration *put(Duration &v) noexcept { return v.put(); }
-
+OPENXR_HPP_INLINE XrDuration *put(Duration &v) noexcept { return v.put(); }
 //! @brief `<` comparison between Duration.
 //! @relates Duration
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration lhs,
@@ -347,14 +365,29 @@ OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs,
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Time>
 class Time {
 public:
+  /*!
+   * @name Constructors, assignment, and conversions
+   * @{
+   */
   //! Default constructor.
   OPENXR_HPP_CONSTEXPR Time() = default;
   //! Explicit constructor from raw XrTime
   OPENXR_HPP_CONSTEXPR explicit Time(XrTime v) noexcept : val_(v) {}
+  //! @}
+
+  /*!
+   * @name Validity checking
+   * @{
+   */
   //! True if this time is valid (positive)
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
     return val_ > 0;
   }
+  //! @}
+
+  //! @name Raw XrTime manipulation
+  //! @{
+
   //! Gets the raw XrTime type.
   OPENXR_HPP_CONSTEXPR XrTime get() const noexcept { return val_; }
   //! @brief Clears this value, then returns the address of the raw XrTime type,
@@ -363,6 +396,8 @@ public:
     val_ = 0;
     return &val_;
   }
+  //! @}
+
   //! Add a Duration to the current Time
   Time &operator+=(Duration d) noexcept {
     val_ += d.get();
@@ -379,21 +414,24 @@ private:
   XrTime val_{};
 };
 
+static_assert(sizeof(Time) == sizeof(XrTime),
+              "raw type and wrapper have different size!");
 //! @brief Free function for getting the raw XrTime from Time.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see Time::get()
 //! @relates Time
-OPENXR_HPP_CONSTEXPR inline XrTime get(Time v) noexcept { return v.get(); }
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrTime get(Time v) noexcept {
+  return v.get();
+}
 //! @brief Free function for clearing and getting the raw XrTime from Time.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see Time::put()
 //! @relates Time
-inline XrTime *put(Time &v) noexcept { return v.put(); }
-
+OPENXR_HPP_INLINE XrTime *put(Time &v) noexcept { return v.put(); }
 //! @brief `<` comparison between Time.
 //! @relates Time
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time lhs,
@@ -523,14 +561,33 @@ OPENXR_HPP_CONSTEXPR inline Time operator+(Time lhs, Duration rhs) noexcept {
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#SystemId>
 class SystemId {
 public:
+  /*!
+   * @name Constructors, assignment, and conversions
+   * @{
+   */
   //! Default constructor.
   OPENXR_HPP_CONSTEXPR SystemId() = default;
   //! Explicit constructor from raw XrSystemId
   OPENXR_HPP_CONSTEXPR explicit SystemId(XrSystemId v) noexcept : val_(v) {}
-  //! True if this SystemId is valid
+  //! @}
+
+  /*!
+   * @name Validity checking
+   * @{
+   */
+  //! Returns true in conditionals if this SystemId is valid
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
     return val_ != XR_NULL_SYSTEM_ID;
   }
+  //! Unary negation: True if this SystemId is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_SYSTEM_ID;
+  }
+  //! @}
+
+  //! @name Raw XrSystemId manipulation
+  //! @{
+
   //! Gets the raw XrSystemId type.
   OPENXR_HPP_CONSTEXPR XrSystemId get() const noexcept { return val_; }
   //! @brief Clears this value, then returns the address of the raw XrSystemId
@@ -539,18 +596,21 @@ public:
     val_ = XR_NULL_SYSTEM_ID;
     return &val_;
   }
+  //! @}
 
 private:
   XrSystemId val_{XR_NULL_SYSTEM_ID};
 };
 
+static_assert(sizeof(SystemId) == sizeof(XrSystemId),
+              "raw type and wrapper have different size!");
 //! @brief Free function for getting the raw XrSystemId from SystemId.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see SystemId::get()
 //! @relates SystemId
-OPENXR_HPP_CONSTEXPR inline XrSystemId get(SystemId v) noexcept {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSystemId get(SystemId v) noexcept {
   return v.get();
 }
 //! @brief Free function for clearing and getting the raw XrSystemId from
@@ -560,8 +620,7 @@ OPENXR_HPP_CONSTEXPR inline XrSystemId get(SystemId v) noexcept {
 //! namespace qualification.
 //! @see SystemId::put()
 //! @relates SystemId
-inline XrSystemId *put(SystemId &v) noexcept { return v.put(); }
-
+OPENXR_HPP_INLINE XrSystemId *put(SystemId &v) noexcept { return v.put(); }
 //! @brief `==` comparison between SystemId.
 //! @relates SystemId
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(SystemId lhs,
@@ -605,14 +664,33 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrSystemId lhs,
 //! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Path>
 class Path {
 public:
+  /*!
+   * @name Constructors, assignment, and conversions
+   * @{
+   */
   //! Default constructor.
   OPENXR_HPP_CONSTEXPR Path() = default;
   //! Explicit constructor from raw XrPath
   OPENXR_HPP_CONSTEXPR explicit Path(XrPath v) noexcept : val_(v) {}
-  //! True if this Path is valid
+  //! @}
+
+  /*!
+   * @name Validity checking
+   * @{
+   */
+  //! Returns true in conditionals if this Path is valid
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
     return val_ != XR_NULL_PATH;
   }
+  //! Unary negation: True if this Path is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_PATH;
+  }
+  //! @}
+
+  //! @name Raw XrPath manipulation
+  //! @{
+
   //! Gets the raw XrPath type.
   OPENXR_HPP_CONSTEXPR XrPath get() const noexcept { return val_; }
   //! @brief Clears this value, then returns the address of the raw XrPath type,
@@ -621,26 +699,30 @@ public:
     val_ = XR_NULL_PATH;
     return &val_;
   }
+  //! @}
 
 private:
   XrPath val_{XR_NULL_PATH};
 };
 
+static_assert(sizeof(Path) == sizeof(XrPath),
+              "raw type and wrapper have different size!");
 //! @brief Free function for getting the raw XrPath from Path.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see Path::get()
 //! @relates Path
-OPENXR_HPP_CONSTEXPR inline XrPath get(Path v) noexcept { return v.get(); }
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrPath get(Path v) noexcept {
+  return v.get();
+}
 //! @brief Free function for clearing and getting the raw XrPath from Path.
 //!
 //! Should be found via argument-dependent lookup and thus not need explicit
 //! namespace qualification.
 //! @see Path::put()
 //! @relates Path
-inline XrPath *put(Path &v) noexcept { return v.put(); }
-
+OPENXR_HPP_INLINE XrPath *put(Path &v) noexcept { return v.put(); }
 //! @brief `==` comparison between Path.
 //! @relates Path
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Path lhs,

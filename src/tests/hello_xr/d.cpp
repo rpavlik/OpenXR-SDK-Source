@@ -6,5 +6,5 @@
 static void bla() {
     xr::Instance inst;
     xr::DispatchLoaderDynamic d;
-    inst.getVulkanDeviceExtensionsKHR(XR_NULL_SYSTEM_ID, d);
+    inst.getVulkanDeviceExtensionsKHR(xr::SystemId{}, d);
 }

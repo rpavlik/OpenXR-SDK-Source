@@ -4886,8 +4886,7 @@ public:
    * If OPENXR_HPP_NO_EXCEPTIONS is not defined:
    *
    * - Throws an appropriate exception on failure.
-   * - Returns Result (which may be Result::Success, or a non-Result::Success
-   * success code)
+   * - Returns Result (which may be {Result::Success, Result::EventUnavailable})
    *
    * If OPENXR_HPP_NO_EXCEPTIONS is defined:
    *
@@ -6762,8 +6761,8 @@ public:
    * If OPENXR_HPP_NO_EXCEPTIONS is not defined:
    *
    * - Throws an appropriate exception on failure.
-   * - Returns Result (which may be Result::Success, or a non-Result::Success
-   * success code)
+   * - Returns Result (which may be {Result::Success,
+   * Result::SpaceBoundsUnavailable})
    *
    * If OPENXR_HPP_NO_EXCEPTIONS is defined:
    *
@@ -7116,8 +7115,7 @@ public:
    * If OPENXR_HPP_NO_EXCEPTIONS is not defined:
    *
    * - Throws an appropriate exception on failure.
-   * - Returns Result (which may be Result::Success, or a non-Result::Success
-   * success code)
+   * - Returns Result (which may be {Result::Success, Result::FrameDiscarded})
    *
    * If OPENXR_HPP_NO_EXCEPTIONS is defined:
    *
@@ -7460,8 +7458,8 @@ public:
    * If OPENXR_HPP_NO_EXCEPTIONS is not defined:
    *
    * - Throws an appropriate exception on failure.
-   * - Returns Result (which may be Result::Success, or a non-Result::Success
-   * success code)
+   * - Returns Result (which may be {Result::Success,
+   * Result::SessionNotFocused})
    *
    * If OPENXR_HPP_NO_EXCEPTIONS is defined:
    *
@@ -9367,8 +9365,7 @@ public:
    * If OPENXR_HPP_NO_EXCEPTIONS is not defined:
    *
    * - Throws an appropriate exception on failure.
-   * - Returns Result (which may be Result::Success, or a non-Result::Success
-   * success code)
+   * - Returns Result (which may be {Result::Success, Result::TimeoutExpired})
    *
    * If OPENXR_HPP_NO_EXCEPTIONS is defined:
    *

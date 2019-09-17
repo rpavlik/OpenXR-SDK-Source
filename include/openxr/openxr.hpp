@@ -157,6 +157,7 @@ static inline void for_each_side_index(IndexHandler &&handler) {
   handler(0);
   handler(1);
 }
+
 class Duration {
 public:
   OPENXR_HPP_CONSTEXPR Duration() = default;
@@ -169,11 +170,11 @@ public:
     return &val_;
   }
 
-  OPENXR_HPP_CONSTEXPR Duration &operator-=(Duration d) noexcept {
+  Duration &operator-=(Duration d) noexcept {
     val_ -= d.val_;
     return *this;
   }
-  OPENXR_HPP_CONSTEXPR Duration &operator+=(Duration d) noexcept {
+  Duration &operator+=(Duration d) noexcept {
     val_ += d.val_;
     return *this;
   }
@@ -197,11 +198,11 @@ OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration d) noexcept {
 inline XrDuration *put(Duration &d) noexcept { return d.put(); }
 OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs,
                                                Duration rhs) noexcept {
-  return lhs += rhs;
+  return Duration{lhs.get() + rhs.get()};
 }
 OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs,
                                                Duration rhs) noexcept {
-  return lhs -= rhs;
+  return Duration{lhs.get() - rhs.get()};
 }
 
 class Time {
@@ -219,11 +220,11 @@ public:
     return &val_;
   }
 
-  OPENXR_HPP_CONSTEXPR Time &operator-=(Duration d) noexcept {
+  Time &operator-=(Duration d) noexcept {
     val_ -= d.get();
     return *this;
   }
-  OPENXR_HPP_CONSTEXPR Time &operator+=(Duration d) noexcept {
+  Time &operator+=(Duration d) noexcept {
     val_ += d.get();
     return *this;
   }
@@ -241,13 +242,229 @@ OPENXR_HPP_CONSTEXPR inline Duration operator-(Time lhs, Time rhs) noexcept {
 }
 
 OPENXR_HPP_CONSTEXPR inline Time operator-(Time lhs, Duration rhs) noexcept {
-  return lhs -= rhs;
+  return Time{lhs.get() - rhs.get()};
 }
 
 OPENXR_HPP_CONSTEXPR inline Time operator+(Time lhs, Duration rhs) noexcept {
-  return lhs += rhs;
+  return Time{lhs.get() + rhs.get()};
 }
 
+//! @brief < comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration const &lhs,
+                                                      Duration const &rhs) {
+  return lhs.get() < rhs.get();
+}
+//! @brief < comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration const &lhs,
+                                                      XrDuration rhs) {
+  return lhs.get() < rhs;
+}
+//! @brief < comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrDuration lhs,
+                                                      Duration const &rhs) {
+  return lhs < rhs.get();
+}
+//! @brief > comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration const &lhs,
+                                                      Duration const &rhs) {
+  return lhs.get() > rhs.get();
+}
+//! @brief > comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration const &lhs,
+                                                      XrDuration rhs) {
+  return lhs.get() > rhs;
+}
+//! @brief > comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrDuration lhs,
+                                                      Duration const &rhs) {
+  return lhs > rhs.get();
+}
+//! @brief <= comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Duration const &lhs,
+                                                       Duration const &rhs) {
+  return lhs.get() <= rhs.get();
+}
+//! @brief <= comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Duration const &lhs,
+                                                       XrDuration rhs) {
+  return lhs.get() <= rhs;
+}
+//! @brief <= comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrDuration lhs,
+                                                       Duration const &rhs) {
+  return lhs <= rhs.get();
+}
+//! @brief >= comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Duration const &lhs,
+                                                       Duration const &rhs) {
+  return lhs.get() >= rhs.get();
+}
+//! @brief >= comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Duration const &lhs,
+                                                       XrDuration rhs) {
+  return lhs.get() >= rhs;
+}
+//! @brief >= comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrDuration lhs,
+                                                       Duration const &rhs) {
+  return lhs >= rhs.get();
+}
+//! @brief == comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Duration const &lhs,
+                                                       Duration const &rhs) {
+  return lhs.get() == rhs.get();
+}
+//! @brief == comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Duration const &lhs,
+                                                       XrDuration rhs) {
+  return lhs.get() == rhs;
+}
+//! @brief == comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrDuration lhs,
+                                                       Duration const &rhs) {
+  return lhs == rhs.get();
+}
+//! @brief != comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Duration const &lhs,
+                                                       Duration const &rhs) {
+  return lhs.get() != rhs.get();
+}
+//! @brief != comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Duration const &lhs,
+                                                       XrDuration rhs) {
+  return lhs.get() != rhs;
+}
+//! @brief != comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrDuration lhs,
+                                                       Duration const &rhs) {
+  return lhs != rhs.get();
+}
+//! @brief < comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time const &lhs,
+                                                      Time const &rhs) {
+  return lhs.get() < rhs.get();
+}
+//! @brief < comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time const &lhs,
+                                                      XrTime rhs) {
+  return lhs.get() < rhs;
+}
+//! @brief < comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrTime lhs,
+                                                      Time const &rhs) {
+  return lhs < rhs.get();
+}
+//! @brief > comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time const &lhs,
+                                                      Time const &rhs) {
+  return lhs.get() > rhs.get();
+}
+//! @brief > comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time const &lhs,
+                                                      XrTime rhs) {
+  return lhs.get() > rhs;
+}
+//! @brief > comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrTime lhs,
+                                                      Time const &rhs) {
+  return lhs > rhs.get();
+}
+//! @brief <= comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time const &lhs,
+                                                       Time const &rhs) {
+  return lhs.get() <= rhs.get();
+}
+//! @brief <= comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time const &lhs,
+                                                       XrTime rhs) {
+  return lhs.get() <= rhs;
+}
+//! @brief <= comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrTime lhs,
+                                                       Time const &rhs) {
+  return lhs <= rhs.get();
+}
+//! @brief >= comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time const &lhs,
+                                                       Time const &rhs) {
+  return lhs.get() >= rhs.get();
+}
+//! @brief >= comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time const &lhs,
+                                                       XrTime rhs) {
+  return lhs.get() >= rhs;
+}
+//! @brief >= comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrTime lhs,
+                                                       Time const &rhs) {
+  return lhs >= rhs.get();
+}
+//! @brief == comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time const &lhs,
+                                                       Time const &rhs) {
+  return lhs.get() == rhs.get();
+}
+//! @brief == comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time const &lhs,
+                                                       XrTime rhs) {
+  return lhs.get() == rhs;
+}
+//! @brief == comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrTime lhs,
+                                                       Time const &rhs) {
+  return lhs == rhs.get();
+}
+//! @brief != comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time const &lhs,
+                                                       Time const &rhs) {
+  return lhs.get() != rhs.get();
+}
+//! @brief != comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time const &lhs,
+                                                       XrTime rhs) {
+  return lhs.get() != rhs;
+}
+//! @brief != comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrTime lhs,
+                                                       Time const &rhs) {
+  return lhs != rhs.get();
+}
 } // namespace OPENXR_HPP_NAMESPACE
 
 /*!

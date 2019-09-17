@@ -154,31 +154,47 @@ static inline void for_each_side_index(IndexHandler &&handler) {
 
 namespace OPENXR_HPP_NAMESPACE {
 
+//! XrDuration wrapper class
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Duration>
 class Duration {
 public:
+  //! Default constructor.
   OPENXR_HPP_CONSTEXPR Duration() = default;
-  OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration t) : val_(t) {}
-
+  //! Explicit constructor from raw XrDuration
+  OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration v) noexcept : val_(v) {}
+  //! Gets the raw XrDuration type.
   OPENXR_HPP_CONSTEXPR XrDuration get() const noexcept { return val_; }
-
+  //! @brief Clears this value, then returns the address of the raw XrDuration
+  //! type, for use in creation/assignment.
   XrDuration *put() noexcept {
     val_ = 0;
     return &val_;
   }
-
-  Duration &operator-=(Duration d) noexcept {
-    val_ -= d.val_;
-    return *this;
-  }
+  //! Add a Duration to the current Duration
   Duration &operator+=(Duration d) noexcept {
     val_ += d.val_;
     return *this;
   }
 
+  //! Subtract a Duration from the current Duration
+  Duration &operator-=(Duration d) noexcept {
+    val_ -= d.val_;
+    return *this;
+  }
+
+  //! For timeouts, indicates the timeout is immediate
+  static OPENXR_HPP_CONSTEXPR Duration noDuration() noexcept {
+    return Duration{XR_NO_DURATION};
+  }
+
+  //! For timeouts, indicates the timeout never occurs.
   static OPENXR_HPP_CONSTEXPR Duration infinite() noexcept {
     return Duration{XR_INFINITE_DURATION};
   }
 
+  //! For haptic vibration, the shortest pulse possible for the device
   static OPENXR_HPP_CONSTEXPR Duration minHaptic() noexcept {
     return Duration{XR_MIN_HAPTIC_DURATION};
   }
@@ -187,41 +203,175 @@ private:
   XrDuration val_{};
 };
 
-OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration d) noexcept {
-  return d.get();
+//! @brief Free function for getting the raw XrDuration from Duration.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Duration::get()
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration v) noexcept {
+  return v.get();
 }
+//! @brief Free function for clearing and getting the raw XrDuration from
+//! Duration.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Duration::put()
+//! @relates Duration
+inline XrDuration *put(Duration &v) noexcept { return v.put(); }
 
-inline XrDuration *put(Duration &d) noexcept { return d.put(); }
+//! @brief `<` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration lhs,
+                                                      Duration rhs) noexcept {
+  return lhs.get() < rhs.get();
+}
+//! @brief `>` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration lhs,
+                                                      Duration rhs) noexcept {
+  return lhs.get() > rhs.get();
+}
+//! @brief `<=` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Duration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs.get() <= rhs.get();
+}
+//! @brief `>=` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Duration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs.get() >= rhs.get();
+}
+//! @brief `==` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Duration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs.get() == rhs.get();
+}
+//! @brief `!=` comparison between Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Duration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs.get() != rhs.get();
+}
+//! @brief `<` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration lhs,
+                                                      XrDuration rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrDuration lhs,
+                                                      Duration rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration lhs,
+                                                      XrDuration rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrDuration lhs,
+                                                      Duration rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Duration lhs, XrDuration rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrDuration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Duration lhs, XrDuration rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrDuration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Duration lhs, XrDuration rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrDuration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Duration and raw XrDuration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Duration lhs, XrDuration rhs) noexcept {
+  return lhs.get() != rhs;
+}
+//! @brief `!=` comparison between raw XrDuration and Duration.
+//! @relates Duration
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrDuration lhs,
+                                                       Duration rhs) noexcept {
+  return lhs != rhs.get();
+}
+//! Add two Duration values
 OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs,
                                                Duration rhs) noexcept {
   return Duration{lhs.get() + rhs.get()};
 }
+
+//! Subtract two Duration values
 OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs,
                                                Duration rhs) noexcept {
   return Duration{lhs.get() - rhs.get()};
 }
 
+//! XrTime wrapper class
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Time>
 class Time {
 public:
+  //! Default constructor.
   OPENXR_HPP_CONSTEXPR Time() = default;
-  OPENXR_HPP_CONSTEXPR explicit Time(XrTime t) : val_(t) {}
-
+  //! Explicit constructor from raw XrTime
+  OPENXR_HPP_CONSTEXPR explicit Time(XrTime v) noexcept : val_(v) {}
+  //! True if this time is valid (positive)
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
-    return val_ == 0;
+    return val_ > 0;
   }
+  //! Gets the raw XrTime type.
   OPENXR_HPP_CONSTEXPR XrTime get() const noexcept { return val_; }
-
+  //! @brief Clears this value, then returns the address of the raw XrTime type,
+  //! for use in creation/assignment.
   XrTime *put() noexcept {
     val_ = 0;
     return &val_;
   }
-
-  Time &operator-=(Duration d) noexcept {
-    val_ -= d.get();
-    return *this;
-  }
+  //! Add a Duration to the current Time
   Time &operator+=(Duration d) noexcept {
     val_ += d.get();
+    return *this;
+  }
+
+  //! Subtract a Duration from the current Time
+  Time &operator-=(Duration d) noexcept {
+    val_ -= d.get();
     return *this;
   }
 
@@ -229,248 +379,162 @@ private:
   XrTime val_{};
 };
 
-OPENXR_HPP_CONSTEXPR inline XrTime get(Time t) noexcept { return t.get(); }
+//! @brief Free function for getting the raw XrTime from Time.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Time::get()
+//! @relates Time
+OPENXR_HPP_CONSTEXPR inline XrTime get(Time v) noexcept { return v.get(); }
+//! @brief Free function for clearing and getting the raw XrTime from Time.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Time::put()
+//! @relates Time
+inline XrTime *put(Time &v) noexcept { return v.put(); }
 
-inline XrTime *put(Time &t) noexcept { return t.put(); }
-
+//! @brief `<` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time lhs,
+                                                      Time rhs) noexcept {
+  return lhs.get() < rhs.get();
+}
+//! @brief `>` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time lhs,
+                                                      Time rhs) noexcept {
+  return lhs.get() > rhs.get();
+}
+//! @brief `<=` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time lhs,
+                                                       Time rhs) noexcept {
+  return lhs.get() <= rhs.get();
+}
+//! @brief `>=` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time lhs,
+                                                       Time rhs) noexcept {
+  return lhs.get() >= rhs.get();
+}
+//! @brief `==` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time lhs,
+                                                       Time rhs) noexcept {
+  return lhs.get() == rhs.get();
+}
+//! @brief `!=` comparison between Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time lhs,
+                                                       Time rhs) noexcept {
+  return lhs.get() != rhs.get();
+}
+//! @brief `<` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time lhs,
+                                                      XrTime rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrTime lhs,
+                                                      Time rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time lhs,
+                                                      XrTime rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrTime lhs,
+                                                      Time rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time lhs,
+                                                       XrTime rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrTime lhs,
+                                                       Time rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time lhs,
+                                                       XrTime rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrTime lhs,
+                                                       Time rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time lhs,
+                                                       XrTime rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrTime lhs,
+                                                       Time rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Time and raw XrTime.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time lhs,
+                                                       XrTime rhs) noexcept {
+  return lhs.get() != rhs;
+}
+//! @brief `!=` comparison between raw XrTime and Time.
+//! @relates Time
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrTime lhs,
+                                                       Time rhs) noexcept {
+  return lhs != rhs.get();
+}
+//! The difference between two Time values is a Duration.
 OPENXR_HPP_CONSTEXPR inline Duration operator-(Time lhs, Time rhs) noexcept {
   return Duration{lhs.get() - rhs.get()};
 }
 
+//! Subtract a Duration from a Time to get another Time
 OPENXR_HPP_CONSTEXPR inline Time operator-(Time lhs, Duration rhs) noexcept {
   return Time{lhs.get() - rhs.get()};
 }
 
+//! Add a Duration to a Time to get another Time
 OPENXR_HPP_CONSTEXPR inline Time operator+(Time lhs, Duration rhs) noexcept {
   return Time{lhs.get() + rhs.get()};
 }
 
-//! @brief < comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration const &lhs,
-                                                      Duration const &rhs) {
-  return lhs.get() < rhs.get();
-}
-//! @brief < comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Duration const &lhs,
-                                                      XrDuration rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrDuration lhs,
-                                                      Duration const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration const &lhs,
-                                                      Duration const &rhs) {
-  return lhs.get() > rhs.get();
-}
-//! @brief > comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Duration const &lhs,
-                                                      XrDuration rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrDuration lhs,
-                                                      Duration const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Duration const &lhs,
-                                                       Duration const &rhs) {
-  return lhs.get() <= rhs.get();
-}
-//! @brief <= comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Duration const &lhs,
-                                                       XrDuration rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrDuration lhs,
-                                                       Duration const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Duration const &lhs,
-                                                       Duration const &rhs) {
-  return lhs.get() >= rhs.get();
-}
-//! @brief >= comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Duration const &lhs,
-                                                       XrDuration rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrDuration lhs,
-                                                       Duration const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Duration const &lhs,
-                                                       Duration const &rhs) {
-  return lhs.get() == rhs.get();
-}
-//! @brief == comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Duration const &lhs,
-                                                       XrDuration rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrDuration lhs,
-                                                       Duration const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Duration const &lhs,
-                                                       Duration const &rhs) {
-  return lhs.get() != rhs.get();
-}
-//! @brief != comparison between Duration and raw XrDuration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Duration const &lhs,
-                                                       XrDuration rhs) {
-  return lhs.get() != rhs;
-}
-//! @brief != comparison between raw XrDuration and Duration.
-//! @relates Duration
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrDuration lhs,
-                                                       Duration const &rhs) {
-  return lhs != rhs.get();
-}
-//! @brief < comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time const &lhs,
-                                                      Time const &rhs) {
-  return lhs.get() < rhs.get();
-}
-//! @brief < comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Time const &lhs,
-                                                      XrTime rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrTime lhs,
-                                                      Time const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time const &lhs,
-                                                      Time const &rhs) {
-  return lhs.get() > rhs.get();
-}
-//! @brief > comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Time const &lhs,
-                                                      XrTime rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrTime lhs,
-                                                      Time const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time const &lhs,
-                                                       Time const &rhs) {
-  return lhs.get() <= rhs.get();
-}
-//! @brief <= comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Time const &lhs,
-                                                       XrTime rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrTime lhs,
-                                                       Time const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time const &lhs,
-                                                       Time const &rhs) {
-  return lhs.get() >= rhs.get();
-}
-//! @brief >= comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Time const &lhs,
-                                                       XrTime rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrTime lhs,
-                                                       Time const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time const &lhs,
-                                                       Time const &rhs) {
-  return lhs.get() == rhs.get();
-}
-//! @brief == comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Time const &lhs,
-                                                       XrTime rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrTime lhs,
-                                                       Time const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time const &lhs,
-                                                       Time const &rhs) {
-  return lhs.get() != rhs.get();
-}
-//! @brief != comparison between Time and raw XrTime.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Time const &lhs,
-                                                       XrTime rhs) {
-  return lhs.get() != rhs;
-}
-//! @brief != comparison between raw XrTime and Time.
-//! @relates Time
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrTime lhs,
-                                                       Time const &rhs) {
-  return lhs != rhs.get();
-}
+//! XrSystemId wrapper class
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#SystemId>
 class SystemId {
 public:
+  //! Default constructor.
   OPENXR_HPP_CONSTEXPR SystemId() = default;
-  OPENXR_HPP_CONSTEXPR explicit SystemId(XrSystemId v) : val_(v) {}
+  //! Explicit constructor from raw XrSystemId
+  OPENXR_HPP_CONSTEXPR explicit SystemId(XrSystemId v) noexcept : val_(v) {}
+  //! True if this SystemId is valid
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
-    return val_ == XR_NULL_SYSTEM_ID;
+    return val_ != XR_NULL_SYSTEM_ID;
   }
-
+  //! Gets the raw XrSystemId type.
   OPENXR_HPP_CONSTEXPR XrSystemId get() const noexcept { return val_; }
-
+  //! @brief Clears this value, then returns the address of the raw XrSystemId
+  //! type, for use in creation/assignment.
   XrSystemId *put() noexcept {
     val_ = XR_NULL_SYSTEM_ID;
     return &val_;
@@ -480,59 +544,79 @@ private:
   XrSystemId val_{XR_NULL_SYSTEM_ID};
 };
 
+//! @brief Free function for getting the raw XrSystemId from SystemId.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see SystemId::get()
+//! @relates SystemId
 OPENXR_HPP_CONSTEXPR inline XrSystemId get(SystemId v) noexcept {
   return v.get();
 }
-
+//! @brief Free function for clearing and getting the raw XrSystemId from
+//! SystemId.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see SystemId::put()
+//! @relates SystemId
 inline XrSystemId *put(SystemId &v) noexcept { return v.put(); }
 
 //! @brief `==` comparison between SystemId.
 //! @relates SystemId
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(SystemId const &lhs,
-                                                       SystemId const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(SystemId lhs,
+                                                       SystemId rhs) noexcept {
   return lhs.get() == rhs.get();
+}
+//! @brief `!=` comparison between SystemId.
+//! @relates SystemId
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(SystemId lhs,
+                                                       SystemId rhs) noexcept {
+  return lhs.get() != rhs.get();
 }
 //! @brief `==` comparison between SystemId and raw XrSystemId.
 //! @relates SystemId
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(SystemId const &lhs,
-                                                       XrSystemId rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(SystemId lhs, XrSystemId rhs) noexcept {
   return lhs.get() == rhs;
 }
 //! @brief `==` comparison between raw XrSystemId and SystemId.
 //! @relates SystemId
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrSystemId lhs,
-                                                       SystemId const &rhs) {
+                                                       SystemId rhs) noexcept {
   return lhs == rhs.get();
-}
-//! @brief `!=` comparison between SystemId.
-//! @relates SystemId
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(SystemId const &lhs,
-                                                       SystemId const &rhs) {
-  return lhs.get() != rhs.get();
 }
 //! @brief `!=` comparison between SystemId and raw XrSystemId.
 //! @relates SystemId
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(SystemId const &lhs,
-                                                       XrSystemId rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(SystemId lhs, XrSystemId rhs) noexcept {
   return lhs.get() != rhs;
 }
 //! @brief `!=` comparison between raw XrSystemId and SystemId.
 //! @relates SystemId
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrSystemId lhs,
-                                                       SystemId const &rhs) {
+                                                       SystemId rhs) noexcept {
   return lhs != rhs.get();
 }
 
+//! XrPath wrapper class
+//!
+//! See the related specification text at
+//! <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#Path>
 class Path {
 public:
+  //! Default constructor.
   OPENXR_HPP_CONSTEXPR Path() = default;
-  OPENXR_HPP_CONSTEXPR explicit Path(XrPath v) : val_(v) {}
+  //! Explicit constructor from raw XrPath
+  OPENXR_HPP_CONSTEXPR explicit Path(XrPath v) noexcept : val_(v) {}
+  //! True if this Path is valid
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
-    return val_ == XR_NULL_PATH;
+    return val_ != XR_NULL_PATH;
   }
-
+  //! Gets the raw XrPath type.
   OPENXR_HPP_CONSTEXPR XrPath get() const noexcept { return val_; }
-
+  //! @brief Clears this value, then returns the address of the raw XrPath type,
+  //! for use in creation/assignment.
   XrPath *put() noexcept {
     val_ = XR_NULL_PATH;
     return &val_;
@@ -542,47 +626,57 @@ private:
   XrPath val_{XR_NULL_PATH};
 };
 
+//! @brief Free function for getting the raw XrPath from Path.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Path::get()
+//! @relates Path
 OPENXR_HPP_CONSTEXPR inline XrPath get(Path v) noexcept { return v.get(); }
-
+//! @brief Free function for clearing and getting the raw XrPath from Path.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Path::put()
+//! @relates Path
 inline XrPath *put(Path &v) noexcept { return v.put(); }
 
 //! @brief `==` comparison between Path.
 //! @relates Path
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Path const &lhs,
-                                                       Path const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Path lhs,
+                                                       Path rhs) noexcept {
   return lhs.get() == rhs.get();
+}
+//! @brief `!=` comparison between Path.
+//! @relates Path
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Path lhs,
+                                                       Path rhs) noexcept {
+  return lhs.get() != rhs.get();
 }
 //! @brief `==` comparison between Path and raw XrPath.
 //! @relates Path
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Path const &lhs,
-                                                       XrPath rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Path lhs,
+                                                       XrPath rhs) noexcept {
   return lhs.get() == rhs;
 }
 //! @brief `==` comparison between raw XrPath and Path.
 //! @relates Path
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrPath lhs,
-                                                       Path const &rhs) {
+                                                       Path rhs) noexcept {
   return lhs == rhs.get();
-}
-//! @brief `!=` comparison between Path.
-//! @relates Path
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Path const &lhs,
-                                                       Path const &rhs) {
-  return lhs.get() != rhs.get();
 }
 //! @brief `!=` comparison between Path and raw XrPath.
 //! @relates Path
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Path const &lhs,
-                                                       XrPath rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Path lhs,
+                                                       XrPath rhs) noexcept {
   return lhs.get() != rhs;
 }
 //! @brief `!=` comparison between raw XrPath and Path.
 //! @relates Path
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrPath lhs,
-                                                       Path const &rhs) {
+                                                       Path rhs) noexcept {
   return lhs != rhs.get();
 }
-
 using BilateralPaths = std::array<Path, SIDE_COUNT>;
 
 } // namespace OPENXR_HPP_NAMESPACE

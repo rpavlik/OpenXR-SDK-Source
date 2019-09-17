@@ -16480,10 +16480,10 @@ OPENXR_HPP_INLINE Result Instance::getInstanceProperties(
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<InstanceProperties>::type
 Instance::getInstanceProperties(Dispatch &&d) const {
-  InstanceProperties structResult;
+  InstanceProperties returnVal;
   Result result = static_cast<Result>(d.xrGetInstanceProperties(
-      this->get(), OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      this->get(), OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getInstanceProperties");
 }
@@ -16575,12 +16575,11 @@ OPENXR_HPP_INLINE Result Instance::getSystem(const SystemGetInfo &getInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<SystemId>::type
 Instance::getSystem(const SystemGetInfo &getInfo, Dispatch &&d) const {
-  SystemId structResult;
+  SystemId returnVal;
   Result result = static_cast<Result>(d.xrGetSystem(
-      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), &structResult));
-  return impl::createResultValue(result, structResult,
-                                 OPENXR_HPP_NAMESPACE_STRING
-                                 "::Instance::getSystem");
+      this->get(), OPENXR_HPP_NAMESPACE::get(getInfo), &returnVal));
+  return impl::createResultValue(
+      result, returnVal, OPENXR_HPP_NAMESPACE_STRING "::Instance::getSystem");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -16596,10 +16595,10 @@ OPENXR_HPP_INLINE Result Instance::getSystemProperties(
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<SystemProperties>::type
 Instance::getSystemProperties(XrSystemId systemId, Dispatch &&d) const {
-  SystemProperties structResult;
+  SystemProperties returnVal;
   Result result = static_cast<Result>(d.xrGetSystemProperties(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getSystemProperties");
 }
@@ -16959,12 +16958,12 @@ OPENXR_HPP_INLINE Result Space::locateSpace(Space baseSpace, const Time &time,
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<SpaceLocation>::type
 Space::locateSpace(Space baseSpace, const Time &time, Dispatch &&d) const {
-  SpaceLocation structResult;
+  SpaceLocation returnVal;
   Result result = static_cast<Result>(d.xrLocateSpace(
       this->get(), baseSpace.get(), OPENXR_HPP_NAMESPACE::get(time),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
+      OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
+      result, returnVal, OPENXR_HPP_NAMESPACE_STRING "::Space::locateSpace");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -17094,11 +17093,11 @@ OPENXR_HPP_INLINE typename ResultValueType<ViewConfigurationProperties>::type
 Instance::getViewConfigurationProperties(
     XrSystemId systemId, ViewConfigurationType viewConfigurationType,
     Dispatch &&d) const {
-  ViewConfigurationProperties structResult;
+  ViewConfigurationProperties returnVal;
   Result result = static_cast<Result>(d.xrGetViewConfigurationProperties(
       this->get(), systemId, OPENXR_HPP_NAMESPACE::get(viewConfigurationType),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getViewConfigurationProperties");
 }
@@ -17422,10 +17421,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<uint32_t>::type
 Swapchain::acquireSwapchainImage(const SwapchainImageAcquireInfo &acquireInfo,
                                  Dispatch &&d) const {
-  uint32_t structResult;
+  uint32_t returnVal;
   Result result = static_cast<Result>(d.xrAcquireSwapchainImage(
-      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), &structResult));
-  return impl::createResultValue(result, structResult,
+      this->get(), OPENXR_HPP_NAMESPACE::get(acquireInfo), &returnVal));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Swapchain::acquireSwapchainImage");
 }
@@ -17541,12 +17540,12 @@ OPENXR_HPP_INLINE Result Session::waitFrame(const FrameWaitInfo &frameWaitInfo,
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<FrameState>::type
 Session::waitFrame(const FrameWaitInfo &frameWaitInfo, Dispatch &&d) const {
-  FrameState structResult;
+  FrameState returnVal;
   Result result = static_cast<Result>(
       d.xrWaitFrame(this->get(), OPENXR_HPP_NAMESPACE::get(frameWaitInfo),
-                    OPENXR_HPP_NAMESPACE::put(structResult)));
+                    OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
+      result, returnVal, OPENXR_HPP_NAMESPACE_STRING "::Session::waitFrame");
 }
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -17685,10 +17684,10 @@ OPENXR_HPP_INLINE Result Instance::stringToPath(const char *pathString,
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Path>::type
 Instance::stringToPath(const char *pathString, Dispatch &&d) const {
-  Path structResult;
+  Path returnVal;
   Result result = static_cast<Result>(
-      d.xrStringToPath(this->get(), pathString, &structResult));
-  return impl::createResultValue(result, structResult,
+      d.xrStringToPath(this->get(), pathString, &returnVal));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::stringToPath");
 }
@@ -17948,10 +17947,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<InteractionProfileState>::type
 Session::getCurrentInteractionProfile(XrPath topLevelUserPath,
                                       Dispatch &&d) const {
-  InteractionProfileState structResult;
+  InteractionProfileState returnVal;
   Result result = static_cast<Result>(d.xrGetCurrentInteractionProfile(
-      this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      this->get(), topLevelUserPath, OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getCurrentInteractionProfile");
 }
@@ -17972,11 +17971,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<ActionStateBoolean>::type
 Session::getActionStateBoolean(const ActionStateGetInfo &getInfo,
                                Dispatch &&d) const {
-  ActionStateBoolean structResult;
+  ActionStateBoolean returnVal;
   Result result = static_cast<Result>(
       d.xrGetActionStateBoolean(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                                OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+                                OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateBoolean");
 }
@@ -17997,11 +17996,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<ActionStateFloat>::type
 Session::getActionStateFloat(const ActionStateGetInfo &getInfo,
                              Dispatch &&d) const {
-  ActionStateFloat structResult;
+  ActionStateFloat returnVal;
   Result result = static_cast<Result>(
       d.xrGetActionStateFloat(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                              OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+                              OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateFloat");
 }
@@ -18022,11 +18021,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<ActionStateVector2f>::type
 Session::getActionStateVector2f(const ActionStateGetInfo &getInfo,
                                 Dispatch &&d) const {
-  ActionStateVector2f structResult;
+  ActionStateVector2f returnVal;
   Result result = static_cast<Result>(d.xrGetActionStateVector2f(
       this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStateVector2f");
 }
@@ -18047,11 +18046,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<ActionStatePose>::type
 Session::getActionStatePose(const ActionStateGetInfo &getInfo,
                             Dispatch &&d) const {
-  ActionStatePose structResult;
+  ActionStatePose returnVal;
   Result result = static_cast<Result>(
       d.xrGetActionStatePose(this->get(), OPENXR_HPP_NAMESPACE::get(getInfo),
-                             OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+                             OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getActionStatePose");
 }
@@ -18390,11 +18389,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsOpenGLKHR>::type
 Instance::getOpenGLGraphicsRequirementsKHR(XrSystemId systemId,
                                            Dispatch &&d) const {
-  GraphicsRequirementsOpenGLKHR structResult;
+  GraphicsRequirementsOpenGLKHR returnVal;
   Result result = static_cast<Result>(d.xrGetOpenGLGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult,
+      result, returnVal,
       OPENXR_HPP_NAMESPACE_STRING
       "::Instance::getOpenGLGraphicsRequirementsKHR");
 }
@@ -18419,11 +18418,11 @@ OPENXR_HPP_INLINE
     typename ResultValueType<GraphicsRequirementsOpenGLESKHR>::type
     Instance::getOpenGLESGraphicsRequirementsKHR(XrSystemId systemId,
                                                  Dispatch &&d) const {
-  GraphicsRequirementsOpenGLESKHR structResult;
+  GraphicsRequirementsOpenGLESKHR returnVal;
   Result result = static_cast<Result>(d.xrGetOpenGLESGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult,
+      result, returnVal,
       OPENXR_HPP_NAMESPACE_STRING
       "::Instance::getOpenGLESGraphicsRequirementsKHR");
 }
@@ -18629,10 +18628,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<VkPhysicalDevice>::type
 Instance::getVulkanGraphicsDeviceKHR(XrSystemId systemId, VkInstance vkInstance,
                                      Dispatch &&d) const {
-  VkPhysicalDevice structResult;
+  VkPhysicalDevice returnVal;
   Result result = static_cast<Result>(d.xrGetVulkanGraphicsDeviceKHR(
-      this->get(), systemId, vkInstance, &structResult));
-  return impl::createResultValue(result, structResult,
+      this->get(), systemId, vkInstance, &returnVal));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getVulkanGraphicsDeviceKHR");
 }
@@ -18656,11 +18655,11 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsVulkanKHR>::type
 Instance::getVulkanGraphicsRequirementsKHR(XrSystemId systemId,
                                            Dispatch &&d) const {
-  GraphicsRequirementsVulkanKHR structResult;
+  GraphicsRequirementsVulkanKHR returnVal;
   Result result = static_cast<Result>(d.xrGetVulkanGraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult,
+      result, returnVal,
       OPENXR_HPP_NAMESPACE_STRING
       "::Instance::getVulkanGraphicsRequirementsKHR");
 }
@@ -18684,10 +18683,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D11KHR>::type
 Instance::getD3D11GraphicsRequirementsKHR(XrSystemId systemId,
                                           Dispatch &&d) const {
-  GraphicsRequirementsD3D11KHR structResult;
+  GraphicsRequirementsD3D11KHR returnVal;
   Result result = static_cast<Result>(d.xrGetD3D11GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getD3D11GraphicsRequirementsKHR");
 }
@@ -18711,10 +18710,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<GraphicsRequirementsD3D12KHR>::type
 Instance::getD3D12GraphicsRequirementsKHR(XrSystemId systemId,
                                           Dispatch &&d) const {
-  GraphicsRequirementsD3D12KHR structResult;
+  GraphicsRequirementsD3D12KHR returnVal;
   Result result = static_cast<Result>(d.xrGetD3D12GraphicsRequirementsKHR(
-      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      this->get(), systemId, OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::getD3D12GraphicsRequirementsKHR");
 }
@@ -18741,12 +18740,12 @@ Session::getVisibilityMaskKHR(ViewConfigurationType viewConfigurationType,
                               uint32_t viewIndex,
                               VisibilityMaskTypeKHR visibilityMaskType,
                               Dispatch &&d) const {
-  VisibilityMaskKHR structResult;
+  VisibilityMaskKHR returnVal;
   Result result = static_cast<Result>(d.xrGetVisibilityMaskKHR(
       this->get(), OPENXR_HPP_NAMESPACE::get(viewConfigurationType), viewIndex,
       OPENXR_HPP_NAMESPACE::get(visibilityMaskType),
-      OPENXR_HPP_NAMESPACE::put(structResult)));
-  return impl::createResultValue(result, structResult,
+      OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Session::getVisibilityMaskKHR");
 }
@@ -18769,12 +18768,13 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Time>::type
 Instance::convertWin32PerformanceCounterToTimeKHR(
     const LARGE_INTEGER *performanceCounter, Dispatch &&d) const {
-  Time structResult;
+  Time returnVal;
   Result result =
       static_cast<Result>(d.xrConvertWin32PerformanceCounterToTimeKHR(
-          this->get(), performanceCounter, &structResult));
+          this->get(), performanceCounter,
+          OPENXR_HPP_NAMESPACE::put(returnVal)));
   return impl::createResultValue(
-      result, structResult,
+      result, returnVal,
       OPENXR_HPP_NAMESPACE_STRING
       "::Instance::convertWin32PerformanceCounterToTimeKHR");
 }
@@ -18798,12 +18798,12 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<LARGE_INTEGER>::type
 Instance::convertTimeToWin32PerformanceCounterKHR(const Time &time,
                                                   Dispatch &&d) const {
-  LARGE_INTEGER structResult;
+  LARGE_INTEGER returnVal;
   Result result =
       static_cast<Result>(d.xrConvertTimeToWin32PerformanceCounterKHR(
-          this->get(), OPENXR_HPP_NAMESPACE::get(time), &structResult));
+          this->get(), OPENXR_HPP_NAMESPACE::get(time), &returnVal));
   return impl::createResultValue(
-      result, structResult,
+      result, returnVal,
       OPENXR_HPP_NAMESPACE_STRING
       "::Instance::convertTimeToWin32PerformanceCounterKHR");
 }
@@ -18826,10 +18826,10 @@ template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<Time>::type
 Instance::convertTimespecTimeToTimeKHR(const struct timespec *timespecTime,
                                        Dispatch &&d) const {
-  Time structResult;
+  Time returnVal;
   Result result = static_cast<Result>(d.xrConvertTimespecTimeToTimeKHR(
-      this->get(), timespecTime, &structResult));
-  return impl::createResultValue(result, structResult,
+      this->get(), timespecTime, OPENXR_HPP_NAMESPACE::put(returnVal)));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::convertTimespecTimeToTimeKHR");
 }
@@ -18851,10 +18851,10 @@ OPENXR_HPP_INLINE Result Instance::convertTimeToTimespecTimeKHR(
 template <typename Dispatch>
 OPENXR_HPP_INLINE typename ResultValueType<timespec>::type
 Instance::convertTimeToTimespecTimeKHR(const Time &time, Dispatch &&d) const {
-  timespec structResult;
+  timespec returnVal;
   Result result = static_cast<Result>(d.xrConvertTimeToTimespecTimeKHR(
-      this->get(), OPENXR_HPP_NAMESPACE::get(time), &structResult));
-  return impl::createResultValue(result, structResult,
+      this->get(), OPENXR_HPP_NAMESPACE::get(time), &returnVal));
+  return impl::createResultValue(result, returnVal,
                                  OPENXR_HPP_NAMESPACE_STRING
                                  "::Instance::convertTimeToTimespecTimeKHR");
 }

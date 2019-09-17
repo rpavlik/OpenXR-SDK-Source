@@ -183,12 +183,6 @@ public:
   OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration v) noexcept : val_(v) {}
   //! @}
 
-  /*!
-   * @name Validity checking
-   * @{
-   */
-  //! @}
-
   //! @name Raw XrDuration manipulation
   //! @{
 
@@ -361,14 +355,14 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrDuration lhs,
   return lhs != rhs.get();
 }
 //! Add two Duration values
-OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs,
-                                               Duration rhs) noexcept {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE Duration
+operator+(Duration lhs, Duration rhs) noexcept {
   return Duration{lhs.get() + rhs.get()};
 }
 
 //! Subtract two Duration values
-OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs,
-                                               Duration rhs) noexcept {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE Duration
+operator-(Duration lhs, Duration rhs) noexcept {
   return Duration{lhs.get() - rhs.get()};
 }
 
@@ -396,8 +390,9 @@ public:
   OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
     return val_ > 0;
   }
+  //! Unary negation: True if this Time is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept { return val_ <= 0; }
   //! @}
-
   //! @name Raw XrTime manipulation
   //! @{
 
@@ -597,7 +592,6 @@ public:
     return val_ == XR_NULL_SYSTEM_ID;
   }
   //! @}
-
   //! @name Raw XrSystemId manipulation
   //! @{
 
@@ -700,7 +694,6 @@ public:
     return val_ == XR_NULL_PATH;
   }
   //! @}
-
   //! @name Raw XrPath manipulation
   //! @{
 
@@ -4683,14 +4676,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Instance() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR Instance() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrInstance type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Instance(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Instance(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Instance(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR Instance(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -4701,7 +4695,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -4711,7 +4705,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -4721,7 +4715,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -4739,7 +4733,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrInstance manipulation
   //! @{
 
@@ -4755,7 +4748,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -6281,7 +6274,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrInstance val_{XR_NULL_HANDLE};
 };
@@ -6442,28 +6434,28 @@ operator!=(XrInstance lhs, Instance const &rhs) noexcept {
 //! is null.
 //! @relates Instance
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(Instance const &lhs, std::nullptr_t /* unused */) {
+operator==(Instance const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and Instance: true if the handle
 //! is null.
 //! @relates Instance
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, Instance const &rhs) {
+operator==(std::nullptr_t /* unused */, Instance const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between Instance and nullptr: true if the
 //! handle is not null.
 //! @relates Instance
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(Instance const &lhs, std::nullptr_t /* unused */) {
+operator!=(Instance const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and Instance: true if the
 //! handle is not null.
 //! @relates Instance
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, Instance const &rhs) {
+operator!=(std::nullptr_t /* unused */, Instance const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -6505,14 +6497,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Session() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR Session() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSession type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Session(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Session(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Session(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR Session(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -6523,7 +6516,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -6533,7 +6526,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -6543,7 +6536,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -6561,7 +6554,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrSession manipulation
   //! @{
 
@@ -6577,7 +6569,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -8193,7 +8185,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrSession val_{XR_NULL_HANDLE};
 };
@@ -8354,28 +8345,28 @@ operator!=(XrSession lhs, Session const &rhs) noexcept {
 //! is null.
 //! @relates Session
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(Session const &lhs, std::nullptr_t /* unused */) {
+operator==(Session const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and Session: true if the handle
 //! is null.
 //! @relates Session
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, Session const &rhs) {
+operator==(std::nullptr_t /* unused */, Session const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between Session and nullptr: true if the handle
 //! is not null.
 //! @relates Session
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(Session const &lhs, std::nullptr_t /* unused */) {
+operator!=(Session const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and Session: true if the handle
 //! is not null.
 //! @relates Session
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, Session const &rhs) {
+operator!=(std::nullptr_t /* unused */, Session const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -8417,14 +8408,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Space() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR Space() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSpace type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Space(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Space(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Space(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR Space(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -8435,7 +8427,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -8445,7 +8437,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -8455,7 +8447,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -8473,7 +8465,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrSpace manipulation
   //! @{
 
@@ -8489,7 +8480,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -8568,7 +8559,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrSpace val_{XR_NULL_HANDLE};
 };
@@ -8728,28 +8718,28 @@ operator!=(XrSpace lhs, Space const &rhs) noexcept {
 //! null.
 //! @relates Space
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(Space const &lhs, std::nullptr_t /* unused */) {
+operator==(Space const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and Space: true if the handle is
 //! null.
 //! @relates Space
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, Space const &rhs) {
+operator==(std::nullptr_t /* unused */, Space const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between Space and nullptr: true if the handle
 //! is not null.
 //! @relates Space
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(Space const &lhs, std::nullptr_t /* unused */) {
+operator!=(Space const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and Space: true if the handle
 //! is not null.
 //! @relates Space
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, Space const &rhs) {
+operator!=(std::nullptr_t /* unused */, Space const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -8791,14 +8781,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Action() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR Action() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrAction type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Action(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Action(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Action(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR Action(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -8809,7 +8800,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -8819,7 +8810,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -8829,7 +8820,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -8847,7 +8838,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrAction manipulation
   //! @{
 
@@ -8863,7 +8853,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -8908,7 +8898,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrAction val_{XR_NULL_HANDLE};
 };
@@ -9068,28 +9057,28 @@ operator!=(XrAction lhs, Action const &rhs) noexcept {
 //! null.
 //! @relates Action
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(Action const &lhs, std::nullptr_t /* unused */) {
+operator==(Action const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and Action: true if the handle is
 //! null.
 //! @relates Action
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, Action const &rhs) {
+operator==(std::nullptr_t /* unused */, Action const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between Action and nullptr: true if the handle
 //! is not null.
 //! @relates Action
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(Action const &lhs, std::nullptr_t /* unused */) {
+operator!=(Action const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and Action: true if the handle
 //! is not null.
 //! @relates Action
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, Action const &rhs) {
+operator!=(std::nullptr_t /* unused */, Action const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -9133,14 +9122,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Swapchain() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR Swapchain() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSwapchain type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Swapchain(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Swapchain(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Swapchain(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR Swapchain(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -9151,7 +9141,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -9161,7 +9151,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -9171,7 +9161,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -9189,7 +9179,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrSwapchain manipulation
   //! @{
 
@@ -9205,7 +9194,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -9419,7 +9408,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrSwapchain val_{XR_NULL_HANDLE};
 };
@@ -9580,28 +9568,28 @@ operator!=(XrSwapchain lhs, Swapchain const &rhs) noexcept {
 //! is null.
 //! @relates Swapchain
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(Swapchain const &lhs, std::nullptr_t /* unused */) {
+operator==(Swapchain const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and Swapchain: true if the handle
 //! is null.
 //! @relates Swapchain
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, Swapchain const &rhs) {
+operator==(std::nullptr_t /* unused */, Swapchain const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between Swapchain and nullptr: true if the
 //! handle is not null.
 //! @relates Swapchain
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(Swapchain const &lhs, std::nullptr_t /* unused */) {
+operator!=(Swapchain const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and Swapchain: true if the
 //! handle is not null.
 //! @relates Swapchain
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, Swapchain const &rhs) {
+operator!=(std::nullptr_t /* unused */, Swapchain const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -9645,14 +9633,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR ActionSet() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR ActionSet() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrActionSet type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT ActionSet(RawHandleType handle) : val_(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT ActionSet(RawHandleType handle) noexcept
+      : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR ActionSet(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR ActionSet(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -9663,7 +9652,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -9673,7 +9662,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -9683,7 +9672,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -9701,7 +9690,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrActionSet manipulation
   //! @{
 
@@ -9717,7 +9705,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -9822,7 +9810,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrActionSet val_{XR_NULL_HANDLE};
 };
@@ -9983,28 +9970,28 @@ operator!=(XrActionSet lhs, ActionSet const &rhs) noexcept {
 //! is null.
 //! @relates ActionSet
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(ActionSet const &lhs, std::nullptr_t /* unused */) {
+operator==(ActionSet const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and ActionSet: true if the handle
 //! is null.
 //! @relates ActionSet
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, ActionSet const &rhs) {
+operator==(std::nullptr_t /* unused */, ActionSet const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between ActionSet and nullptr: true if the
 //! handle is not null.
 //! @relates ActionSet
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(ActionSet const &lhs, std::nullptr_t /* unused */) {
+operator!=(ActionSet const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and ActionSet: true if the
 //! handle is not null.
 //! @relates ActionSet
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, ActionSet const &rhs) {
+operator!=(std::nullptr_t /* unused */, ActionSet const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -10052,15 +10039,18 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT() noexcept
+      : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrDebugUtilsMessengerEXT type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT DebugUtilsMessengerEXT(RawHandleType handle)
+  OPENXR_HPP_TYPESAFE_EXPLICIT
+  DebugUtilsMessengerEXT(RawHandleType handle) noexcept
       : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR
+  DebugUtilsMessengerEXT(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -10071,7 +10061,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -10081,7 +10071,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -10091,7 +10081,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -10109,7 +10099,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrDebugUtilsMessengerEXT manipulation
   //! @{
 
@@ -10127,7 +10116,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -10178,7 +10167,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrDebugUtilsMessengerEXT val_{XR_NULL_HANDLE};
 };
@@ -10375,28 +10363,32 @@ operator!=(XrDebugUtilsMessengerEXT lhs,
 //! if the handle is null.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(DebugUtilsMessengerEXT const &lhs, std::nullptr_t /* unused */) {
+operator==(DebugUtilsMessengerEXT const &lhs,
+           std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and DebugUtilsMessengerEXT: true
 //! if the handle is null.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, DebugUtilsMessengerEXT const &rhs) {
+operator==(std::nullptr_t /* unused */,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between DebugUtilsMessengerEXT and nullptr:
 //! true if the handle is not null.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(DebugUtilsMessengerEXT const &lhs, std::nullptr_t /* unused */) {
+operator!=(DebugUtilsMessengerEXT const &lhs,
+           std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and DebugUtilsMessengerEXT:
 //! true if the handle is not null.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, DebugUtilsMessengerEXT const &rhs) {
+operator!=(std::nullptr_t /* unused */,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {
@@ -10445,15 +10437,15 @@ public:
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT() : val_(XR_NULL_HANDLE) {}
+  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT() noexcept : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSpatialAnchorMSFT type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT SpatialAnchorMSFT(RawHandleType handle)
+  OPENXR_HPP_TYPESAFE_EXPLICIT SpatialAnchorMSFT(RawHandleType handle) noexcept
       : val_(handle) {}
   //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT(std::nullptr_t /* unused */)
+  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT(std::nullptr_t /* unused */) noexcept
       : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
@@ -10464,7 +10456,7 @@ public:
   //!
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
-  Type &operator=(RawHandleType handle) {
+  Type &operator=(RawHandleType handle) noexcept {
     val_ = handle;
     return *this;
   }
@@ -10474,7 +10466,7 @@ public:
   //!
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
-  Type &operator=(std::nullptr_t /* unused */) {
+  Type &operator=(std::nullptr_t /* unused */) noexcept {
     val_ = XR_NULL_HANDLE;
     return *this;
   }
@@ -10484,7 +10476,7 @@ public:
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
-  operator RawHandleType() const {
+  operator RawHandleType() const noexcept {
     return val_;
   }
   //! @}
@@ -10502,7 +10494,6 @@ public:
     return val_ == XR_NULL_HANDLE;
   }
   //! @}
-
   //! @name Raw XrSpatialAnchorMSFT manipulation
   //! @{
 
@@ -10518,7 +10509,7 @@ public:
   //! ```
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
-  RawHandleType *put() {
+  RawHandleType *put() noexcept {
     val_ = XR_NULL_HANDLE;
     return &val_;
   }
@@ -10569,7 +10560,6 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-
 private:
   XrSpatialAnchorMSFT val_{XR_NULL_HANDLE};
 };
@@ -10745,28 +10735,28 @@ operator!=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
 //! the handle is null.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(SpatialAnchorMSFT const &lhs, std::nullptr_t /* unused */) {
+operator==(SpatialAnchorMSFT const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Equality comparison between nullptr and SpatialAnchorMSFT: true if
 //! the handle is null.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(std::nullptr_t /* unused */, SpatialAnchorMSFT const &rhs) {
+operator==(std::nullptr_t /* unused */, SpatialAnchorMSFT const &rhs) noexcept {
   return rhs.get() == XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between SpatialAnchorMSFT and nullptr: true if
 //! the handle is not null.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(SpatialAnchorMSFT const &lhs, std::nullptr_t /* unused */) {
+operator!=(SpatialAnchorMSFT const &lhs, std::nullptr_t /* unused */) noexcept {
   return lhs.get() != XR_NULL_HANDLE;
 }
 //! @brief Inequality comparison between nullptr and SpatialAnchorMSFT: true if
 //! the handle is not null.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(std::nullptr_t /* unused */, SpatialAnchorMSFT const &rhs) {
+operator!=(std::nullptr_t /* unused */, SpatialAnchorMSFT const &rhs) noexcept {
   return rhs.get() != XR_NULL_HANDLE;
 }
 namespace traits {

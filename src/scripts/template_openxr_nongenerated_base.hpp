@@ -22,6 +22,9 @@
 #ifdef Success
 #undef Success
 #endif
+#ifdef None
+#undef None
+#endif
 
 #if !defined(OPENXR_HPP_ASSERT)
 #include <cassert>
@@ -80,10 +83,8 @@
 namespace OPENXR_HPP_NAMESPACE {
 
 using Bool32 = XrBool32;
-using Duration = XrDuration;
 using Path = XrPath;
 using SystemId = XrSystemId;
-using Time = XrTime;
 using Version = XrVersion;
 
 enum Side : uint32_t {
@@ -98,36 +99,90 @@ using BilateralPaths = std::array<Path, SIDE_COUNT>;
 using SideHandler = std::function<void(Side)>;
 using IndexHandler = std::function<void(uint32_t)>;
 
-constexpr char* const reserved_paths[] = {
-    "/user/hand/left",
-    "/user/hand/right",
-    "/user/head",
-    "/user/gamepad",
-    "/user/treadmill",
+constexpr char const* const reserved_paths[] = {
+    "/user/hand/left", "/user/hand/right", "/user/head", "/user/gamepad", "/user/treadmill",
 };
 
-constexpr char* const interaction_profiles[] = {
- "/interaction_profiles/khr/simple_controller",
- "/interaction_profiles/google/daydream_controller",
- "/interaction_profiles/htc/vive_controller",
- "/interaction_profiles/htc/vive_pro",
- "/interaction_profiles/microsoft/motion_controller",
- "/interaction_profiles/microsoft/xbox_controller",
- "/interaction_profiles/oculus/go_controller",
- "/interaction_profiles/oculus/touch_controller",
- "/interaction_profiles/valve/index_controller",
+constexpr char const* const interaction_profiles[] = {
+    "/interaction_profiles/khr/simple_controller",       "/interaction_profiles/google/daydream_controller",
+    "/interaction_profiles/htc/vive_controller",         "/interaction_profiles/htc/vive_pro",
+    "/interaction_profiles/microsoft/motion_controller", "/interaction_profiles/microsoft/xbox_controller",
+    "/interaction_profiles/oculus/go_controller",        "/interaction_profiles/oculus/touch_controller",
+    "/interaction_profiles/valve/index_controller",
 };
 
-
-void for_each_side(const SideHandler& handler) {
+template <typename SideHandler>
+static inline void for_each_side(SideHandler&& handler) {
     handler(Left);
     handler(Right);
 }
 
-void for_each_side_index(const IndexHandler& handler) {
-    for(uint32_t i = 0; i < SIDE_COUNT; ++i) {
-        handler(i);
-    }
+template <typename IndexHandler>
+static inline void for_each_side_index(IndexHandler&& handler) {
+    handler(0);
+    handler(1);
 }
+class Duration {
+   public:
+    OPENXR_HPP_CONSTEXPR Duration() = default;
+    OPENXR_HPP_CONSTEXPR explicit Duration(XrDuration t) : val_(t) {}
+
+    OPENXR_HPP_CONSTEXPR XrDuration get() const noexcept { return val_; }
+
+    XrDuration* put() noexcept {
+        val_ = 0;
+        return &val_;
+    }
+
+    Duration& operator-=(Duration d) noexcept {
+        val_ -= d.val_;
+        return *this;
+    }
+    Duration& operator+=(Duration d) noexcept {
+        val_ += d.val_;
+        return *this;
+    }
+
+   private:
+    XrDuration val_{};
+};
+
+OPENXR_HPP_CONSTEXPR inline XrDuration get(Duration d) noexcept { return d.get(); }
+
+inline XrDuration* put(Duration& d) noexcept { return d.put(); }
+OPENXR_HPP_CONSTEXPR inline Duration operator+(Duration lhs, Duration rhs) noexcept { return lhs += rhs; }
+OPENXR_HPP_CONSTEXPR inline Duration operator-(Duration lhs, Duration rhs) noexcept { return lhs -= rhs; }
+
+class Time {
+   public:
+    OPENXR_HPP_CONSTEXPR Time() = default;
+    OPENXR_HPP_CONSTEXPR explicit Time(XrTime t) : val_(t) {}
+
+    OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept { return val_ == 0; }
+    OPENXR_HPP_CONSTEXPR XrTime get() const noexcept { return val_; }
+
+    XrTime* put() noexcept {
+        val_ = 0;
+        return &val_;
+    }
+
+    Time& operator-=(Duration d) noexcept {
+        val_ -= d.get();
+        return *this;
+    }
+    Time& operator+=(Duration d) noexcept {
+        val_ += d.get();
+        return *this;
+    }
+
+   private:
+    XrTime val_{};
+};
+
+OPENXR_HPP_CONSTEXPR inline XrTime get(Time t) noexcept { return t.get(); }
+
+inline XrTime* put(Time& t) noexcept { return t.put(); }
+
+OPENXR_HPP_CONSTEXPR inline Duration operator-(Time lhs, Time rhs) noexcept { return Duration{lhs.get() - rhs.get()}; }
 
 }  // namespace OPENXR_HPP_NAMESPACE

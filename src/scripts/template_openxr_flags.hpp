@@ -15,14 +15,14 @@ namespace OPENXR_HPP_NAMESPACE {
 //! @brief Flags class associated with /*{flags.name}*/
 //!
 //! See the related specification text at /*{ make_spec_url(flags.name) }*/
-enum class /*{projected_bits_type }*/ :  XrFlags64 {
+enum class /*{projected_bits_type }*/ : XrFlags64 {
     None = 0,
     //# for val in bitmask.values
     /*{ create_flag_value(val.name, flags.valid_flags) }*/ = /*{val.name}*/,
     //# endfor
     AllBits = 0
-    //# for val in bitmask.values
-        | /*{ val.name}*/
+              //# for val in bitmask.values
+              | /*{ val.name}*/
     //# endfor
 };
 
@@ -34,4 +34,3 @@ using /*{projected_type }*/ = Flags</*{projected_bits_type }*/, /*{flags.name}*/
 //! @}
 
 }  // namespace OPENXR_HPP_NAMESPACE
-

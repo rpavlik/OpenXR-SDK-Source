@@ -4622,23 +4622,20 @@ class Instance {
 public:
   using Type = Instance;
   using RawHandleType = XrInstance;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Instance() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Instance(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR Instance() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrInstance type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Instance(RawHandleType handle) : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Instance(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR Instance(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrInstance
@@ -4649,7 +4646,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -4659,7 +4656,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -4669,30 +4666,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this Instance is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this Instance is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrInstance manipulation
+  //! @{
+
+  //! Gets the raw XrInstance type.
+  OPENXR_HPP_CONSTEXPR XrInstance get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -4704,15 +4700,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -5713,118 +5703,161 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(Instance) == sizeof(XrInstance),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between Instance.
+private:
+  XrInstance val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(Instance) == sizeof(XrInstance),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrInstance from Instance.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Instance::get()
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Instance const &lhs,
-                                                      Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrInstance
+get(Instance const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrInstance handle in a Instance (by reference).
+//!
+//! e.g.
+//! ```
+//! Instance yourHandle;
+//! auto result = d.xrCreateInstance(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Instance
+OPENXR_HPP_INLINE XrInstance *put(Instance &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrInstance handle in a Instance (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(Instance* yourHandle) {
+//!     auto result = d.xrCreateInstance(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Instance
+OPENXR_HPP_INLINE XrInstance *put(Instance *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between Instance and raw XrInstance.
+//! @brief `>` comparison between Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Instance const &lhs,
-                                                      XrInstance rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrInstance and Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrInstance lhs,
-                                                      Instance const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Instance const &lhs,
-                                                      Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between Instance and raw XrInstance.
+//! @brief `<=` comparison between Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Instance const &lhs,
-                                                      XrInstance rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrInstance and Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrInstance lhs,
-                                                      Instance const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Instance const &lhs,
-                                                       Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between Instance and raw XrInstance.
+//! @brief `>=` comparison between Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Instance const &lhs,
-                                                       XrInstance rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrInstance and Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrInstance lhs,
-                                                       Instance const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Instance const &lhs,
-                                                       Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between Instance and raw XrInstance.
+//! @brief `==` comparison between Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Instance const &lhs,
-                                                       XrInstance rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrInstance and Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrInstance lhs,
-                                                       Instance const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Instance const &lhs,
-                                                       Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between Instance and raw XrInstance.
+//! @brief `!=` comparison between Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Instance const &lhs,
-                                                       XrInstance rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrInstance and Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrInstance lhs,
-                                                       Instance const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Instance.
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Instance const &lhs,
-                                                       Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Instance const &lhs, Instance const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between Instance and raw XrInstance.
+//! @brief `<` comparison between Instance and raw XrInstance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Instance const &lhs,
-                                                       XrInstance rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Instance const &lhs,
+                                                      XrInstance rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrInstance and Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrInstance lhs, Instance const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Instance and raw XrInstance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Instance const &lhs,
+                                                      XrInstance rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrInstance and Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrInstance lhs, Instance const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Instance and raw XrInstance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Instance const &lhs, XrInstance rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrInstance and Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrInstance lhs, Instance const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Instance and raw XrInstance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Instance const &lhs, XrInstance rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrInstance and Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrInstance lhs, Instance const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Instance and raw XrInstance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Instance const &lhs, XrInstance rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrInstance and Instance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrInstance lhs, Instance const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Instance and raw XrInstance.
+//! @relates Instance
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Instance const &lhs, XrInstance rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrInstance and Instance.
+//! @brief `!=` comparison between raw XrInstance and Instance.
 //! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrInstance lhs,
-                                                       Instance const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrInstance lhs, Instance const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between Instance and nullptr: true if the handle
@@ -5855,43 +5888,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, Instance const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrInstance handle in a Instance
-//! @relates Instance
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrInstance get(Instance const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrInstance handle in a Instance (by reference).
-//!
-//! e.g.
-//! ```
-//! Instance yourHandle;
-//! auto result = d.xrCreateInstance(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Instance
-OPENXR_HPP_INLINE XrInstance *put(Instance &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrInstance handle in a Instance (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(Instance* yourHandle) {
-//!     auto result = d.xrCreateInstance(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Instance
-OPENXR_HPP_INLINE XrInstance *put(Instance *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for Instance
 template <> struct cpp_type<ObjectType::Instance> { using type = Instance; };
@@ -5926,23 +5922,20 @@ class Session {
 public:
   using Type = Session;
   using RawHandleType = XrSession;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Session() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Session(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR Session() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSession type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Session(RawHandleType handle) : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Session(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR Session(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrSession
@@ -5953,7 +5946,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -5963,7 +5956,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -5973,30 +5966,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this Session is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this Session is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrSession manipulation
+  //! @{
+
+  //! Gets the raw XrSession type.
+  OPENXR_HPP_CONSTEXPR XrSession get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -6008,15 +6000,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -7047,118 +7033,161 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(Session) == sizeof(XrSession),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between Session.
+private:
+  XrSession val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(Session) == sizeof(XrSession),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrSession from Session.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Session::get()
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Session const &lhs,
-                                                      Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSession
+get(Session const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSession handle in a Session (by reference).
+//!
+//! e.g.
+//! ```
+//! Session yourHandle;
+//! auto result = d.xrCreateSession(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Session
+OPENXR_HPP_INLINE XrSession *put(Session &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSession handle in a Session (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(Session* yourHandle) {
+//!     auto result = d.xrCreateSession(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Session
+OPENXR_HPP_INLINE XrSession *put(Session *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between Session and raw XrSession.
+//! @brief `>` comparison between Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Session const &lhs,
-                                                      XrSession rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrSession and Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrSession lhs,
-                                                      Session const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Session const &lhs,
-                                                      Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between Session and raw XrSession.
+//! @brief `<=` comparison between Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Session const &lhs,
-                                                      XrSession rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrSession and Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrSession lhs,
-                                                      Session const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Session const &lhs,
-                                                       Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between Session and raw XrSession.
+//! @brief `>=` comparison between Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Session const &lhs,
-                                                       XrSession rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrSession and Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrSession lhs,
-                                                       Session const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Session const &lhs,
-                                                       Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between Session and raw XrSession.
+//! @brief `==` comparison between Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Session const &lhs,
-                                                       XrSession rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrSession and Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrSession lhs,
-                                                       Session const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Session const &lhs,
-                                                       Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between Session and raw XrSession.
+//! @brief `!=` comparison between Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Session const &lhs,
-                                                       XrSession rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrSession and Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrSession lhs,
-                                                       Session const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Session.
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Session const &lhs,
-                                                       Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Session const &lhs, Session const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between Session and raw XrSession.
+//! @brief `<` comparison between Session and raw XrSession.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Session const &lhs,
+                                                      XrSession rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrSession and Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrSession lhs, Session const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Session and raw XrSession.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Session const &lhs,
+                                                      XrSession rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrSession and Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrSession lhs, Session const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Session and raw XrSession.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Session const &lhs,
+                                                       XrSession rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrSession and Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrSession lhs, Session const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Session and raw XrSession.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Session const &lhs,
+                                                       XrSession rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrSession and Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrSession lhs, Session const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Session and raw XrSession.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Session const &lhs,
+                                                       XrSession rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrSession and Session.
+//! @relates Session
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrSession lhs, Session const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Session and raw XrSession.
 //! @relates Session
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Session const &lhs,
-                                                       XrSession rhs) {
+                                                       XrSession rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrSession and Session.
+//! @brief `!=` comparison between raw XrSession and Session.
 //! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrSession lhs,
-                                                       Session const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrSession lhs, Session const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between Session and nullptr: true if the handle
@@ -7189,43 +7218,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, Session const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrSession handle in a Session
-//! @relates Session
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSession get(Session const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSession handle in a Session (by reference).
-//!
-//! e.g.
-//! ```
-//! Session yourHandle;
-//! auto result = d.xrCreateSession(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Session
-OPENXR_HPP_INLINE XrSession *put(Session &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSession handle in a Session (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(Session* yourHandle) {
-//!     auto result = d.xrCreateSession(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Session
-OPENXR_HPP_INLINE XrSession *put(Session *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for Session
 template <> struct cpp_type<ObjectType::Session> { using type = Session; };
@@ -7260,23 +7252,20 @@ class Space {
 public:
   using Type = Space;
   using RawHandleType = XrSpace;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Space() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Space(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR Space() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSpace type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Space(RawHandleType handle) : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Space(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR Space(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrSpace
@@ -7287,7 +7276,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -7297,7 +7286,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -7307,30 +7296,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this Space is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this Space is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrSpace manipulation
+  //! @{
+
+  //! Gets the raw XrSpace type.
+  OPENXR_HPP_CONSTEXPR XrSpace get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -7342,15 +7330,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -7402,118 +7384,160 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(Space) == sizeof(XrSpace),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between Space.
+private:
+  XrSpace val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(Space) == sizeof(XrSpace),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrSpace from Space.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Space::get()
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Space const &lhs,
-                                                      Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSpace get(Space const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSpace handle in a Space (by reference).
+//!
+//! e.g.
+//! ```
+//! Space yourHandle;
+//! auto result = d.xrCreateSpace(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Space
+OPENXR_HPP_INLINE XrSpace *put(Space &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSpace handle in a Space (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(Space* yourHandle) {
+//!     auto result = d.xrCreateSpace(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Space
+OPENXR_HPP_INLINE XrSpace *put(Space *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between Space and raw XrSpace.
+//! @brief `>` comparison between Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Space const &lhs,
-                                                      XrSpace rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrSpace and Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrSpace lhs,
-                                                      Space const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Space const &lhs,
-                                                      Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between Space and raw XrSpace.
+//! @brief `<=` comparison between Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Space const &lhs,
-                                                      XrSpace rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrSpace and Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrSpace lhs,
-                                                      Space const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Space const &lhs,
-                                                       Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between Space and raw XrSpace.
+//! @brief `>=` comparison between Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Space const &lhs,
-                                                       XrSpace rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrSpace and Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrSpace lhs,
-                                                       Space const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Space const &lhs,
-                                                       Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between Space and raw XrSpace.
+//! @brief `==` comparison between Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Space const &lhs,
-                                                       XrSpace rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrSpace and Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrSpace lhs,
-                                                       Space const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Space const &lhs,
-                                                       Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between Space and raw XrSpace.
+//! @brief `!=` comparison between Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Space const &lhs,
-                                                       XrSpace rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrSpace and Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrSpace lhs,
-                                                       Space const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Space.
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Space const &lhs,
-                                                       Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Space const &lhs, Space const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between Space and raw XrSpace.
+//! @brief `<` comparison between Space and raw XrSpace.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Space const &lhs,
+                                                      XrSpace rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrSpace and Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrSpace lhs, Space const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Space and raw XrSpace.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Space const &lhs,
+                                                      XrSpace rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrSpace and Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrSpace lhs, Space const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Space and raw XrSpace.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Space const &lhs,
+                                                       XrSpace rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrSpace and Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrSpace lhs, Space const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Space and raw XrSpace.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Space const &lhs,
+                                                       XrSpace rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrSpace and Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrSpace lhs, Space const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Space and raw XrSpace.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Space const &lhs,
+                                                       XrSpace rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrSpace and Space.
+//! @relates Space
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrSpace lhs, Space const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Space and raw XrSpace.
 //! @relates Space
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Space const &lhs,
-                                                       XrSpace rhs) {
+                                                       XrSpace rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrSpace and Space.
+//! @brief `!=` comparison between raw XrSpace and Space.
 //! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrSpace lhs,
-                                                       Space const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrSpace lhs, Space const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between Space and nullptr: true if the handle is
@@ -7544,43 +7568,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, Space const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrSpace handle in a Space
-//! @relates Space
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSpace get(Space const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSpace handle in a Space (by reference).
-//!
-//! e.g.
-//! ```
-//! Space yourHandle;
-//! auto result = d.xrCreateSpace(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Space
-OPENXR_HPP_INLINE XrSpace *put(Space &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSpace handle in a Space (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(Space* yourHandle) {
-//!     auto result = d.xrCreateSpace(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Space
-OPENXR_HPP_INLINE XrSpace *put(Space *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for Space
 template <> struct cpp_type<ObjectType::Space> { using type = Space; };
@@ -7615,23 +7602,20 @@ class Action {
 public:
   using Type = Action;
   using RawHandleType = XrAction;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Action() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Action(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR Action() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrAction type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Action(RawHandleType handle) : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Action(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR Action(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrAction
@@ -7642,7 +7626,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -7652,7 +7636,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -7662,30 +7646,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this Action is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this Action is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrAction manipulation
+  //! @{
+
+  //! Gets the raw XrAction type.
+  OPENXR_HPP_CONSTEXPR XrAction get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -7697,15 +7680,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -7735,118 +7712,160 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(Action) == sizeof(XrAction),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between Action.
+private:
+  XrAction val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(Action) == sizeof(XrAction),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrAction from Action.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Action::get()
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Action const &lhs,
-                                                      Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrAction get(Action const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrAction handle in a Action (by reference).
+//!
+//! e.g.
+//! ```
+//! Action yourHandle;
+//! auto result = d.xrCreateAction(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Action
+OPENXR_HPP_INLINE XrAction *put(Action &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrAction handle in a Action (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(Action* yourHandle) {
+//!     auto result = d.xrCreateAction(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Action
+OPENXR_HPP_INLINE XrAction *put(Action *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between Action and raw XrAction.
+//! @brief `>` comparison between Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Action const &lhs,
-                                                      XrAction rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrAction and Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrAction lhs,
-                                                      Action const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Action const &lhs,
-                                                      Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between Action and raw XrAction.
+//! @brief `<=` comparison between Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Action const &lhs,
-                                                      XrAction rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrAction and Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrAction lhs,
-                                                      Action const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Action const &lhs,
-                                                       Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between Action and raw XrAction.
+//! @brief `>=` comparison between Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Action const &lhs,
-                                                       XrAction rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrAction and Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrAction lhs,
-                                                       Action const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Action const &lhs,
-                                                       Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between Action and raw XrAction.
+//! @brief `==` comparison between Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Action const &lhs,
-                                                       XrAction rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrAction and Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrAction lhs,
-                                                       Action const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Action const &lhs,
-                                                       Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between Action and raw XrAction.
+//! @brief `!=` comparison between Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Action const &lhs,
-                                                       XrAction rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrAction and Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrAction lhs,
-                                                       Action const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Action.
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Action const &lhs,
-                                                       Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Action const &lhs, Action const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between Action and raw XrAction.
+//! @brief `<` comparison between Action and raw XrAction.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Action const &lhs,
+                                                      XrAction rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrAction and Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrAction lhs, Action const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Action and raw XrAction.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Action const &lhs,
+                                                      XrAction rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrAction and Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrAction lhs, Action const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Action and raw XrAction.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Action const &lhs,
+                                                       XrAction rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrAction and Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrAction lhs, Action const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Action and raw XrAction.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Action const &lhs,
+                                                       XrAction rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrAction and Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrAction lhs, Action const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Action and raw XrAction.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Action const &lhs,
+                                                       XrAction rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrAction and Action.
+//! @relates Action
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrAction lhs, Action const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Action and raw XrAction.
 //! @relates Action
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Action const &lhs,
-                                                       XrAction rhs) {
+                                                       XrAction rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrAction and Action.
+//! @brief `!=` comparison between raw XrAction and Action.
 //! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrAction lhs,
-                                                       Action const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrAction lhs, Action const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between Action and nullptr: true if the handle is
@@ -7877,43 +7896,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, Action const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrAction handle in a Action
-//! @relates Action
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrAction get(Action const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrAction handle in a Action (by reference).
-//!
-//! e.g.
-//! ```
-//! Action yourHandle;
-//! auto result = d.xrCreateAction(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Action
-OPENXR_HPP_INLINE XrAction *put(Action &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrAction handle in a Action (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(Action* yourHandle) {
-//!     auto result = d.xrCreateAction(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Action
-OPENXR_HPP_INLINE XrAction *put(Action *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for Action
 template <> struct cpp_type<ObjectType::Action> { using type = Action; };
@@ -7950,24 +7932,20 @@ class Swapchain {
 public:
   using Type = Swapchain;
   using RawHandleType = XrSwapchain;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR Swapchain() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR Swapchain(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR Swapchain() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSwapchain type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT Swapchain(RawHandleType handle)
-      : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT Swapchain(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR Swapchain(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrSwapchain
@@ -7978,7 +7956,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -7988,7 +7966,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -7998,30 +7976,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this Swapchain is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this Swapchain is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrSwapchain manipulation
+  //! @{
+
+  //! Gets the raw XrSwapchain type.
+  OPENXR_HPP_CONSTEXPR XrSwapchain get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -8033,15 +8010,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -8179,118 +8150,161 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(Swapchain) == sizeof(XrSwapchain),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between Swapchain.
+private:
+  XrSwapchain val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(Swapchain) == sizeof(XrSwapchain),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrSwapchain from Swapchain.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see Swapchain::get()
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Swapchain const &lhs,
-                                                      Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSwapchain
+get(Swapchain const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSwapchain handle in a Swapchain (by reference).
+//!
+//! e.g.
+//! ```
+//! Swapchain yourHandle;
+//! auto result = d.xrCreateSwapchain(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Swapchain
+OPENXR_HPP_INLINE XrSwapchain *put(Swapchain &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSwapchain handle in a Swapchain (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(Swapchain* yourHandle) {
+//!     auto result = d.xrCreateSwapchain(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates Swapchain
+OPENXR_HPP_INLINE XrSwapchain *put(Swapchain *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between Swapchain and raw XrSwapchain.
+//! @brief `>` comparison between Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(Swapchain const &lhs,
-                                                      XrSwapchain rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrSwapchain and Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrSwapchain lhs,
-                                                      Swapchain const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Swapchain const &lhs,
-                                                      Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between Swapchain and raw XrSwapchain.
+//! @brief `<=` comparison between Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(Swapchain const &lhs,
-                                                      XrSwapchain rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrSwapchain and Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrSwapchain lhs,
-                                                      Swapchain const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Swapchain const &lhs,
-                                                       Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between Swapchain and raw XrSwapchain.
+//! @brief `>=` comparison between Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(Swapchain const &lhs,
-                                                       XrSwapchain rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrSwapchain and Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrSwapchain lhs,
-                                                       Swapchain const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Swapchain const &lhs,
-                                                       Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between Swapchain and raw XrSwapchain.
+//! @brief `==` comparison between Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(Swapchain const &lhs,
-                                                       XrSwapchain rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrSwapchain and Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrSwapchain lhs,
-                                                       Swapchain const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Swapchain const &lhs,
-                                                       Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between Swapchain and raw XrSwapchain.
+//! @brief `!=` comparison between Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(Swapchain const &lhs,
-                                                       XrSwapchain rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrSwapchain and Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrSwapchain lhs,
-                                                       Swapchain const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between Swapchain.
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Swapchain const &lhs,
-                                                       Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Swapchain const &lhs, Swapchain const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between Swapchain and raw XrSwapchain.
+//! @brief `<` comparison between Swapchain and raw XrSwapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(Swapchain const &lhs,
-                                                       XrSwapchain rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(Swapchain const &lhs, XrSwapchain rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrSwapchain and Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrSwapchain lhs, Swapchain const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between Swapchain and raw XrSwapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(Swapchain const &lhs, XrSwapchain rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrSwapchain and Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrSwapchain lhs, Swapchain const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between Swapchain and raw XrSwapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(Swapchain const &lhs, XrSwapchain rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrSwapchain and Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrSwapchain lhs, Swapchain const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between Swapchain and raw XrSwapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(Swapchain const &lhs, XrSwapchain rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrSwapchain and Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrSwapchain lhs, Swapchain const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between Swapchain and raw XrSwapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(Swapchain const &lhs, XrSwapchain rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrSwapchain and Swapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrSwapchain lhs, Swapchain const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between Swapchain and raw XrSwapchain.
+//! @relates Swapchain
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(Swapchain const &lhs, XrSwapchain rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrSwapchain and Swapchain.
+//! @brief `!=` comparison between raw XrSwapchain and Swapchain.
 //! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrSwapchain lhs,
-                                                       Swapchain const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrSwapchain lhs, Swapchain const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between Swapchain and nullptr: true if the handle
@@ -8321,43 +8335,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, Swapchain const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrSwapchain handle in a Swapchain
-//! @relates Swapchain
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSwapchain get(Swapchain const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSwapchain handle in a Swapchain (by reference).
-//!
-//! e.g.
-//! ```
-//! Swapchain yourHandle;
-//! auto result = d.xrCreateSwapchain(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Swapchain
-OPENXR_HPP_INLINE XrSwapchain *put(Swapchain &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSwapchain handle in a Swapchain (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(Swapchain* yourHandle) {
-//!     auto result = d.xrCreateSwapchain(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates Swapchain
-OPENXR_HPP_INLINE XrSwapchain *put(Swapchain *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for Swapchain
 template <> struct cpp_type<ObjectType::Swapchain> { using type = Swapchain; };
@@ -8394,24 +8371,20 @@ class ActionSet {
 public:
   using Type = ActionSet;
   using RawHandleType = XrActionSet;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR ActionSet() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR ActionSet(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR ActionSet() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrActionSet type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
-  OPENXR_HPP_TYPESAFE_EXPLICIT ActionSet(RawHandleType handle)
-      : m_raw(handle) {}
+  OPENXR_HPP_TYPESAFE_EXPLICIT ActionSet(RawHandleType handle) : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR ActionSet(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrActionSet
@@ -8422,7 +8395,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -8432,7 +8405,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -8442,30 +8415,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this ActionSet is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this ActionSet is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrActionSet manipulation
+  //! @{
+
+  //! Gets the raw XrActionSet type.
+  OPENXR_HPP_CONSTEXPR XrActionSet get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -8477,15 +8449,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -8550,118 +8516,161 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(ActionSet) == sizeof(XrActionSet),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between ActionSet.
+private:
+  XrActionSet val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(ActionSet) == sizeof(XrActionSet),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrActionSet from ActionSet.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see ActionSet::get()
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(ActionSet const &lhs,
-                                                      ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrActionSet
+get(ActionSet const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrActionSet handle in a ActionSet (by reference).
+//!
+//! e.g.
+//! ```
+//! ActionSet yourHandle;
+//! auto result = d.xrCreateActionSet(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates ActionSet
+OPENXR_HPP_INLINE XrActionSet *put(ActionSet &v) noexcept { return v.put(); }
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrActionSet handle in a ActionSet (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(ActionSet* yourHandle) {
+//!     auto result = d.xrCreateActionSet(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates ActionSet
+OPENXR_HPP_INLINE XrActionSet *put(ActionSet *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between ActionSet and raw XrActionSet.
+//! @brief `>` comparison between ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(ActionSet const &lhs,
-                                                      XrActionSet rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrActionSet and ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<(XrActionSet lhs,
-                                                      ActionSet const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(ActionSet const &lhs,
-                                                      ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between ActionSet and raw XrActionSet.
+//! @brief `<=` comparison between ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(ActionSet const &lhs,
-                                                      XrActionSet rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrActionSet and ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>(XrActionSet lhs,
-                                                      ActionSet const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(ActionSet const &lhs,
-                                                       ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between ActionSet and raw XrActionSet.
+//! @brief `>=` comparison between ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(ActionSet const &lhs,
-                                                       XrActionSet rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrActionSet and ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator<=(XrActionSet lhs,
-                                                       ActionSet const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(ActionSet const &lhs,
-                                                       ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between ActionSet and raw XrActionSet.
+//! @brief `==` comparison between ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(ActionSet const &lhs,
-                                                       XrActionSet rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrActionSet and ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator>=(XrActionSet lhs,
-                                                       ActionSet const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(ActionSet const &lhs,
-                                                       ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between ActionSet and raw XrActionSet.
+//! @brief `!=` comparison between ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(ActionSet const &lhs,
-                                                       XrActionSet rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrActionSet and ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator==(XrActionSet lhs,
-                                                       ActionSet const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between ActionSet.
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(ActionSet const &lhs,
-                                                       ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(ActionSet const &lhs, ActionSet const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between ActionSet and raw XrActionSet.
+//! @brief `<` comparison between ActionSet and raw XrActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(ActionSet const &lhs,
-                                                       XrActionSet rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(ActionSet const &lhs, XrActionSet rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrActionSet and ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrActionSet lhs, ActionSet const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between ActionSet and raw XrActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(ActionSet const &lhs, XrActionSet rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrActionSet and ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrActionSet lhs, ActionSet const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between ActionSet and raw XrActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(ActionSet const &lhs, XrActionSet rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrActionSet and ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrActionSet lhs, ActionSet const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between ActionSet and raw XrActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(ActionSet const &lhs, XrActionSet rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrActionSet and ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrActionSet lhs, ActionSet const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between ActionSet and raw XrActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(ActionSet const &lhs, XrActionSet rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrActionSet and ActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrActionSet lhs, ActionSet const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between ActionSet and raw XrActionSet.
+//! @relates ActionSet
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(ActionSet const &lhs, XrActionSet rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrActionSet and ActionSet.
+//! @brief `!=` comparison between raw XrActionSet and ActionSet.
 //! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool operator!=(XrActionSet lhs,
-                                                       ActionSet const &rhs) {
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrActionSet lhs, ActionSet const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between ActionSet and nullptr: true if the handle
@@ -8692,43 +8701,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, ActionSet const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrActionSet handle in a ActionSet
-//! @relates ActionSet
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrActionSet get(ActionSet const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrActionSet handle in a ActionSet (by reference).
-//!
-//! e.g.
-//! ```
-//! ActionSet yourHandle;
-//! auto result = d.xrCreateActionSet(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates ActionSet
-OPENXR_HPP_INLINE XrActionSet *put(ActionSet &h) { return h.put(); }
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrActionSet handle in a ActionSet (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(ActionSet* yourHandle) {
-//!     auto result = d.xrCreateActionSet(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates ActionSet
-OPENXR_HPP_INLINE XrActionSet *put(ActionSet *h) { return h->put(); }
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for ActionSet
 template <> struct cpp_type<ObjectType::ActionSet> { using type = ActionSet; };
@@ -8769,24 +8741,21 @@ class DebugUtilsMessengerEXT {
 public:
   using Type = DebugUtilsMessengerEXT;
   using RawHandleType = XrDebugUtilsMessengerEXT;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrDebugUtilsMessengerEXT type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_TYPESAFE_EXPLICIT DebugUtilsMessengerEXT(RawHandleType handle)
-      : m_raw(handle) {}
+      : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR DebugUtilsMessengerEXT(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrDebugUtilsMessengerEXT
@@ -8797,7 +8766,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -8807,7 +8776,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -8817,30 +8786,31 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this DebugUtilsMessengerEXT is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this DebugUtilsMessengerEXT is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrDebugUtilsMessengerEXT manipulation
+  //! @{
+
+  //! Gets the raw XrDebugUtilsMessengerEXT type.
+  OPENXR_HPP_CONSTEXPR XrDebugUtilsMessengerEXT get() const noexcept {
+    return val_;
+  }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -8852,15 +8822,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -8893,137 +8857,197 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
+
 private:
-  RawHandleType m_raw;
+  XrDebugUtilsMessengerEXT val_{XR_NULL_HANDLE};
 };
+
 static_assert(sizeof(DebugUtilsMessengerEXT) ==
                   sizeof(XrDebugUtilsMessengerEXT),
-              "handle and wrapper have different size!");
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrDebugUtilsMessengerEXT from
+//! DebugUtilsMessengerEXT.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see DebugUtilsMessengerEXT::get()
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT
+get(DebugUtilsMessengerEXT const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrDebugUtilsMessengerEXT handle in a DebugUtilsMessengerEXT (by reference).
+//!
+//! e.g.
+//! ```
+//! DebugUtilsMessengerEXT yourHandle;
+//! auto result = d.xrCreateDebugUtilsMessengerEXT(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT *
+put(DebugUtilsMessengerEXT &v) noexcept {
+  return v.put();
+}
 
-//! @brief < comparison between DebugUtilsMessengerEXT.
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrDebugUtilsMessengerEXT handle in a DebugUtilsMessengerEXT (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(DebugUtilsMessengerEXT* yourHandle) {
+//!     auto result = d.xrCreateDebugUtilsMessengerEXT(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT *
+put(DebugUtilsMessengerEXT *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator<(DebugUtilsMessengerEXT const &lhs,
-          DebugUtilsMessengerEXT const &rhs) {
+          DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between DebugUtilsMessengerEXT and raw
-//! XrDebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrDebugUtilsMessengerEXT and
-//! DebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between DebugUtilsMessengerEXT.
+//! @brief `>` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator>(DebugUtilsMessengerEXT const &lhs,
-          DebugUtilsMessengerEXT const &rhs) {
+          DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between DebugUtilsMessengerEXT and raw
-//! XrDebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrDebugUtilsMessengerEXT and
-//! DebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between DebugUtilsMessengerEXT.
+//! @brief `<=` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator<=(DebugUtilsMessengerEXT const &lhs,
-           DebugUtilsMessengerEXT const &rhs) {
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between DebugUtilsMessengerEXT and raw
-//! XrDebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<=(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrDebugUtilsMessengerEXT and
-//! DebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<=(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between DebugUtilsMessengerEXT.
+//! @brief `>=` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator>=(DebugUtilsMessengerEXT const &lhs,
-           DebugUtilsMessengerEXT const &rhs) {
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between DebugUtilsMessengerEXT and raw
-//! XrDebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>=(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrDebugUtilsMessengerEXT and
-//! DebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>=(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between DebugUtilsMessengerEXT.
+//! @brief `==` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator==(DebugUtilsMessengerEXT const &lhs,
-           DebugUtilsMessengerEXT const &rhs) {
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between DebugUtilsMessengerEXT and raw
-//! XrDebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrDebugUtilsMessengerEXT and
-//! DebugUtilsMessengerEXT.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between DebugUtilsMessengerEXT.
+//! @brief `!=` comparison between DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(DebugUtilsMessengerEXT const &lhs,
-           DebugUtilsMessengerEXT const &rhs) {
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between DebugUtilsMessengerEXT and raw
+//! @brief `<` comparison between DebugUtilsMessengerEXT and raw
 //! XrDebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(DebugUtilsMessengerEXT const &lhs, XrDebugUtilsMessengerEXT rhs) {
-  return lhs.get() != rhs;
+operator<(DebugUtilsMessengerEXT const &lhs,
+          XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() < rhs;
 }
-//! @brief != comparison between raw XrDebugUtilsMessengerEXT and
+//! @brief `<` comparison between raw XrDebugUtilsMessengerEXT and
 //! DebugUtilsMessengerEXT.
 //! @relates DebugUtilsMessengerEXT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(XrDebugUtilsMessengerEXT lhs, DebugUtilsMessengerEXT const &rhs) {
+operator<(XrDebugUtilsMessengerEXT lhs,
+          DebugUtilsMessengerEXT const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between DebugUtilsMessengerEXT and raw
+//! XrDebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(DebugUtilsMessengerEXT const &lhs,
+          XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrDebugUtilsMessengerEXT and
+//! DebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrDebugUtilsMessengerEXT lhs,
+          DebugUtilsMessengerEXT const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between DebugUtilsMessengerEXT and raw
+//! XrDebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(DebugUtilsMessengerEXT const &lhs,
+           XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrDebugUtilsMessengerEXT and
+//! DebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrDebugUtilsMessengerEXT lhs,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between DebugUtilsMessengerEXT and raw
+//! XrDebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(DebugUtilsMessengerEXT const &lhs,
+           XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrDebugUtilsMessengerEXT and
+//! DebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrDebugUtilsMessengerEXT lhs,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between DebugUtilsMessengerEXT and raw
+//! XrDebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(DebugUtilsMessengerEXT const &lhs,
+           XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrDebugUtilsMessengerEXT and
+//! DebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrDebugUtilsMessengerEXT lhs,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between DebugUtilsMessengerEXT and raw
+//! XrDebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(DebugUtilsMessengerEXT const &lhs,
+           XrDebugUtilsMessengerEXT rhs) noexcept {
+  return lhs.get() != rhs;
+}
+//! @brief `!=` comparison between raw XrDebugUtilsMessengerEXT and
+//! DebugUtilsMessengerEXT.
+//! @relates DebugUtilsMessengerEXT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(XrDebugUtilsMessengerEXT lhs,
+           DebugUtilsMessengerEXT const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between DebugUtilsMessengerEXT and nullptr: true
@@ -9054,49 +9078,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, DebugUtilsMessengerEXT const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrDebugUtilsMessengerEXT handle in
-//! a DebugUtilsMessengerEXT
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT
-get(DebugUtilsMessengerEXT const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrDebugUtilsMessengerEXT handle in a DebugUtilsMessengerEXT (by reference).
-//!
-//! e.g.
-//! ```
-//! DebugUtilsMessengerEXT yourHandle;
-//! auto result = d.xrCreateDebugUtilsMessengerEXT(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT *put(DebugUtilsMessengerEXT &h) {
-  return h.put();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrDebugUtilsMessengerEXT handle in a DebugUtilsMessengerEXT (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(DebugUtilsMessengerEXT* yourHandle) {
-//!     auto result = d.xrCreateDebugUtilsMessengerEXT(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates DebugUtilsMessengerEXT
-OPENXR_HPP_INLINE XrDebugUtilsMessengerEXT *put(DebugUtilsMessengerEXT *h) {
-  return h->put();
-}
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for DebugUtilsMessengerEXT
 template <> struct cpp_type<ObjectType::DebugUtilsMessengerEXT> {
@@ -9138,24 +9119,21 @@ class SpatialAnchorMSFT {
 public:
   using Type = SpatialAnchorMSFT;
   using RawHandleType = XrSpatialAnchorMSFT;
-
   /*!
    * @name Constructors, assignment, and conversions
    * @{
    */
   //! Default (empty/null) constructor
-  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT() : m_raw(XR_NULL_HANDLE) {}
-
-  //! Constructor from nullptr - creates empty/null handle.
-  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT(std::nullptr_t /* unused */)
-      : m_raw(XR_NULL_HANDLE) {}
-
+  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT() : val_(XR_NULL_HANDLE) {}
   //! @brief Conversion constructor from the raw XrSpatialAnchorMSFT type
   //!
   //! Explicit on 32-bit platforms by default unless
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_TYPESAFE_EXPLICIT SpatialAnchorMSFT(RawHandleType handle)
-      : m_raw(handle) {}
+      : val_(handle) {}
+  //! Constructor from nullptr - creates empty/null handle.
+  OPENXR_HPP_CONSTEXPR SpatialAnchorMSFT(std::nullptr_t /* unused */)
+      : val_(XR_NULL_HANDLE) {}
 
 #if defined(OPENXR_HPP_TYPESAFE_CONVERSION)
   //! @brief Assignment operator from the raw XrSpatialAnchorMSFT
@@ -9166,7 +9144,7 @@ public:
   //! Only provided if OPENXR_HPP_TYPESAFE_CONVERSION is defined (defaults to
   //! only on 64-bit).
   Type &operator=(RawHandleType handle) {
-    m_raw = handle;
+    val_ = handle;
     return *this;
   }
 #endif
@@ -9176,7 +9154,7 @@ public:
   //! Does *not* destroy any contained non-null handle first! For that, see
   //! UniqueHandle<>.
   Type &operator=(std::nullptr_t /* unused */) {
-    m_raw = XR_NULL_HANDLE;
+    val_ = XR_NULL_HANDLE;
     return *this;
   }
 
@@ -9186,30 +9164,29 @@ public:
   //! OPENXR_HPP_TYPESAFE_CONVERSION is defined.
   OPENXR_HPP_CONSTEXPR OPENXR_HPP_TYPESAFE_EXPLICIT
   operator RawHandleType() const {
-    return m_raw;
+    return val_;
   }
-
   //! @}
 
   /*!
    * @name Validity checking
    * @{
    */
-  //! Returns true in conditionals if this handle is non-null
-  OPENXR_HPP_CONSTEXPR explicit operator bool() const {
-    return m_raw != XR_NULL_HANDLE;
+  //! Returns true in conditionals if this SpatialAnchorMSFT is valid
+  OPENXR_HPP_CONSTEXPR explicit operator bool() const noexcept {
+    return val_ != XR_NULL_HANDLE;
   }
-
-  //! Negation operator: true if this handle is null
-  OPENXR_HPP_CONSTEXPR bool operator!() const {
-    return m_raw == XR_NULL_HANDLE;
+  //! Unary negation: True if this SpatialAnchorMSFT is invalid
+  OPENXR_HPP_CONSTEXPR bool operator!() const noexcept {
+    return val_ == XR_NULL_HANDLE;
   }
   //! @}
 
-  /*!
-   * @name Raw handle manipulation
-   * @{
-   */
+  //! @name Raw XrSpatialAnchorMSFT manipulation
+  //! @{
+
+  //! Gets the raw XrSpatialAnchorMSFT type.
+  OPENXR_HPP_CONSTEXPR XrSpatialAnchorMSFT get() const noexcept { return val_; }
   //! @brief "Put" function for assigning as null then getting the address of
   //! the raw pointer to pass to creation functions.
   //!
@@ -9221,15 +9198,9 @@ public:
   //!
   //! See also OPENXR_HPP_NAMESPACE::put()
   RawHandleType *put() {
-    m_raw = XR_NULL_HANDLE;
-    return &m_raw;
+    val_ = XR_NULL_HANDLE;
+    return &val_;
   }
-
-  //! @brief Gets the raw handle type.
-  //!
-  //! See also OPENXR_HPP_NAMESPACE::get()
-  OPENXR_HPP_CONSTEXPR RawHandleType get() const { return m_raw; }
-
   //! @}
 
   /*!
@@ -9262,118 +9233,176 @@ public:
 #endif /*OPENXR_HPP_DISABLE_ENHANCED_MODE*/
 
   //! @}
-private:
-  RawHandleType m_raw;
-};
-static_assert(sizeof(SpatialAnchorMSFT) == sizeof(XrSpatialAnchorMSFT),
-              "handle and wrapper have different size!");
 
-//! @brief < comparison between SpatialAnchorMSFT.
+private:
+  XrSpatialAnchorMSFT val_{XR_NULL_HANDLE};
+};
+
+static_assert(sizeof(SpatialAnchorMSFT) == sizeof(XrSpatialAnchorMSFT),
+              "raw type and wrapper have different size!");
+//! @brief Free function for getting the raw XrSpatialAnchorMSFT from
+//! SpatialAnchorMSFT.
+//!
+//! Should be found via argument-dependent lookup and thus not need explicit
+//! namespace qualification.
+//! @see SpatialAnchorMSFT::get()
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSpatialAnchorMSFT
+get(SpatialAnchorMSFT const &v) noexcept {
+  return v.get();
+}
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSpatialAnchorMSFT handle in a SpatialAnchorMSFT (by reference).
+//!
+//! e.g.
+//! ```
+//! SpatialAnchorMSFT yourHandle;
+//! auto result = d.xrCreateSpatialAnchorMSFT(..., put(yourHandle));
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorMSFT *put(SpatialAnchorMSFT &v) noexcept {
+  return v.put();
+}
+
+//! @brief Free "put" function for clearing and getting the address of the raw
+//! XrSpatialAnchorMSFT handle in a SpatialAnchorMSFT (by pointer).
+//!
+//! e.g.
+//! ```
+//! void yourFunction(SpatialAnchorMSFT* yourHandle) {
+//!     auto result = d.xrCreateSpatialAnchorMSFT(..., put(yourHandle));
+//!     ....
+//! }
+//! ```
+//!
+//! Should be found by argument-dependent lookup and thus not need to have the
+//! namespace specified.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_INLINE XrSpatialAnchorMSFT *put(SpatialAnchorMSFT *h) noexcept {
+  OPENXR_HPP_ASSERT(h != nullptr);
+  return h->put();
+}
+//! @brief `<` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator<(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() < rhs.get();
 }
-//! @brief < comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `>` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
-  return lhs.get() < rhs;
-}
-//! @brief < comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
-  return lhs < rhs.get();
-}
-//! @brief > comparison between SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator>(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() > rhs.get();
 }
-//! @brief > comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `<=` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
-  return lhs.get() > rhs;
-}
-//! @brief > comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
-  return lhs > rhs.get();
-}
-//! @brief <= comparison between SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<=(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator<=(SpatialAnchorMSFT const &lhs,
+           SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() <= rhs.get();
 }
-//! @brief <= comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `>=` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
-  return lhs.get() <= rhs;
-}
-//! @brief <= comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator<=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
-  return lhs <= rhs.get();
-}
-//! @brief >= comparison between SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>=(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator>=(SpatialAnchorMSFT const &lhs,
+           SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() >= rhs.get();
 }
-//! @brief >= comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `==` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
-  return lhs.get() >= rhs;
-}
-//! @brief >= comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator>=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
-  return lhs >= rhs.get();
-}
-//! @brief == comparison between SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator==(SpatialAnchorMSFT const &lhs,
+           SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() == rhs.get();
 }
-//! @brief == comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `!=` comparison between SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
-  return lhs.get() == rhs;
-}
-//! @brief == comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator==(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
-  return lhs == rhs.get();
-}
-//! @brief != comparison between SpatialAnchorMSFT.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(SpatialAnchorMSFT const &lhs, SpatialAnchorMSFT const &rhs) {
+operator!=(SpatialAnchorMSFT const &lhs,
+           SpatialAnchorMSFT const &rhs) noexcept {
   return lhs.get() != rhs.get();
 }
-//! @brief != comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @brief `<` comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) {
+operator<(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
+  return lhs.get() < rhs;
+}
+//! @brief `<` comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
+  return lhs < rhs.get();
+}
+//! @brief `>` comparison between SpatialAnchorMSFT and raw XrSpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
+  return lhs.get() > rhs;
+}
+//! @brief `>` comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
+  return lhs > rhs.get();
+}
+//! @brief `<=` comparison between SpatialAnchorMSFT and raw
+//! XrSpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
+  return lhs.get() <= rhs;
+}
+//! @brief `<=` comparison between raw XrSpatialAnchorMSFT and
+//! SpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator<=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
+  return lhs <= rhs.get();
+}
+//! @brief `>=` comparison between SpatialAnchorMSFT and raw
+//! XrSpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
+  return lhs.get() >= rhs;
+}
+//! @brief `>=` comparison between raw XrSpatialAnchorMSFT and
+//! SpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator>=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
+  return lhs >= rhs.get();
+}
+//! @brief `==` comparison between SpatialAnchorMSFT and raw
+//! XrSpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
+  return lhs.get() == rhs;
+}
+//! @brief `==` comparison between raw XrSpatialAnchorMSFT and
+//! SpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator==(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
+  return lhs == rhs.get();
+}
+//! @brief `!=` comparison between SpatialAnchorMSFT and raw
+//! XrSpatialAnchorMSFT.
+//! @relates SpatialAnchorMSFT
+OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
+operator!=(SpatialAnchorMSFT const &lhs, XrSpatialAnchorMSFT rhs) noexcept {
   return lhs.get() != rhs;
 }
-//! @brief != comparison between raw XrSpatialAnchorMSFT and SpatialAnchorMSFT.
+//! @brief `!=` comparison between raw XrSpatialAnchorMSFT and
+//! SpatialAnchorMSFT.
 //! @relates SpatialAnchorMSFT
 OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
-operator!=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) {
+operator!=(XrSpatialAnchorMSFT lhs, SpatialAnchorMSFT const &rhs) noexcept {
   return lhs != rhs.get();
 }
 //! @brief Equality comparison between SpatialAnchorMSFT and nullptr: true if
@@ -9404,49 +9433,6 @@ OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE bool
 operator!=(std::nullptr_t /* unused */, SpatialAnchorMSFT const &rhs) {
   return rhs.get() != XR_NULL_HANDLE;
 }
-
-//! @brief Free function accessor for the raw XrSpatialAnchorMSFT handle in a
-//! SpatialAnchorMSFT
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_CONSTEXPR OPENXR_HPP_INLINE XrSpatialAnchorMSFT
-get(SpatialAnchorMSFT const &h) {
-  return h.get();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSpatialAnchorMSFT handle in a SpatialAnchorMSFT (by reference).
-//!
-//! e.g.
-//! ```
-//! SpatialAnchorMSFT yourHandle;
-//! auto result = d.xrCreateSpatialAnchorMSFT(..., put(yourHandle));
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorMSFT *put(SpatialAnchorMSFT &h) {
-  return h.put();
-}
-
-//! @brief Free "put" function for clearing and getting the address of the raw
-//! XrSpatialAnchorMSFT handle in a SpatialAnchorMSFT (by pointer).
-//!
-//! e.g.
-//! ```
-//! void yourFunction(SpatialAnchorMSFT* yourHandle) {
-//!     auto result = d.xrCreateSpatialAnchorMSFT(..., put(yourHandle));
-//!     ....
-//! }
-//! ```
-//!
-//! Should be found by argument-dependent lookup and thus not need to have the
-//! namespace specified.
-//! @relates SpatialAnchorMSFT
-OPENXR_HPP_INLINE XrSpatialAnchorMSFT *put(SpatialAnchorMSFT *h) {
-  return h->put();
-}
-
 namespace traits {
 //! @brief Explicit specialization of cpp_type for SpatialAnchorMSFT
 template <> struct cpp_type<ObjectType::SpatialAnchorMSFT> {

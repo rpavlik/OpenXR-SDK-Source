@@ -72,19 +72,19 @@ jobs:
         artifact: $(artifactName)
 
 # Build the loader, API layers, and samples on Windows with MinGW
-# - job: mingw_build
-#   displayName: 'Windows MinGW'
-#   variables:
-#     VULKAN_SDK: "$(System.DefaultWorkingDirectory)\\vulkan_sdk\\$(VULKAN_SDK_VERSION)"
-#   pool:
-#     vmImage: 'windows-latest'
-#   steps:
-#     - template: build_mingw.yml
-#       parameters:
-#         sourceDir: ${{parameters.sourceDir}}
-#         buildType: RelWithDebInfo
-#         cmakeArgs: -DBUILD_ALL_EXTENSIONS=ON
-#         useVulkan: 'true'
+- job: mingw_build
+  displayName: 'Windows MinGW'
+  variables:
+    VULKAN_SDK: "$(System.DefaultWorkingDirectory)\\vulkan_sdk\\$(VULKAN_SDK_VERSION)"
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+    - template: build_mingw.yml
+      parameters:
+        sourceDir: ${{parameters.sourceDir}}
+        buildType: RelWithDebInfo
+        cmakeArgs: -DBUILD_ALL_EXTENSIONS=ON
+        useVulkan: 'true'
 
 - job: combine_artifacts
   dependsOn: windows_build

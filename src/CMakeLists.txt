@@ -112,6 +112,10 @@ if(OPENGL_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/common/gfxwrapper_opengl
     else()
         target_link_libraries(openxr-gfxwrapper PUBLIC ${OPENGL_LIBRARIES})
     endif()
+    if(WIN32)
+        target_link_libraries(openxr-gfxwrapper PUBLIC gdi32)
+    endif()
+
     message(STATUS "Enabling OpenGL support in hello_xr, loader_test, and conformance, if configured")
 endif()
 

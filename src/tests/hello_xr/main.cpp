@@ -99,7 +99,48 @@ bool UpdateOptionsFromCommandLine(Options& options, int argc, char* argv[]) {
 struct AndroidAppState {
     ANativeWindow* NativeWindow = nullptr;
     bool Resumed = false;
+    std::shared_ptr<IOpenXrProgram> program = nullptr;
 };
+
+void init_app(struct android_app* app) {
+    AndroidAppState* appState = (AndroidAppState*)app->userData;
+
+    std::shared_ptr<Options> options = std::make_shared<Options>();
+    if (!UpdateOptionsFromSystemProperties(*options)) {
+        return;
+    }
+
+    std::shared_ptr<PlatformData> data = std::make_shared<PlatformData>();
+    data->applicationVM = app->activity->vm;
+    data->applicationActivity = app->activity->clazz;
+
+    // Create platform-specific implementation.
+    std::shared_ptr<IPlatformPlugin> platformPlugin = CreatePlatformPlugin(options, data);
+    // Create graphics API implementation.
+    std::shared_ptr<IGraphicsPlugin> graphicsPlugin = CreateGraphicsPlugin(options, platformPlugin);
+
+    // Initialize the OpenXR program.
+    appState->program = CreateOpenXrProgram(options, platformPlugin, graphicsPlugin);
+
+    // Initialize the loader for this platform
+    PFN_xrInitializeLoaderKHR initializeLoader = nullptr;
+    if (XR_SUCCEEDED(xrGetInstanceProcAddr(XR_NULL_HANDLE, "xrInitializeLoaderKHR", (PFN_xrVoidFunction*)(&initializeLoader)))) {
+        XrLoaderInitInfoAndroidKHR loaderInitInfoAndroid;
+        memset(&loaderInitInfoAndroid, 0, sizeof(loaderInitInfoAndroid));
+        loaderInitInfoAndroid.type = XR_TYPE_LOADER_INIT_INFO_ANDROID_KHR;
+        loaderInitInfoAndroid.next = NULL;
+        loaderInitInfoAndroid.applicationVM = app->activity->vm;
+        loaderInitInfoAndroid.applicationContext = app->activity->clazz;
+        initializeLoader((const XrLoaderInitInfoBaseHeaderKHR*)&loaderInitInfoAndroid);
+    }
+
+    appState->program->CreateInstance();
+    appState->program->InitializeSystem();
+    appState->program->InitializeSession();
+    appState->program->CreateSwapchains();
+
+    Log::Write(Log::Level::Info, "OpenXR app initialized successfully.");
+}
 
 /**
  * Process the next main command.
@@ -143,6 +184,7 @@ static void app_handle_cmd(struct android_app* app, int32_t cmd) {
             Log::Write(Log::Level::Info, "surfaceCreated()");
             Log::Write(Log::Level::Info, "    APP_CMD_INIT_WINDOW");
             appState->NativeWindow = app->window;
+            init_app(app);
             break;
         }
         case APP_CMD_TERM_WINDOW: {
@@ -169,72 +211,42 @@ void android_main(struct android_app* app) {
         app->userData = &appState;
         app->onAppCmd = app_handle_cmd;
 
-        std::shared_ptr<Options> options = std::make_shared<Options>();
-        if (!UpdateOptionsFromSystemProperties(*options)) {
-            return;
-        }
-
-        std::shared_ptr<PlatformData> data = std::make_shared<PlatformData>();
-        data->applicationVM = app->activity->vm;
-        data->applicationActivity = app->activity->clazz;
-
         bool requestRestart = false;
         bool exitRenderLoop = false;
-
-        // Create platform-specific implementation.
-        std::shared_ptr<IPlatformPlugin> platformPlugin = CreatePlatformPlugin(options, data);
-        // Create graphics API implementation.
-        std::shared_ptr<IGraphicsPlugin> graphicsPlugin = CreateGraphicsPlugin(options, platformPlugin);
-
-        // Initialize the OpenXR program.
-        std::shared_ptr<IOpenXrProgram> program = CreateOpenXrProgram(options, platformPlugin, graphicsPlugin);
-
-        // Initialize the loader for this platform
-        PFN_xrInitializeLoaderKHR initializeLoader = nullptr;
-        if (XR_SUCCEEDED(
-                xrGetInstanceProcAddr(XR_NULL_HANDLE, "xrInitializeLoaderKHR", (PFN_xrVoidFunction*)(&initializeLoader)))) {
-            XrLoaderInitInfoAndroidKHR loaderInitInfoAndroid;
-            memset(&loaderInitInfoAndroid, 0, sizeof(loaderInitInfoAndroid));
-            loaderInitInfoAndroid.type = XR_TYPE_LOADER_INIT_INFO_ANDROID_KHR;
-            loaderInitInfoAndroid.next = NULL;
-            loaderInitInfoAndroid.applicationVM = app->activity->vm;
-            loaderInitInfoAndroid.applicationContext = app->activity->clazz;
-            initializeLoader((const XrLoaderInitInfoBaseHeaderKHR*)&loaderInitInfoAndroid);
-        }
-
-        program->CreateInstance();
-        program->InitializeSystem();
-        program->InitializeSession();
-        program->CreateSwapchains();
 
         while (app->destroyRequested == 0) {
             // Read all pending events.
             for (;;) {
                 int events;
                 struct android_poll_source* source;
+
                 // If the timeout is zero, returns immediately without blocking.
                 // If the timeout is negative, waits indefinitely until an event appears.
-                const int timeoutMilliseconds =
-                    (!appState.Resumed && !program->IsSessionRunning() && app->destroyRequested == 0) ? -1 : 0;
+                int timeoutMilliseconds = 0;
+                if (appState.program != nullptr) {
+                    timeoutMilliseconds =
+                        (!appState.Resumed && !appState.program->IsSessionRunning() && app->destroyRequested == 0) ? -1 : 0;
+                }
+
                 if (ALooper_pollAll(timeoutMilliseconds, nullptr, &events, (void**)&source) < 0) {
                     break;
                 }
-
                 // Process this event.
                 if (source != nullptr) {
                     source->process(app, source);
                 }
             }
+            if (appState.program != nullptr) {
+                appState.program->PollEvents(&exitRenderLoop, &requestRestart);
+                if (!appState.program->IsSessionRunning()) {
+                    // Throttle loop since xrWaitFrame won't be called.
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                    continue;
+                }
 
-            program->PollEvents(&exitRenderLoop, &requestRestart);
-            if (!program->IsSessionRunning()) {
-                // Throttle loop since xrWaitFrame won't be called.
-                std::this_thread::sleep_for(std::chrono::milliseconds(250));
-                continue;
+                appState.program->PollActions();
+                appState.program->RenderFrame();
             }
-
-            program->PollActions();
-            program->RenderFrame();
         }
 
         app->activity->vm->DetachCurrentThread();

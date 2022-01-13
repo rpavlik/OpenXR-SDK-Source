@@ -120,19 +120,20 @@ jobs:
         with:
           name: windows-binaries-uwp
 
+      # -aos causes the overwrite mode to be "skip" since some files will be in common
       - name: Extract
         run: |
           7za x windows-binaries-uwp.7z
-          7za x windows-binaries-non-uwp.7z
+          7za x -aos windows-binaries-non-uwp.7z
 
       - name: Display structure of downloaded files
         run: ls -R
 
       - name: Repack
-        run: 7z a -R OpenXR-Windows-Binaries.zip OpenXR-Windows-Binaries
+        run: 7z a -R OpenXR-Windows-Binaries.7z OpenXR-Windows-Binaries
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: OpenXR-Windows-Binaries
-          path: OpenXR-Windows-Binaries.zip
+          path: OpenXR-Windows-Binaries.7z

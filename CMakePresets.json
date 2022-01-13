@@ -7,8 +7,8 @@
     },
     "configurePresets": [
         {
-            "name": "msvc_base",
-            "displayName": "Base build using MSVC",
+            "name": "msvc_packaging_base",
+            "displayName": "Base build for release/packaging using MSVC",
             "generator": "Visual Studio 16 2019",
             "hidden": true,
             "condition": {
@@ -24,9 +24,9 @@
             "installDir": "install"
         },
         {
-            "name": "msvc_uwp_base",
-            "displayName": "Base build using MSVC for UWP",
-            "inherits": "msvc_base",
+            "name": "msvc_uwp_packaging_base",
+            "displayName": "Base build for release/packaging using MSVC for UWP",
+            "inherits": "msvc_packaging_base",
             "cacheVariables": {
                 "CMAKE_SYSTEM_NAME": "WindowsStore",
                 "CMAKE_SYSTEM_VERSION": "10.0"
@@ -34,48 +34,54 @@
             "hidden": true
         },
         {
-            "name": "Win32",
-            "inherits": "msvc_base",
+            "name": "Win32_packaging",
+            "displayName": "Win32 component of release packages",
+            "inherits": "msvc_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "Win32"
             }
         },
         {
-            "name": "Win32_uwp",
-            "inherits": "msvc_uwp_base",
+            "name": "Win32_uwp_packaging",
+            "displayName": "Win32 UWP component of release packages",
+            "inherits": "msvc_uwp_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "Win32"
             }
         },
         {
-            "name": "x64",
-            "inherits": "msvc_base",
+            "name": "x64_packaging",
+            "displayName": "Windows on x64 component of release packages",
+            "inherits": "msvc_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "x64"
             }
         },
         {
-            "name": "x64_uwp",
-            "inherits": "msvc_uwp_base",
+            "name": "x64_uwp_packaging",
+            "displayName": "Windows on x64 UWP component of release packages",
+            "inherits": "msvc_uwp_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "x64"
             }
         },
         {
-            "name": "ARM_uwp",
-            "inherits": "msvc_uwp_base",
+            "name": "ARM_uwp_packaging",
+            "displayName": "Windows on ARM UWP component of release packages",
+            "inherits": "msvc_uwp_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "ARM"
             }
         },
         {
-            "name": "ARM64_uwp",
-            "inherits": "msvc_uwp_base",
+            "name": "ARM64_uwp_packaging",
+            "displayName": "Windows on ARM64 UWP component of release packages",
+            "inherits": "msvc_uwp_packaging_base",
             "architecture": {
                 "strategy": "set",
                 "value": "ARM64"
@@ -93,7 +99,7 @@
     ],
     "buildPresets": [
         {
-            "name": "msvc_base_release",
+            "name": "msvc_base_packaging_release_build",
             "configuration": "RelWithDebInfo",
             "hidden": true,
             "targets": [
@@ -104,34 +110,40 @@
             "verbose": true
         },
         {
-            "name": "win32_release",
-            "configurePreset": "Win32",
-            "inherits": "msvc_base_release"
+            "name": "win32_packaging",
+            "configurePreset": "Win32_packaging",
+            "displayName": "Windows Win32 component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         },
         {
-            "name": "win32_uwp_release",
-            "configurePreset": "Win32_uwp",
-            "inherits": "msvc_base_release"
+            "name": "win32_uwp_packaging",
+            "configurePreset": "Win32_uwp_packaging",
+            "displayName": "Windows Win32 UWP component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         },
         {
-            "name": "x64_release",
-            "configurePreset": "x64",
-            "inherits": "msvc_base_release"
+            "name": "x64_packaging",
+            "configurePreset": "x64_packaging",
+            "displayName": "Windows x64 component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         },
         {
-            "name": "x64_uwp_release",
-            "configurePreset": "x64_uwp",
-            "inherits": "msvc_base_release"
+            "name": "x64_uwp_packaging",
+            "configurePreset": "x64_uwp_packaging",
+            "displayName": "Windows x64 UWP component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         },
         {
-            "name": "arm_uwp_release",
-            "configurePreset": "ARM_uwp",
-            "inherits": "msvc_base_release"
+            "name": "arm_uwp_packaging",
+            "configurePreset": "ARM_uwp_packaging",
+            "displayName": "Windows ARM UWP component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         },
         {
-            "name": "arm64_uwp_release",
-            "configurePreset": "ARM64_uwp",
-            "inherits": "msvc_base_release"
+            "name": "arm64_uwp_packaging",
+            "configurePreset": "ARM64_uwp_packaging",
+            "displayName": "Windows ARM64 UWP component of release packages",
+            "inherits": "msvc_base_packaging_release_build"
         }
     ]
 }

@@ -45,6 +45,9 @@ jobs:
           cmake --preset "x64_packaging"
           cmake --build --preset "x64_packaging" --parallel
 
+      - name: Describe
+        run: git describe > install/version.txt
+
       - name: Organize
         if: inputs.package
         run: Move-Item install/ OpenXR-Windows-Binaries/
@@ -86,6 +89,9 @@ jobs:
         run: |
           cmake --preset "ARM64_uwp_packaging"
           cmake --build --preset "arm64_uwp_packaging" --parallel
+
+      - name: Describe
+        run: git describe > install/version.txt
 
       - name: Organize
         if: inputs.package

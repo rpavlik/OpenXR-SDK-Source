@@ -25,6 +25,8 @@ if (-not (Test-Path "$env:VULKAN_SDK/Include/vulkan/vulkan.h")) {
 
     Write-Output "Extracting $FN in silent, blocking mode to $env:VULKAN_SDK"
     Start-Process "c:\Program Files\7-Zip\7z" -ArgumentList "x", $FN, "-o$parent" -Wait
+
+    echo "VULKAN_SDK=${env:VULKAN_SDK}" >> $env:GITHUB_ENV
 } else {
     Write-Output "$env:VULKAN_SDK found and contains header"
 }

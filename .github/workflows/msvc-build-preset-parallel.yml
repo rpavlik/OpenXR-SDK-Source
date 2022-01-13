@@ -25,22 +25,23 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+
       - run: ./.azure-pipelines/shared/install_vulkan.ps1
         name: Install Vulkan SDK
         if: inputs.useVulkan
         working-directory: ${{ github.workspace }}
 
-      - name: Set Vulkan SDK path
-        run: $env:VULKAN_SDK="${{ github.workspace }}/vulkan_sdk/$env:VULKAN_SDK_VERSION"
-        if: inputs.useVulkan
-
       - name: Build Win32
         if: inputs.complete
+        # env:
+        #   VULKAN_SDK: "${{ github.workspace }}/vulkan_sdk/${{env.VULKAN_SDK_VERSION}}"
         run: |
           cmake --preset "Win32_packaging"
           cmake --build --preset "win32_packaging" --parallel
 
       - name: Build x64
+        # env:
+        #   VULKAN_SDK: "${{ github.workspace }}/vulkan_sdk/${{env.VULKAN_SDK_VERSION}}"
         run: |
           cmake --preset "x64_packaging"
           cmake --build --preset "x64_packaging" --parallel
@@ -68,11 +69,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Build Win32_uwp
         if: inputs.complete
         run: |
           cmake --preset "Win32_uwp_packaging"
           cmake --build --preset "win32_uwp_packaging" --parallel
+
       - name: Build x64_uwp
         run: |
           cmake --preset "x64_uwp_packaging"

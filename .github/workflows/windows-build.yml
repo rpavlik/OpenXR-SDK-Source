@@ -6,7 +6,8 @@ on:
 
 jobs:
   windows:
-    uses: "rpavlik/OpenXR-SDK-Source/.github/workflows/msvc-build-preset.yml@actions"
+    uses: "rpavlik/OpenXR-SDK-Source/.github/workflows/msvc-build-preset-parallel.yml@actions"
     with:
       complete: false
       useVulkan: true
+      package: true

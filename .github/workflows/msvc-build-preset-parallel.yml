@@ -24,7 +24,10 @@ jobs:
     name: MSVC Builds
     runs-on: windows-latest
     steps:
+      # "true" gets coerced to 1 (shallow), false gets coerced to 0 (all history/branches/tags)
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: ${{ ! inputs.package }}
 
       - run: ./.azure-pipelines/shared/install_vulkan.ps1
         name: Install Vulkan SDK
@@ -47,7 +50,14 @@ jobs:
           cmake --build --preset "x64_packaging" --parallel
 
       - name: Describe
+        if: inputs.package
         run: git describe > install/version.txt
+
+      - name: Describe
+        if: "! inputs.package"
+        run: |
+          echo "${{ github/repository }} ${{ github/ref }}" > install.version
+          echo "${{ github.ref }}" >> install/version.txt
 
       - name: Organize
         if: inputs.package
@@ -68,7 +78,10 @@ jobs:
     name: MSVC Builds (UWP)
     runs-on: windows-latest
     steps:
+      # "true" gets coerced to 1 (shallow), false gets coerced to 0 (all history/branches/tags)
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: ${{ ! inputs.package }}
 
       - name: Build Win32_uwp
         if: inputs.complete
@@ -94,7 +107,14 @@ jobs:
           cmake --build --preset "arm64_uwp_packaging" --parallel
 
       - name: Describe
+        if: inputs.package
         run: git describe > install/version.txt
+
+      - name: Describe
+        if: "! inputs.package"
+        run: |
+          echo "${{ github/repository }} ${{ github/ref }}" > install.version
+          echo "${{ github.ref }}" >> install/version.txt
 
       - name: Organize
         if: inputs.package

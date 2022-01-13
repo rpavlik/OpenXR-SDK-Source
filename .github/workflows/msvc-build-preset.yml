@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2022, Collabora, Ltd.
+# SPDX-License-Identifier: CC0-1.0
+
+on:
+  workflow_call:
+    inputs:
+      complete:
+        type: boolean
+        required: true
+        default: false
+        description: "Whether we should be complete or fast"
+      useVulkan:
+        type: boolean
+        required: false
+        default: false
+      package:
+        type: boolean
+        required: false
+        default: false
+        description: "Should we archive the packaged/installed artifacts?"
+
+jobs:
+  msvc-build:
+    name: MSVC Builds
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./.azure-pipelines/shared/install_vulkan.ps1
+        name: Install Vulkan SDK
+        if: inputs.useVulkan
+        working-directory: ${{ github.workspace }}
+
+      - run: $env:VULKAN_SDK="${{ github.workspace }}/vulkan_sdk/$env:VULKAN_SDK_VERSION"
+        name: Set Vulkan SDK path
+
+      - name: Build Win32
+        run: |
+          cmake --preset "Win32_packaging"
+          cmake --build --preset "win32_packaging" --parallel
+
+      - name: Build Win32_uwp
+        if: inputs.complete
+        run: |
+          cmake --preset "Win32_uwp_packaging"
+          cmake --build --preset "win32_uwp_packaging" --parallel
+
+      - name: Build x64
+        run: |
+          cmake --preset "x64_packaging"
+          cmake --build --preset "x64_packaging" --parallel
+
+      - name: Build x64_uwp
+        run: |
+          cmake --preset "x64_uwp_packaging"
+          cmake --build --preset "x64_uwp_packaging" --parallel
+
+      - name: Build ARM_uwp
+        if: inputs.complete
+        run: |
+          cmake --preset "ARM_uwp_packaging"
+          cmake --build --preset "arm_uwp_packaging" --parallel
+
+      - name: Build ARM64_uwp
+        run: |
+          cmake --preset "ARM64_uwp_packaging"
+          cmake --build --preset "arm64_uwp_packaging" --parallel
+
+      - name: Organize
+        if: inputs.package
+        run: Move-Item install/ OpenXR-Windows-Binaries/
+
+      - name: Upload artifacts
+        if: inputs.package
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenXR-Windows-Binaries
+          path: OpenXR-Windows-Binaries

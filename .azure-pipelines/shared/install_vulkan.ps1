@@ -8,8 +8,8 @@ if (-not $env:VULKAN_SDK_VERSION) {
 $SDK_VER = $env:VULKAN_SDK_VERSION
 
 if (-not (Test-Path env:VULKAN_SDK)) {
-    if ($env:SYSTEM_DEFAULTWORKINGDIRECTORY) {
-        $env:VULKAN_SDK = "$env:SYSTEM_DEFAULTWORKINGDIRECTORY\vulkan_sdk\$SDK_VER"
+    if ($env:GITHUB_WORKSPACE) {
+        $env:VULKAN_SDK = "$env:GITHUB_WORKSPACE\vulkan_sdk\$SDK_VER"
     } else {
         $env:VULKAN_SDK = "c:\VulkanSDK\$SDK_VER"
     }
@@ -25,6 +25,8 @@ if (-not (Test-Path "$env:VULKAN_SDK/Include/vulkan/vulkan.h")) {
 
     Write-Output "Extracting $FN in silent, blocking mode to $env:VULKAN_SDK"
     Start-Process "c:\Program Files\7-Zip\7z" -ArgumentList "x", $FN, "-o$parent" -Wait
+
+    echo "VULKAN_SDK=${env:VULKAN_SDK}" >> $env:GITHUB_ENV
 } else {
     Write-Output "$env:VULKAN_SDK found and contains header"
 }

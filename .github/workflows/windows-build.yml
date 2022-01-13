@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2022, Collabora, Ltd.
+# SPDX-License-Identifier: CC0-1.0
+
+on:
+  pull_request:
+
+jobs:
+  windows:
+    uses: "rpavlik/OpenXR-SDK-Source/.github/workflows/msvc-build-preset-parallel.yml@actions"
+    with:
+      complete: false
+      useVulkan: true
+      package: true

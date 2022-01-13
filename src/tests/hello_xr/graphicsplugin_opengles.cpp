@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Khronos Group Inc.
+// Copyright (c) 2017-2022, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -333,12 +333,6 @@ struct OpenGLESGraphicsPlugin : public IGraphicsPlugin {
         glBindVertexArray(0);
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        // Swap our window every other eye for RenderDoc
-        static int everyOther = 0;
-        if ((everyOther++ & 1) != 0) {
-            ksGpuWindow_SwapBuffers(&window);
-        }
     }
 
     uint32_t GetSupportedSwapchainSampleCount(const XrViewConfigurationView&) override { return 1; }

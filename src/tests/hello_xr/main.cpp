@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Khronos Group Inc.
+// Copyright (c) 2017-2022, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,12 +10,28 @@
 #include "graphicsplugin.h"
 #include "openxr_program.h"
 
+#if defined(_WIN32)
+// Favor the high performance NVIDIA or AMD GPUs
+extern "C" {
+// http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
+_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+// https://gpuopen.com/learn/amdpowerxpressrequesthighperformance/
+_declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+}
+#endif  // defined(_WIN32)
+
 namespace {
 
 #ifdef XR_USE_PLATFORM_ANDROID
 void ShowHelp() { Log::Write(Log::Level::Info, "adb shell setprop debug.xr.graphicsPlugin OpenGLES|Vulkan"); }
 
 bool UpdateOptionsFromSystemProperties(Options& options) {
+#if defined(DEFAULT_GRAPHICS_PLUGIN_OPENGLES)
+    options.GraphicsPlugin = "OpenGLES";
+#elif defined(DEFAULT_GRAPHICS_PLUGIN_VULKAN)
+    options.GraphicsPlugin = "Vulkan";
+#endif
+
     char value[PROP_VALUE_MAX] = {};
     if (__system_property_get("debug.xr.graphicsPlugin", value) != 0) {
         options.GraphicsPlugin = value;
@@ -222,6 +238,8 @@ void android_main(struct android_app* app) {
 
             program->PollEvents(&exitRenderLoop, &requestRestart);
             if (!program->IsSessionRunning()) {
+                // Throttle loop since xrWaitFrame won't be called.
+                std::this_thread::sleep_for(std::chrono::milliseconds(250));
                 continue;
             }
 

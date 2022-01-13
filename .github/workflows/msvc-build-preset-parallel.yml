@@ -1,0 +1,168 @@
+# SPDX-FileCopyrightText: 2022, Collabora, Ltd.
+# SPDX-License-Identifier: CC0-1.0
+
+on:
+  workflow_call:
+    inputs:
+      complete:
+        type: boolean
+        required: true
+        default: false
+        description: "Whether we should be complete or fast"
+      useVulkan:
+        type: boolean
+        required: false
+        default: false
+      package:
+        type: boolean
+        required: false
+        default: false
+        description: "Should we archive the packaged/installed artifacts?"
+
+jobs:
+  msvc-build:
+    name: MSVC Builds
+    runs-on: windows-latest
+    steps:
+      # "true" gets coerced to 1 (shallow), false gets coerced to 0 (all history/branches/tags)
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: ${{ ! inputs.package }}
+
+      - run: ./.azure-pipelines/shared/install_vulkan.ps1
+        name: Install Vulkan SDK
+        if: inputs.useVulkan
+        working-directory: ${{ github.workspace }}
+
+      - name: Build Win32
+        if: inputs.complete
+        # env:
+        #   VULKAN_SDK: "${{ github.workspace }}/vulkan_sdk/${{env.VULKAN_SDK_VERSION}}"
+        run: |
+          cmake --preset "Win32_packaging"
+          cmake --build --preset "win32_packaging" --parallel
+
+      - name: Build x64
+        # env:
+        #   VULKAN_SDK: "${{ github.workspace }}/vulkan_sdk/${{env.VULKAN_SDK_VERSION}}"
+        run: |
+          cmake --preset "x64_packaging"
+          cmake --build --preset "x64_packaging" --parallel
+
+      - name: Describe
+        if: inputs.package
+        run: git describe > install/version.txt
+
+      - name: Describe
+        if: "! inputs.package"
+        run: |
+          echo "${{ github/repository }} ${{ github/ref }}" > install.version
+          echo "${{ github.ref }}" >> install/version.txt
+
+      - name: Organize
+        if: inputs.package
+        run: Move-Item install/ OpenXR-Windows-Binaries/
+
+      - name: Compress
+        if: inputs.package
+        run: 7z a -R windows-binaries-non-uwp.7z OpenXR-Windows-Binaries
+
+      - name: Upload artifacts
+        if: inputs.package
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-binaries-non-uwp
+          path: windows-binaries-non-uwp.7z
+
+  msvc-build-uwp:
+    name: MSVC Builds (UWP)
+    runs-on: windows-latest
+    steps:
+      # "true" gets coerced to 1 (shallow), false gets coerced to 0 (all history/branches/tags)
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: ${{ ! inputs.package }}
+
+      - name: Build Win32_uwp
+        if: inputs.complete
+        run: |
+          cmake --preset "Win32_uwp_packaging"
+          cmake --build --preset "win32_uwp_packaging" --parallel
+
+      - name: Build x64_uwp
+        run: |
+          cmake --preset "x64_uwp_packaging"
+          cmake --build --preset "x64_uwp_packaging" --parallel
+
+      - name: Build ARM_uwp
+        if: inputs.complete
+        run: |
+          cmake --preset "ARM_uwp_packaging"
+          cmake --build --preset "arm_uwp_packaging" --parallel
+
+      - name: Build ARM64_uwp
+        if: inputs.complete
+        run: |
+          cmake --preset "ARM64_uwp_packaging"
+          cmake --build --preset "arm64_uwp_packaging" --parallel
+
+      - name: Describe
+        if: inputs.package
+        run: git describe > install/version.txt
+
+      - name: Describe
+        if: "! inputs.package"
+        run: |
+          echo "${{ github/repository }} ${{ github/ref }}" > install.version
+          echo "${{ github.ref }}" >> install/version.txt
+
+      - name: Organize
+        if: inputs.package
+        run: Move-Item install/ OpenXR-Windows-Binaries/
+
+      - name: Compress
+        if: inputs.package
+        run: 7z a -R windows-binaries-uwp.7z OpenXR-Windows-Binaries
+
+      - name: Upload artifacts
+        if: inputs.package
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-binaries-uwp
+          path: windows-binaries-uwp.7z
+
+  finish-msvc-package:
+    name: Finish MSVC release package
+    if: inputs.package
+    runs-on: ubuntu-latest
+    needs:
+      - msvc-build
+      - msvc-build-uwp
+    steps:
+      - name: Download non-UWP
+        uses: actions/download-artifact@v2
+        with:
+          name: windows-binaries-non-uwp
+
+      - name: Download UWP
+        uses: actions/download-artifact@v2
+        with:
+          name: windows-binaries-uwp
+
+      # -aos causes the overwrite mode to be "skip" since some files will be in common
+      - name: Extract
+        run: |
+          7za x windows-binaries-uwp.7z
+          7za x -aos windows-binaries-non-uwp.7z
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Repack
+        run: 7z a -R OpenXR-Windows-Binaries.7z OpenXR-Windows-Binaries
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenXR-Windows-Binaries
+          path: OpenXR-Windows-Binaries.7z
